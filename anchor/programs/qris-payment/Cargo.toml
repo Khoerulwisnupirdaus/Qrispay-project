@@ -1,0 +1,20 @@
+[package]
+name = "qris-payment"
+version = "0.1.0"
+description = "Rialo QRIS Payment Lock - Escrow smart contract for crypto-to-QRIS payments"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "qris_payment"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.30.1"
+anchor-spl = "0.30.1"

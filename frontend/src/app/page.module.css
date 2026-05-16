@@ -1,0 +1,416 @@
+/* ============================================================
+ * Home Page Styles — Premium v2
+ * ============================================================ */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.main { flex: 1; }
+
+/* ============================================================
+ * Landing — Disconnected Hero
+ * ============================================================ */
+.landing {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+.hero {
+  text-align: center;
+  padding: 56px 0 48px;
+  position: relative;
+}
+
+.heroGlow {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 500px;
+  background:
+    radial-gradient(circle at 40% 40%, rgba(123,110,246,0.18) 0%, transparent 50%),
+    radial-gradient(circle at 60% 60%, rgba(34,211,238,0.1) 0%, transparent 50%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: aurora 15s ease-in-out infinite alternate;
+}
+
+.heroIcon {
+  margin-bottom: 32px;
+  display: inline-block;
+  animation: float 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 30px rgba(123,110,246,0.4));
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -1.5px;
+  color: var(--text-100);
+}
+
+.gradientText {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: var(--text-300);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 400;
+}
+
+.heroNote {
+  margin-top: 16px;
+  font-size: 0.78rem;
+  color: var(--text-400);
+  font-weight: 500;
+}
+
+/* Trusted by bar */
+.trustedBar {
+  margin-top: 48px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.trustedLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-400);
+  margin-bottom: 14px;
+}
+
+.trustedLogos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  opacity: 0.5;
+}
+
+.trustedLogo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-300);
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+ * Features — Premium cards with glow borders
+ * ============================================================ */
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 56px;
+}
+
+.featureCard {
+  text-align: center;
+  padding: 32px 18px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient border glow on hover */
+.featureCard::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--grad-primary);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  border-radius: 1px;
+}
+
+.featureCard:hover::after { opacity: 0.6; }
+
+.featureIcon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  display: inline-block;
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  border-radius: var(--r-md);
+  background: var(--grad-primary-soft);
+  border: 1px solid var(--border-subtle);
+}
+
+.featureCard h3 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-100);
+}
+
+.featureCard p {
+  font-size: 0.78rem;
+  color: var(--text-300);
+  line-height: 1.5;
+}
+
+/* ============================================================
+ * How It Works — Steps with connecting line
+ * ============================================================ */
+.howItWorks {
+  margin-top: 64px;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 36px;
+  color: var(--text-100);
+  letter-spacing: -0.5px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 24px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(16px);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.step:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-glass-hover);
+  transform: translateX(4px);
+}
+
+.step h4 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-100);
+}
+
+.step p {
+  font-size: 0.82rem;
+  color: var(--text-300);
+}
+
+.stepNumber {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--grad-primary);
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(123,110,246,0.35);
+}
+
+.stepLine {
+  width: 2px;
+  height: 16px;
+  margin-left: 45px;
+  background: linear-gradient(180deg, var(--border-default), transparent);
+}
+
+/* ============================================================
+ * Stats Section
+ * ============================================================ */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 48px;
+}
+
+.statCard {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(12px);
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-100);
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: var(--text-400);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* ============================================================
+ * Idle Screen — Connected, waiting for scan
+ * ============================================================ */
+.idleScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  padding: 24px 20px;
+}
+
+.idleCard {
+  text-align: center;
+  max-width: 460px;
+  width: 100%;
+  padding: 56px 40px;
+  background: var(--grad-card);
+  backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-2xl);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg), var(--shadow-glow-sm);
+}
+
+/* Top glow stripe */
+.idleCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--grad-primary);
+  opacity: 0.6;
+}
+
+/* Corner glow */
+.idleCard::after {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.scanPromptIcon {
+  margin-bottom: 28px;
+  display: inline-block;
+  animation: float 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(123,110,246,0.3));
+}
+
+.idleTitle {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+
+.idleSubtitle {
+  color: var(--text-300);
+  margin-bottom: 36px;
+  font-size: 0.95rem;
+}
+
+.idleStats {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.statItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statItem .statLabel {
+  font-size: 0.8rem;
+  color: var(--text-400);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.statItem .statValue {
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-200);
+  margin-bottom: 0;
+}
+
+/* ============================================================
+ * Footer
+ * ============================================================ */
+.footer {
+  text-align: center;
+  padding: 28px 20px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.8rem;
+  color: var(--text-300);
+  position: relative;
+  z-index: 1;
+}
+
+.footer p + p { margin-top: 4px; }
+
+/* ============================================================
+ * Responsive
+ * ============================================================ */
+@media (max-width: 640px) {
+  .heroTitle { font-size: 2rem; letter-spacing: -0.5px; }
+  .heroSubtitle { font-size: 0.95rem; }
+  .features { grid-template-columns: 1fr; gap: 10px; }
+  .landing { padding: 16px 16px 50px; }
+  .statsGrid { grid-template-columns: 1fr; }
+  .idleCard { padding: 40px 24px; border-radius: var(--r-xl); }
+}
