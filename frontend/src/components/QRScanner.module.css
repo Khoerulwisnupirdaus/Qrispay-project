@@ -1,5 +1,5 @@
 /* ============================================================
- * QR Scanner Styles — Premium v2
+ * QR Scanner — Light Mode v3
  * ============================================================ */
 
 .scannerContainer {
@@ -7,8 +7,6 @@
   margin: 0 auto;
   padding: 32px 20px;
   min-height: calc(100vh - 80px);
-  position: relative;
-  z-index: 1;
 }
 
 .scannerHeader {
@@ -20,52 +18,33 @@
 
 .scannerHeader h2 {
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-size: 1.3rem; font-weight: 700; letter-spacing: -0.3px;
+  color: var(--text-primary);
 }
 
 .closeBtn {
-  background: var(--bg-2);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-300);
-  padding: 8px 16px;
-  border-radius: var(--r-full);
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
-  font-weight: 600;
+  background: white; border: 1px solid var(--border-light);
+  color: var(--text-secondary); padding: 8px 16px;
+  border-radius: var(--r-full); font-size: 0.82rem;
+  cursor: pointer; transition: all var(--duration-fast) var(--ease-out); font-weight: 600;
 }
+.closeBtn:hover { border-color: var(--border-hover); color: var(--text-primary); }
 
-.closeBtn:hover {
-  border-color: var(--border-hover);
-  color: var(--text-100);
-}
-
-/* Camera viewport */
 .scannerViewport {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  position: relative;
-  background: var(--bg-1);
+  width: 100%; aspect-ratio: 1; border-radius: var(--r-xl);
+  overflow: hidden; position: relative; background: white;
   border: 2px solid var(--border-default);
-  box-shadow: var(--shadow-lg), 0 0 40px rgba(123,110,246,0.1);
+  box-shadow: var(--shadow-lg);
 }
 
-/* Animated scan line */
 .scannerViewport::after {
   content: '';
-  position: absolute;
-  left: 10%;
-  right: 10%;
+  position: absolute; left: 10%; right: 10%;
   height: 3px;
-  background: var(--grad-primary);
-  box-shadow: 0 0 20px rgba(123,110,246,0.5), 0 0 60px rgba(34,211,238,0.3);
+  background: linear-gradient(90deg, #7C3AED, #A78BFA);
+  box-shadow: 0 0 15px rgba(124,58,237,0.4);
   border-radius: 2px;
-  animation: scanLine 2.5s ease-in-out infinite;
-  z-index: 5;
+  animation: scanLine 2.5s ease-in-out infinite; z-index: 5;
 }
 
 @keyframes scanLine {
@@ -75,21 +54,8 @@
   90% { opacity: 0; }
 }
 
-/* Corner markers */
-.cornerMarker {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  z-index: 4;
-}
-
-.cornerMarker::before,
-.cornerMarker::after {
-  content: '';
-  position: absolute;
-  background: var(--primary);
-  border-radius: 2px;
-}
+.cornerMarker { position: absolute; width: 28px; height: 28px; z-index: 4; }
+.cornerMarker::before, .cornerMarker::after { content: ''; position: absolute; background: var(--primary); border-radius: 2px; }
 
 .cornerMarker.tl { top: 14px; left: 14px; }
 .cornerMarker.tl::before { width: 28px; height: 3px; top: 0; left: 0; }
@@ -104,146 +70,64 @@
 .cornerMarker.bl::after { width: 3px; height: 28px; bottom: 0; left: 0; }
 
 .cornerMarker.br { bottom: 14px; right: 14px; }
-.cornerMarker.br::before { width: 28px; height: 3px; bottom: 0; right: 0; background: var(--cyan); }
-.cornerMarker.br::after { width: 3px; height: 28px; bottom: 0; right: 0; background: var(--cyan); }
+.cornerMarker.br::before { width: 28px; height: 3px; bottom: 0; right: 0; background: var(--primary-light); }
+.cornerMarker.br::after { width: 3px; height: 28px; bottom: 0; right: 0; background: var(--primary-light); }
 
-/* Camera status */
 .cameraStatus {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  z-index: 3;
-  background: var(--bg-1);
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  z-index: 3; background: white;
 }
+.cameraIcon { font-size: 3rem; }
+.cameraStatus p { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
 
-.cameraIcon {
-  font-size: 3rem;
-  filter: drop-shadow(0 0 12px rgba(123,110,246,0.3));
-}
-
-.cameraStatus p {
-  color: var(--text-300);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* Mode toggle */
-.modeToggle {
-  display: flex;
-  gap: 8px;
-  margin-top: 20px;
-}
+.modeToggle { display: flex; gap: 8px; margin-top: 20px; }
 
 .modeBtn {
-  flex: 1;
-  padding: 12px 16px;
-  background: var(--bg-2);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-md);
-  color: var(--text-300);
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
+  flex: 1; padding: 12px 16px;
+  background: white; border: 1px solid var(--border-light);
+  border-radius: var(--r-md); color: var(--text-secondary);
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
   transition: all var(--duration-fast) var(--ease-out);
 }
+.modeBtn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.modeBtn.active { background: #F5F3FF; border-color: var(--primary); color: var(--primary); box-shadow: var(--shadow-glow); }
 
-.modeBtn:hover {
-  border-color: var(--border-hover);
-  color: var(--text-100);
-}
-
-.modeBtn.active {
-  background: rgba(123,110,246,0.1);
-  border-color: var(--primary);
-  color: var(--primary-light);
-  box-shadow: var(--shadow-glow-sm);
-}
-
-/* Manual input */
-.manualInput {
-  margin-top: 20px;
-}
-
-.manualInput label {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-300);
-  margin-bottom: 10px;
-}
+.manualInput { margin-top: 20px; }
+.manualInput label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; }
 
 .manualInput textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 16px;
-  background: var(--bg-1);
-  border: 1px solid var(--border-default);
-  border-radius: var(--r-md);
-  color: var(--text-100);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  resize: vertical;
-  outline: none;
-  transition: border-color var(--duration-fast);
+  width: 100%; min-height: 100px; padding: 16px;
+  background: white; border: 1.5px solid var(--border-default);
+  border-radius: var(--r-md); color: var(--text-primary);
+  font-family: var(--font-mono); font-size: 0.82rem;
+  resize: vertical; outline: none; transition: border-color var(--duration-fast);
 }
+.manualInput textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
 
-.manualInput textarea:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-glow);
-}
-
-/* Demo QRIS */
 .demoSection {
-  margin-top: 24px;
-  padding: 20px;
-  background: var(--bg-glass);
-  border: 1px solid rgba(251,191,36,0.15);
+  margin-top: 24px; padding: 20px;
+  background: #FFFBEB; border: 1px solid rgba(245,158,11,0.2);
   border-radius: var(--r-lg);
 }
-
-.demoSection h4 {
-  font-family: var(--font-display);
-  color: var(--amber);
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.demoSection p {
-  color: var(--text-400);
-  font-size: 0.78rem;
-  margin-bottom: 14px;
-}
+.demoSection h4 { font-family: var(--font-display); color: #D97706; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; }
+.demoSection p { color: var(--text-muted); font-size: 0.78rem; margin-bottom: 14px; }
 
 .demoBtn {
-  width: 100%;
-  padding: 12px;
-  background: rgba(251,191,36,0.08);
-  border: 1px solid rgba(251,191,36,0.25);
-  border-radius: var(--r-md);
-  color: var(--amber);
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all var(--duration-fast);
+  width: 100%; padding: 12px;
+  background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25);
+  border-radius: var(--r-md); color: #D97706;
+  font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all var(--duration-fast);
 }
+.demoBtn:hover { background: rgba(245,158,11,0.14); border-color: #D97706; }
 
-.demoBtn:hover {
-  background: rgba(251,191,36,0.14);
-  border-color: var(--amber);
-}
-
-/* Error message */
 .errorMsg {
   padding: 14px 18px;
-  background: rgba(248,113,113,0.08);
-  border: 1px solid rgba(248,113,113,0.2);
-  border-radius: var(--r-md);
-  color: var(--red);
-  font-size: 0.82rem;
-  margin-top: 16px;
+  background: #FEF2F2; border: 1px solid rgba(239,68,68,0.2);
+  border-radius: var(--r-md); color: #DC2626; font-size: 0.82rem; margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .scannerContainer { padding: 20px 14px; }
+  .scannerViewport { border-radius: var(--r-lg); }
 }

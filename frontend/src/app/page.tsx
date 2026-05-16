@@ -3,8 +3,8 @@
 /**
  * Home Page — Rialo QRIS Pay
  *
- * Premium landing page for the neofinance payment dApp.
- * Three states: Landing (disconnected), Idle (connected), Payment flow.
+ * Tria-inspired landing with bold colored feature cards,
+ * clean stats bar, and premium neofinance aesthetic.
  */
 
 import React, { useState } from "react";
@@ -40,78 +40,98 @@ export default function HomePage() {
         {/* ============ DISCONNECTED — Landing ============ */}
         {!connected && (
           <div className={`${styles.landing} animate-fade-in`}>
+            {/* Hero */}
             <div className={styles.hero}>
-              <div className={styles.heroGlow}></div>
-
-              {/* Hero Icon — Animated QRIS symbol */}
-              <div className={styles.heroIcon}>
-                <svg width="88" height="88" viewBox="0 0 88 88" fill="none">
-                  <defs>
-                    <linearGradient id="hg" x1="0" y1="0" x2="88" y2="88">
-                      <stop stopColor="#7B6EF6" />
-                      <stop offset="0.5" stopColor="#A78BFA" />
-                      <stop offset="1" stopColor="#22D3EE" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="4" y="4" width="80" height="80" rx="20" stroke="url(#hg)" strokeWidth="2" />
-                  <rect x="16" y="16" width="22" height="22" rx="6" fill="url(#hg)" opacity="0.5" />
-                  <rect x="50" y="16" width="22" height="22" rx="6" fill="url(#hg)" opacity="0.35" />
-                  <rect x="16" y="50" width="22" height="22" rx="6" fill="url(#hg)" opacity="0.35" />
-                  <circle cx="61" cy="61" r="12" fill="url(#hg)" opacity="0.7" />
-                  <path d="M56 61L59.5 64.5L67 57" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-
               <h1 className={styles.heroTitle}>
-                Pay with <span className={styles.gradientText}>Crypto</span>,
-                <br />Settle via <span className={styles.gradientText}>QRIS</span>
+                Your crypto should do{"\n"}
+                <span className={styles.gradientText}>more than sit in a wallet</span>
               </h1>
 
               <p className={styles.heroSubtitle}>
-                Neofinance meets real-world payments. Use stablecoins on
-                Rialo to pay any merchant in Indonesia — settled via QRIS
-                with 50ms finality and zero gas fees.
+                Pay any merchant in Indonesia with USDC — settled instantly
+                via QRIS on Rialo Network. Zero gas. 50ms finality.
               </p>
 
-              <WalletMultiButton />
+              <div className={styles.heroActions}>
+                <WalletMultiButton />
+              </div>
 
               <p className={styles.heroNote}>
-                Connect your wallet to get started — powered by Rialo Network
+                Connect your wallet to start paying — powered by Rialo Network
               </p>
             </div>
 
             {/* Stats Bar */}
-            <div className={styles.statsGrid}>
-              <div className={styles.statCard}>
+            <div className={styles.statsBar}>
+              <div className={styles.statItem}>
                 <div className={styles.statValue}>50ms</div>
-                <div className={styles.statLabel}>Block Time</div>
+                <div className={styles.statLabel}>Finality</div>
               </div>
-              <div className={styles.statCard}>
+              <div className={styles.statDivider}></div>
+              <div className={styles.statItem}>
                 <div className={styles.statValue}>$0</div>
                 <div className={styles.statLabel}>Gas Fees</div>
               </div>
-              <div className={styles.statCard}>
+              <div className={styles.statDivider}></div>
+              <div className={styles.statItem}>
                 <div className={styles.statValue}>40M+</div>
-                <div className={styles.statLabel}>QRIS Merchants</div>
+                <div className={styles.statLabel}>Merchants</div>
               </div>
             </div>
 
-            {/* Feature Cards */}
-            <div className={styles.features}>
-              <div className={`${styles.featureCard} glass-card`}>
-                <div className={styles.featureIcon}>⚡</div>
+            {/* Feature Cards — Tria-style */}
+            <div className={styles.featuresGrid}>
+              {/* QRIS Pay — Main feature, full width */}
+              <div className={`${styles.featureCard} ${styles.fullWidth} dark`}>
+                <span className={styles.featureTag}>QRIS Pay</span>
+                <h3>Scan. Pay. Done.</h3>
+                <p>
+                  Point your camera at any QRIS code in Indonesia. Your USDC
+                  converts to IDR and settles in real-time — no middlemen,
+                  no delays.
+                </p>
+              </div>
+
+              {/* Zero Gas */}
+              <div className={`${styles.featureCard} violet`}>
+                <span className={styles.featureEmoji}>⚡</span>
+                <span className={styles.featureTag}>Rialo Cruise</span>
+                <h3>Zero Gas Fees</h3>
+                <p>
+                  Gasless transactions on Rialo Network. Every payment is free.
+                </p>
+              </div>
+
+              {/* Instant Settlement */}
+              <div className={`${styles.featureCard} teal`}>
+                <span className={styles.featureEmoji}>🔄</span>
+                <span className={styles.featureTag}>Settlement</span>
                 <h3>50ms Finality</h3>
-                <p>Rialo&apos;s ultra-fast consensus settles payments instantly</p>
+                <p>
+                  Rialo&apos;s SVM processes your payment in milliseconds.
+                </p>
               </div>
-              <div className={`${styles.featureCard} glass-card`}>
-                <div className={styles.featureIcon}>🌐</div>
-                <h3>Native Bridge</h3>
-                <p>On-chain contracts connect directly to QRIS — no oracles</p>
+
+              {/* Cross-Chain */}
+              <div className={`${styles.featureCard} lime`}>
+                <span className={styles.featureEmoji}>🌐</span>
+                <span className={styles.featureTag}>Cross-Chain</span>
+                <h3>Multi-Chain Ready</h3>
+                <p>
+                  Built on SVM — compatible with Solana ecosystem. Bridge from
+                  any chain.
+                </p>
               </div>
-              <div className={`${styles.featureCard} glass-card`}>
-                <div className={styles.featureIcon}>🚀</div>
-                <h3>Zero Gas</h3>
-                <p>Rialo Cruise enables fully gasless transactions</p>
+
+              {/* Security */}
+              <div className={`${styles.featureCard} white`}>
+                <span className={styles.featureEmoji}>🔒</span>
+                <span className={styles.featureTag}>Security</span>
+                <h3>On-Chain Escrow</h3>
+                <p>
+                  Smart contract locks funds until QRIS settlement confirms.
+                  Trustless and auditable.
+                </p>
               </div>
             </div>
 
@@ -123,7 +143,7 @@ export default function HomePage() {
                   <div className={styles.stepNumber}>1</div>
                   <div>
                     <h4>Connect Wallet</h4>
-                    <p>Link your Rialo wallet — or sign in with email via Account Abstraction</p>
+                    <p>Link your Rialo wallet — Phantom, Backpack, or any Solana wallet</p>
                   </div>
                 </div>
                 <div className={styles.stepLine}></div>
@@ -145,7 +165,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Trusted by */}
+            {/* Built on */}
             <div className={styles.trustedBar}>
               <span className={styles.trustedLabel}>Built on</span>
               <div className={styles.trustedLogos}>
@@ -158,31 +178,27 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* ============ CONNECTED — Idle / Scan Prompt ============ */}
+        {/* ============ CONNECTED — Idle ============ */}
         {connected && appState === "idle" && (
           <div className={`${styles.idleScreen} animate-fade-in`}>
             <div className={styles.idleCard}>
               <div className={styles.scanPromptIcon}>
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                  {/* Dashed frame */}
-                  <rect x="8" y="8" width="84" height="84" rx="18" stroke="rgba(123,110,246,0.2)" strokeWidth="1.5" strokeDasharray="6 4" />
-                  {/* Corner brackets */}
-                  <path d="M8 28V18a10 10 0 0110-10h10" stroke="#7B6EF6" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M72 8h10a10 10 0 0110 10v10" stroke="#7B6EF6" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M92 72v10a10 10 0 01-10 10h-10" stroke="#22D3EE" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M28 92H18a10 10 0 01-10-10V72" stroke="#22D3EE" strokeWidth="3" strokeLinecap="round" />
-                  {/* Inner pattern */}
-                  <rect x="28" y="28" width="18" height="18" rx="5" fill="#7B6EF6" opacity="0.2" />
-                  <rect x="54" y="28" width="18" height="18" rx="5" fill="#7B6EF6" opacity="0.12" />
-                  <rect x="28" y="54" width="18" height="18" rx="5" fill="#22D3EE" opacity="0.12" />
-                  <rect x="54" y="54" width="18" height="18" rx="5" fill="#22D3EE" opacity="0.2" />
-                  {/* Scan line */}
-                  <line x1="16" y1="50" x2="84" y2="50" stroke="url(#scan-line)" strokeWidth="1.5" opacity="0.5" />
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <rect x="6" y="6" width="68" height="68" rx="16" stroke="#D4D0E8" strokeWidth="1.5" strokeDasharray="5 3" />
+                  <path d="M6 24V14a8 8 0 018-8h10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M56 6h10a8 8 0 018 8v10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M74 56v10a8 8 0 01-8 8h-10" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M24 74H14a8 8 0 01-8-8V56" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
+                  <rect x="24" y="24" width="14" height="14" rx="4" fill="#7C3AED" opacity="0.15" />
+                  <rect x="42" y="24" width="14" height="14" rx="4" fill="#7C3AED" opacity="0.1" />
+                  <rect x="24" y="42" width="14" height="14" rx="4" fill="#A78BFA" opacity="0.1" />
+                  <rect x="42" y="42" width="14" height="14" rx="4" fill="#A78BFA" opacity="0.15" />
+                  <line x1="14" y1="40" x2="66" y2="40" stroke="url(#sl)" strokeWidth="1.5" opacity="0.4" />
                   <defs>
-                    <linearGradient id="scan-line" x1="16" y1="50" x2="84" y2="50">
+                    <linearGradient id="sl" x1="14" y1="40" x2="66" y2="40">
                       <stop stopColor="transparent" />
-                      <stop offset="0.3" stopColor="#7B6EF6" />
-                      <stop offset="0.7" stopColor="#22D3EE" />
+                      <stop offset="0.3" stopColor="#7C3AED" />
+                      <stop offset="0.7" stopColor="#A78BFA" />
                       <stop offset="1" stopColor="transparent" />
                     </linearGradient>
                   </defs>
@@ -203,21 +219,21 @@ export default function HomePage() {
               </button>
 
               <div className={styles.idleStats}>
-                <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Network</span>
-                  <span className={styles.statValue}>Rialo (SVM Devnet)</span>
+                <div className={styles.idleStatRow}>
+                  <span className={styles.idleStatLabel}>Network</span>
+                  <span className={styles.idleStatValue}>Rialo SVM Devnet</span>
                 </div>
-                <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Finality</span>
-                  <span className={styles.statValue}>~50ms</span>
+                <div className={styles.idleStatRow}>
+                  <span className={styles.idleStatLabel}>Finality</span>
+                  <span className={styles.idleStatValue}>~50ms</span>
                 </div>
-                <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Gas</span>
-                  <span className={styles.statValue}>Free (Rialo Cruise)</span>
+                <div className={styles.idleStatRow}>
+                  <span className={styles.idleStatLabel}>Gas</span>
+                  <span className={styles.idleStatValue}>Free</span>
                 </div>
-                <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Rate</span>
-                  <span className={styles.statValue}>1 USDC ≈ Rp 15,800</span>
+                <div className={styles.idleStatRow}>
+                  <span className={styles.idleStatLabel}>Rate</span>
+                  <span className={styles.idleStatValue}>1 USDC ≈ Rp 15,800</span>
                 </div>
               </div>
             </div>
@@ -245,10 +261,9 @@ export default function HomePage() {
       {/* Footer */}
       <footer className={styles.footer}>
         <p>
-          Rialo QRIS Pay • A{" "}
+          Rialo QRIS Pay — A{" "}
           <span className={styles.gradientText}>Rialo Network</span>{" "}
-          neofinance dApp by{" "}
-          <span className={styles.gradientText}>Subzero Labs</span>
+          neofinance dApp by Subzero Labs
         </p>
         <p className="text-xs text-muted">MVP on SVM Devnet — Mainnet coming soon</p>
       </footer>

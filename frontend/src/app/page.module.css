@@ -1,5 +1,6 @@
 /* ============================================================
- * Home Page Styles — Premium v2
+ * Home Page — Tria-inspired Premium v3
+ * Light mode, bold cards, phone mockups, clean spacing
  * ============================================================ */
 
 .app {
@@ -7,60 +8,37 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 1;
 }
 
 .main { flex: 1; }
 
 /* ============================================================
- * Landing — Disconnected Hero
+ * Landing — Hero Section
  * ============================================================ */
 .landing {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 24px 20px 80px;
+  padding: 0 20px 80px;
 }
 
 .hero {
-  text-align: center;
-  padding: 56px 0 48px;
+  text-align: left;
+  padding: 60px 0 48px;
   position: relative;
-}
-
-.heroGlow {
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 500px;
-  height: 500px;
-  background:
-    radial-gradient(circle at 40% 40%, rgba(123,110,246,0.18) 0%, transparent 50%),
-    radial-gradient(circle at 60% 60%, rgba(34,211,238,0.1) 0%, transparent 50%);
-  filter: blur(40px);
-  pointer-events: none;
-  animation: aurora 15s ease-in-out infinite alternate;
-}
-
-.heroIcon {
-  margin-bottom: 32px;
-  display: inline-block;
-  animation: float 5s ease-in-out infinite;
-  filter: drop-shadow(0 0 30px rgba(123,110,246,0.4));
 }
 
 .heroTitle {
   font-family: var(--font-display);
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.12;
   margin-bottom: 20px;
   letter-spacing: -1.5px;
-  color: var(--text-100);
+  color: var(--text-primary);
 }
 
 .gradientText {
-  background: var(--grad-primary);
+  background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #6366F1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -68,129 +46,175 @@
 
 .heroSubtitle {
   font-size: 1.1rem;
-  color: var(--text-300);
+  color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 36px;
-  max-width: 440px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 500px;
   font-weight: 400;
 }
 
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .heroNote {
-  margin-top: 16px;
+  margin-top: 24px;
   font-size: 0.78rem;
-  color: var(--text-400);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
-/* Trusted by bar */
-.trustedBar {
-  margin-top: 48px;
-  padding: 20px 0;
-  text-align: center;
-}
-
-.trustedLabel {
-  display: block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--text-400);
-  margin-bottom: 14px;
-}
-
-.trustedLogos {
+/* ============================================================
+ * Stats Bar — Clean horizontal
+ * ============================================================ */
+.statsBar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  opacity: 0.5;
+  gap: 40px;
+  padding: 32px 0;
+  margin-top: 24px;
 }
 
-.trustedLogo {
+.statItem {
+  text-align: center;
+}
+
+.statValue {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text-300);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
   letter-spacing: 1px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.statDivider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-default);
 }
 
 /* ============================================================
- * Features — Premium cards with glow borders
+ * Feature Cards — Tria-style colored blocks
  * ============================================================ */
-.features {
+.featuresGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 56px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 48px;
 }
 
 .featureCard {
-  text-align: center;
-  padding: 32px 18px 28px;
+  padding: 36px 28px;
+  border-radius: var(--r-xl);
   position: relative;
   overflow: hidden;
+  transition: all var(--duration-base) var(--ease-out);
 }
 
-/* Gradient border glow on hover */
-.featureCard::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: var(--grad-primary);
-  opacity: 0;
-  transition: opacity var(--duration-base) var(--ease-out);
-  border-radius: 1px;
+.featureCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
-.featureCard:hover::after { opacity: 0.6; }
+/* Color variants */
+.featureCard.dark {
+  background: var(--card-dark);
+  color: var(--text-on-dark);
+}
+.featureCard.dark p { color: var(--text-on-dark-muted); }
 
-.featureIcon {
-  font-size: 2rem;
-  margin-bottom: 16px;
+.featureCard.violet {
+  background: linear-gradient(145deg, #7C3AED, #6D28D9);
+  color: white;
+}
+.featureCard.violet p { color: rgba(255,255,255,0.75); }
+
+.featureCard.teal {
+  background: linear-gradient(145deg, #0D9488, #0F766E);
+  color: white;
+}
+.featureCard.teal p { color: rgba(255,255,255,0.75); }
+
+.featureCard.lime {
+  background: #D4E157;
+  color: var(--text-primary);
+}
+.featureCard.lime p { color: rgba(15,15,26,0.7); }
+
+.featureCard.white {
+  background: white;
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+.featureCard.white p { color: var(--text-secondary); }
+
+.featureCard.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.featureTag {
   display: inline-block;
-  width: 56px;
-  height: 56px;
-  line-height: 56px;
-  border-radius: var(--r-md);
-  background: var(--grad-primary-soft);
-  border: 1px solid var(--border-subtle);
+  padding: 4px 14px;
+  border-radius: var(--r-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.15);
 }
+
+.featureCard.lime .featureTag { background: rgba(0,0,0,0.08); }
+.featureCard.white .featureTag { background: rgba(124,58,237,0.08); color: var(--primary); }
 
 .featureCard h3 {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text-100);
+  margin-bottom: 10px;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
 }
 
 .featureCard p {
-  font-size: 0.78rem;
-  color: var(--text-300);
-  line-height: 1.5;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.featureEmoji {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  display: block;
 }
 
 /* ============================================================
- * How It Works — Steps with connecting line
+ * How It Works — Clean vertical steps
  * ============================================================ */
 .howItWorks {
   margin-top: 64px;
 }
 
 .sectionTitle {
-  text-align: center;
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 36px;
-  color: var(--text-100);
+  color: var(--text-primary);
   letter-spacing: -0.5px;
+  text-align: center;
 }
 
 .steps {
@@ -203,18 +227,17 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  padding: 22px 24px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-subtle);
+  padding: 24px 28px;
+  background: white;
+  border: 1px solid var(--border-light);
   border-radius: var(--r-lg);
-  backdrop-filter: blur(16px);
   transition: all var(--duration-base) var(--ease-out);
 }
 
 .step:hover {
-  border-color: var(--border-hover);
-  background: var(--bg-glass-hover);
+  box-shadow: var(--shadow-md);
   transform: translateX(4px);
+  border-color: var(--border-hover);
 }
 
 .step h4 {
@@ -222,12 +245,12 @@
   font-size: 0.95rem;
   font-weight: 700;
   margin-bottom: 4px;
-  color: var(--text-100);
+  color: var(--text-primary);
 }
 
 .step p {
   font-size: 0.82rem;
-  color: var(--text-300);
+  color: var(--text-secondary);
 }
 
 .stepNumber {
@@ -237,58 +260,59 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--grad-primary);
+  background: linear-gradient(135deg, #7C3AED, #A78BFA);
   border-radius: var(--r-full);
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(123,110,246,0.35);
+  color: white;
+  box-shadow: var(--shadow-glow);
 }
 
 .stepLine {
   width: 2px;
-  height: 16px;
+  height: 14px;
   margin-left: 45px;
   background: linear-gradient(180deg, var(--border-default), transparent);
 }
 
 /* ============================================================
- * Stats Section
+ * Trusted by — Built on section
  * ============================================================ */
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 48px;
-}
-
-.statCard {
+.trustedBar {
+  margin-top: 56px;
+  padding: 24px 0;
   text-align: center;
-  padding: 24px 16px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-lg);
-  backdrop-filter: blur(12px);
 }
 
-.statValue {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--text-100);
-  margin-bottom: 4px;
-}
-
-.statLabel {
+.trustedLabel {
+  display: block;
   font-size: 0.7rem;
-  color: var(--text-400);
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.trustedLogos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  opacity: 0.45;
+}
+
+.trustedLogo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   letter-spacing: 1px;
-  font-weight: 600;
 }
 
 /* ============================================================
- * Idle Screen — Connected, waiting for scan
+ * Idle Screen — Connected state
  * ============================================================ */
 .idleScreen {
   display: flex;
@@ -300,59 +324,45 @@
 
 .idleCard {
   text-align: center;
-  max-width: 460px;
+  max-width: 440px;
   width: 100%;
   padding: 56px 40px;
-  background: var(--grad-card);
-  backdrop-filter: blur(24px) saturate(1.2);
-  border: 1px solid var(--border-default);
+  background: white;
+  border: 1px solid var(--border-light);
   border-radius: var(--r-2xl);
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-lg), var(--shadow-glow-sm);
+  box-shadow: var(--shadow-lg);
 }
 
-/* Top glow stripe */
+/* Top accent stripe */
 .idleCard::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: var(--grad-primary);
-  opacity: 0.6;
-}
-
-/* Corner glow */
-.idleCard::after {
-  content: '';
-  position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 60%);
-  pointer-events: none;
+  height: 3px;
+  background: linear-gradient(90deg, #7C3AED, #A78BFA, #6366F1);
 }
 
 .scanPromptIcon {
   margin-bottom: 28px;
   display: inline-block;
   animation: float 5s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(123,110,246,0.3));
 }
 
 .idleTitle {
   font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 10px;
   letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .idleSubtitle {
-  color: var(--text-300);
+  color: var(--text-secondary);
   margin-bottom: 36px;
   font-size: 0.95rem;
 }
@@ -360,32 +370,29 @@
 .idleStats {
   margin-top: 36px;
   padding-top: 28px;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.statItem {
+.idleStatRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.statItem .statLabel {
-  font-size: 0.8rem;
-  color: var(--text-400);
-  text-transform: none;
-  letter-spacing: 0;
+.idleStatLabel {
+  font-size: 0.82rem;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
-.statItem .statValue {
+.idleStatValue {
   font-size: 0.82rem;
   font-weight: 600;
   font-family: var(--font-mono);
-  color: var(--text-200);
-  margin-bottom: 0;
+  color: var(--text-primary);
 }
 
 /* ============================================================
@@ -393,10 +400,10 @@
  * ============================================================ */
 .footer {
   text-align: center;
-  padding: 28px 20px;
-  border-top: 1px solid var(--border-subtle);
-  font-size: 0.8rem;
-  color: var(--text-300);
+  padding: 32px 20px;
+  border-top: 1px solid var(--border-light);
+  font-size: 0.82rem;
+  color: var(--text-muted);
   position: relative;
   z-index: 1;
 }
@@ -404,99 +411,74 @@
 .footer p + p { margin-top: 4px; }
 
 /* ============================================================
- * Mobile Responsive — App-grade responsive design
+ * Responsive — Mobile First
  * ============================================================ */
 
 /* Tablet */
 @media (max-width: 768px) {
-  .landing { padding: 16px 16px 60px; }
+  .landing { padding: 0 16px 60px; }
   .hero { padding: 40px 0 36px; }
   .heroTitle { font-size: 2.4rem; letter-spacing: -1px; }
   .heroSubtitle { font-size: 1rem; margin-bottom: 28px; }
-  .heroGlow { width: 350px; height: 350px; }
 
-  .statsGrid { gap: 8px; }
-  .statCard { padding: 18px 12px; }
-  .statValue { font-size: 1.3rem; }
+  .featuresGrid { gap: 12px; }
+  .featureCard { padding: 28px 22px; }
+  .featureCard h3 { font-size: 1.15rem; }
 
-  .features { gap: 10px; margin-top: 40px; }
-  .featureCard { padding: 24px 14px 22px; }
-  .featureIcon { width: 48px; height: 48px; line-height: 48px; font-size: 1.6rem; }
+  .statsBar { gap: 24px; }
+  .statValue { font-size: 1.4rem; }
 
-  .howItWorks { margin-top: 48px; }
-  .step { padding: 18px 20px; gap: 14px; }
-  .stepNumber { width: 38px; height: 38px; min-width: 38px; font-size: 0.9rem; }
-  .stepLine { margin-left: 39px; height: 12px; }
-
-  .trustedLogos { gap: 20px; }
-  .trustedLogo { font-size: 0.75rem; }
-
+  .step { padding: 20px 22px; gap: 14px; }
   .idleCard { padding: 44px 28px; }
-  .idleTitle { font-size: 1.5rem; }
 }
 
 /* Mobile */
 @media (max-width: 480px) {
-  .landing { padding: 12px 14px 50px; }
-  .hero { padding: 28px 0 28px; }
-  .heroTitle { font-size: 1.9rem; letter-spacing: -0.5px; }
-  .heroSubtitle { font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px; max-width: 100%; }
-  .heroNote { font-size: 0.72rem; }
-  .heroGlow { width: 280px; height: 280px; top: -40px; }
-  .heroIcon svg { width: 68px; height: 68px; }
+  .landing { padding: 0 14px 50px; }
+  .hero { padding: 28px 0 24px; text-align: center; }
+  .heroTitle { font-size: 2rem; letter-spacing: -0.5px; }
+  .heroSubtitle { font-size: 0.92rem; line-height: 1.6; margin-bottom: 24px; max-width: 100%; margin-left: auto; margin-right: auto; }
+  .heroActions { justify-content: center; }
 
-  /* Stats — keep 3 columns on mobile */
-  .statsGrid { gap: 6px; margin-top: 32px; }
-  .statCard { padding: 16px 8px; border-radius: var(--r-md); }
-  .statValue { font-size: 1.1rem; }
-  .statLabel { font-size: 0.6rem; letter-spacing: 0.5px; }
+  /* Stats */
+  .statsBar { gap: 16px; padding: 24px 0; }
+  .statValue { font-size: 1.2rem; }
+  .statLabel { font-size: 0.62rem; }
+  .statDivider { height: 28px; }
 
-  /* Features — single column on small screens */
-  .features { grid-template-columns: 1fr; gap: 8px; margin-top: 32px; }
-  .featureCard {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    gap: 14px;
-    padding: 18px 16px;
-  }
-  .featureIcon { margin-bottom: 0; width: 44px; height: 44px; line-height: 44px; font-size: 1.4rem; flex-shrink: 0; }
-  .featureCard h3 { font-size: 0.88rem; margin-bottom: 2px; }
-  .featureCard p { font-size: 0.75rem; }
+  /* Features — stack single column */
+  .featuresGrid { grid-template-columns: 1fr; gap: 10px; margin-top: 32px; }
+  .featureCard { padding: 24px 20px; border-radius: var(--r-lg); }
+  .featureCard h3 { font-size: 1.1rem; }
+  .featureCard p { font-size: 0.82rem; }
+  .featureEmoji { font-size: 2rem; margin-bottom: 10px; }
 
-  /* How it works */
-  .howItWorks { margin-top: 36px; }
-  .sectionTitle { font-size: 1.2rem; margin-bottom: 24px; }
-  .step { padding: 16px; gap: 12px; }
+  /* Steps */
+  .howItWorks { margin-top: 40px; }
+  .sectionTitle { font-size: 1.3rem; margin-bottom: 24px; }
+  .step { padding: 16px 18px; gap: 12px; }
   .step h4 { font-size: 0.88rem; }
   .step p { font-size: 0.75rem; }
   .stepNumber { width: 36px; height: 36px; min-width: 36px; font-size: 0.85rem; }
   .stepLine { margin-left: 34px; height: 10px; }
 
-  /* Trusted */
-  .trustedBar { margin-top: 36px; }
-  .trustedLogos { gap: 14px; flex-wrap: wrap; }
-  .trustedLogo { font-size: 0.68rem; }
-
-  /* Idle screen */
-  .idleScreen { min-height: calc(100vh - 72px); padding: 20px 14px; align-items: flex-start; padding-top: 32px; }
+  /* Idle */
+  .idleScreen { padding: 20px 14px; align-items: flex-start; padding-top: 32px; }
   .idleCard { padding: 36px 20px; border-radius: var(--r-xl); }
   .idleTitle { font-size: 1.4rem; }
   .idleSubtitle { font-size: 0.88rem; margin-bottom: 28px; }
-  .scanPromptIcon svg { width: 80px; height: 80px; }
-  .idleStats { margin-top: 28px; padding-top: 20px; gap: 10px; }
-  .statItem .statLabel { font-size: 0.75rem; }
-  .statItem .statValue { font-size: 0.75rem; }
+
+  /* Trusted */
+  .trustedLogos { gap: 16px; flex-wrap: wrap; }
 
   /* Footer */
-  .footer { padding: 20px 14px; font-size: 0.72rem; }
+  .footer { padding: 20px 14px; font-size: 0.75rem; }
 }
 
-/* Small phones (360px like iPhone SE) */
+/* Small phones */
 @media (max-width: 360px) {
-  .heroTitle { font-size: 1.6rem; }
-  .heroSubtitle { font-size: 0.82rem; }
-  .statValue { font-size: 1rem; }
+  .heroTitle { font-size: 1.7rem; }
+  .statValue { font-size: 1.05rem; }
   .idleCard { padding: 28px 16px; }
 }
 
@@ -508,4 +490,3 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
-

@@ -1,21 +1,24 @@
 /* ============================================================
- * Header Styles — Premium v2
+ * Header — Tria-inspired sticky frosted nav
  * ============================================================ */
 .header {
   position: sticky;
-  top: 0;
+  top: 12px;
   z-index: 100;
-  backdrop-filter: blur(20px) saturate(1.3);
-  -webkit-backdrop-filter: blur(20px) saturate(1.3);
-  background: rgba(6, 6, 15, 0.7);
-  border-bottom: 1px solid var(--border-subtle);
+  margin: 12px 16px 0;
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--r-2xl);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
 }
 
 .headerInner {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
-  height: 72px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -25,78 +28,83 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .logoIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 0 8px rgba(123,110,246,0.3));
 }
 
 .logoTitle {
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  background: var(--grad-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
 }
 
 .logoSub {
-  font-size: 0.65rem;
-  color: var(--text-400);
+  font-size: 0.6rem;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   font-weight: 700;
-  margin-top: -2px;
+  margin-top: -1px;
 }
 
 /* Right Section */
 .headerRight {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .networkBadge {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 16px;
-  background: rgba(34, 211, 238, 0.06);
-  border: 1px solid rgba(34, 211, 238, 0.18);
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.12);
   border-radius: var(--r-full);
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--cyan);
-  letter-spacing: 0.5px;
+  color: var(--primary);
+  letter-spacing: 0.3px;
 }
 
 .networkDot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan-glow);
+  background: #34D399;
+  box-shadow: 0 0 6px rgba(52,211,153,0.5);
   animation: pulse-ring 2.5s ease-in-out infinite;
 }
 
 @keyframes pulse-ring {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.3); }
-  50% { box-shadow: 0 0 0 5px rgba(34,211,238,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(52,211,153,0); }
 }
 
 .balance {
-  padding: 7px 16px;
-  background: var(--bg-2);
-  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  background: white;
+  border: 1px solid var(--border-light);
   border-radius: var(--r-full);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-200);
+  color: var(--text-secondary);
+}
+
+/* Mobile header */
+@media (max-width: 480px) {
+  .header { margin: 8px 8px 0; top: 8px; }
+  .headerInner { padding: 0 14px; height: 48px; }
+  .logoTitle { font-size: 1rem; }
+  .networkBadge { padding: 4px 10px; font-size: 0.65rem; }
+  .balance { padding: 4px 10px; font-size: 0.68rem; }
 }

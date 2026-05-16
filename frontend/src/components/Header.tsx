@@ -63,8 +63,8 @@ export default function Header() {
               />
               <defs>
                 <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stopColor="#6C5CE7" />
-                  <stop offset="1" stopColor="#00CEC9" />
+                  <stop stopColor="#7C3AED" />
+                  <stop offset="1" stopColor="#A78BFA" />
                 </linearGradient>
               </defs>
             </svg>
