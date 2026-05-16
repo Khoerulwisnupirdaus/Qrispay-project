@@ -404,13 +404,108 @@
 .footer p + p { margin-top: 4px; }
 
 /* ============================================================
- * Responsive
+ * Mobile Responsive — App-grade responsive design
  * ============================================================ */
-@media (max-width: 640px) {
-  .heroTitle { font-size: 2rem; letter-spacing: -0.5px; }
-  .heroSubtitle { font-size: 0.95rem; }
-  .features { grid-template-columns: 1fr; gap: 10px; }
-  .landing { padding: 16px 16px 50px; }
-  .statsGrid { grid-template-columns: 1fr; }
-  .idleCard { padding: 40px 24px; border-radius: var(--r-xl); }
+
+/* Tablet */
+@media (max-width: 768px) {
+  .landing { padding: 16px 16px 60px; }
+  .hero { padding: 40px 0 36px; }
+  .heroTitle { font-size: 2.4rem; letter-spacing: -1px; }
+  .heroSubtitle { font-size: 1rem; margin-bottom: 28px; }
+  .heroGlow { width: 350px; height: 350px; }
+
+  .statsGrid { gap: 8px; }
+  .statCard { padding: 18px 12px; }
+  .statValue { font-size: 1.3rem; }
+
+  .features { gap: 10px; margin-top: 40px; }
+  .featureCard { padding: 24px 14px 22px; }
+  .featureIcon { width: 48px; height: 48px; line-height: 48px; font-size: 1.6rem; }
+
+  .howItWorks { margin-top: 48px; }
+  .step { padding: 18px 20px; gap: 14px; }
+  .stepNumber { width: 38px; height: 38px; min-width: 38px; font-size: 0.9rem; }
+  .stepLine { margin-left: 39px; height: 12px; }
+
+  .trustedLogos { gap: 20px; }
+  .trustedLogo { font-size: 0.75rem; }
+
+  .idleCard { padding: 44px 28px; }
+  .idleTitle { font-size: 1.5rem; }
 }
+
+/* Mobile */
+@media (max-width: 480px) {
+  .landing { padding: 12px 14px 50px; }
+  .hero { padding: 28px 0 28px; }
+  .heroTitle { font-size: 1.9rem; letter-spacing: -0.5px; }
+  .heroSubtitle { font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px; max-width: 100%; }
+  .heroNote { font-size: 0.72rem; }
+  .heroGlow { width: 280px; height: 280px; top: -40px; }
+  .heroIcon svg { width: 68px; height: 68px; }
+
+  /* Stats — keep 3 columns on mobile */
+  .statsGrid { gap: 6px; margin-top: 32px; }
+  .statCard { padding: 16px 8px; border-radius: var(--r-md); }
+  .statValue { font-size: 1.1rem; }
+  .statLabel { font-size: 0.6rem; letter-spacing: 0.5px; }
+
+  /* Features — single column on small screens */
+  .features { grid-template-columns: 1fr; gap: 8px; margin-top: 32px; }
+  .featureCard {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 14px;
+    padding: 18px 16px;
+  }
+  .featureIcon { margin-bottom: 0; width: 44px; height: 44px; line-height: 44px; font-size: 1.4rem; flex-shrink: 0; }
+  .featureCard h3 { font-size: 0.88rem; margin-bottom: 2px; }
+  .featureCard p { font-size: 0.75rem; }
+
+  /* How it works */
+  .howItWorks { margin-top: 36px; }
+  .sectionTitle { font-size: 1.2rem; margin-bottom: 24px; }
+  .step { padding: 16px; gap: 12px; }
+  .step h4 { font-size: 0.88rem; }
+  .step p { font-size: 0.75rem; }
+  .stepNumber { width: 36px; height: 36px; min-width: 36px; font-size: 0.85rem; }
+  .stepLine { margin-left: 34px; height: 10px; }
+
+  /* Trusted */
+  .trustedBar { margin-top: 36px; }
+  .trustedLogos { gap: 14px; flex-wrap: wrap; }
+  .trustedLogo { font-size: 0.68rem; }
+
+  /* Idle screen */
+  .idleScreen { min-height: calc(100vh - 72px); padding: 20px 14px; align-items: flex-start; padding-top: 32px; }
+  .idleCard { padding: 36px 20px; border-radius: var(--r-xl); }
+  .idleTitle { font-size: 1.4rem; }
+  .idleSubtitle { font-size: 0.88rem; margin-bottom: 28px; }
+  .scanPromptIcon svg { width: 80px; height: 80px; }
+  .idleStats { margin-top: 28px; padding-top: 20px; gap: 10px; }
+  .statItem .statLabel { font-size: 0.75rem; }
+  .statItem .statValue { font-size: 0.75rem; }
+
+  /* Footer */
+  .footer { padding: 20px 14px; font-size: 0.72rem; }
+}
+
+/* Small phones (360px like iPhone SE) */
+@media (max-width: 360px) {
+  .heroTitle { font-size: 1.6rem; }
+  .heroSubtitle { font-size: 0.82rem; }
+  .statValue { font-size: 1rem; }
+  .idleCard { padding: 28px 16px; }
+}
+
+/* Safe area for notch devices */
+@supports(padding: max(0px)) {
+  .app {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+

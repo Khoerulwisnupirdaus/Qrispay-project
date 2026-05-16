@@ -1,0 +1,17 @@
+{
+  "name": "Rialo QRIS Pay",
+  "short_name": "QRIS Pay",
+  "description": "Pay any merchant in Indonesia with stablecoins — settled via QRIS on Rialo Network",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06060F",
+  "theme_color": "#06060F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
