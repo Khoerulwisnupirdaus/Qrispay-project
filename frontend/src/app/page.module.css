@@ -1,319 +1,353 @@
 /* ============================================================
- * Home Page — Tria-inspired Premium v3
- * Light mode, bold cards, phone mockups, clean spacing
+ * Page Styles — Professional v4
+ * No vibecoding. Intentional design decisions.
  * ============================================================ */
 
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
+.app { min-height: 100vh; display: flex; flex-direction: column; }
 .main { flex: 1; }
 
-/* ============================================================
- * Landing — Hero Section
- * ============================================================ */
+/* ── Hero ─────────────────────────────────────────────── */
 .landing {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 0 20px 80px;
+  padding: 0 24px 100px;
 }
 
 .hero {
-  text-align: left;
-  padding: 60px 0 48px;
-  position: relative;
+  padding: 64px 0 0;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+.heroBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 6px rgba(52,211,153,0.5);
 }
 
 .heroTitle {
   font-family: var(--font-display);
-  font-size: 3.2rem;
+  font-size: 3rem;
   font-weight: 700;
-  line-height: 1.12;
-  margin-bottom: 20px;
-  letter-spacing: -1.5px;
+  line-height: 1.15;
+  letter-spacing: -1.2px;
   color: var(--text-primary);
+  margin-bottom: 20px;
 }
 
-.gradientText {
-  background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #6366F1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.heroTitleLight {
+  color: var(--text-muted);
 }
 
 .heroSubtitle {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 36px;
-  max-width: 500px;
-  font-weight: 400;
+  max-width: 540px;
 }
 
 .heroActions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.heroNote {
-  margin-top: 24px;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-weight: 500;
+.heroSecondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 24px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--r-md);
+  transition: all var(--duration-fast) var(--ease-out);
+  text-decoration: none;
 }
 
-/* ============================================================
- * Stats Bar — Clean horizontal
- * ============================================================ */
-.statsBar {
+.heroSecondaryBtn:hover {
+  color: var(--primary);
+  background: rgba(124,58,237,0.04);
+}
+
+/* ── Metrics Strip ────────────────────────────────────── */
+.metricsStrip {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 40px;
-  padding: 32px 0;
-  margin-top: 24px;
+  gap: 28px;
+  padding: 40px 0;
+  margin-top: 8px;
 }
 
-.statItem {
-  text-align: center;
-}
+.metric { text-align: center; }
 
-.statValue {
+.metricValue {
+  display: block;
   font-family: var(--font-display);
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.2;
 }
 
-.statLabel {
-  font-size: 0.72rem;
+.metricLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
   margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.statDivider {
-  width: 1px;
-  height: 40px;
+.metricDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   background: var(--border-default);
 }
 
-/* ============================================================
- * Feature Cards — Tria-style colored blocks
- * ============================================================ */
-.featuresGrid {
+/* ── Bento Grid ───────────────────────────────────────── */
+.bentoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 48px;
+  gap: 12px;
+  margin-top: 12px;
 }
 
-.featureCard {
-  padding: 36px 28px;
+.bentoCard {
+  padding: 28px 24px;
   border-radius: var(--r-xl);
-  position: relative;
-  overflow: hidden;
-  transition: all var(--duration-base) var(--ease-out);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 
-.featureCard:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+.bentoCard:hover {
+  transform: translateY(-3px);
 }
 
-/* Color variants */
-.featureCard.dark {
-  background: var(--card-dark);
-  color: var(--text-on-dark);
+/* Card typography */
+.cardLabel {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 14px;
+  margin-bottom: 8px;
+  opacity: 0.6;
 }
-.featureCard.dark p { color: var(--text-on-dark-muted); }
 
-.featureCard.violet {
-  background: linear-gradient(145deg, #7C3AED, #6D28D9);
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+
+.cardTitleLg {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.cardDesc {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  opacity: 0.75;
+}
+
+/* ── Card Variants ─────────────────────────────────── */
+
+/* Primary — dark, full width */
+.bentoPrimary {
+  grid-column: 1 / -1;
+  background: #18182B;
   color: white;
+  padding: 36px 32px;
 }
-.featureCard.violet p { color: rgba(255,255,255,0.75); }
 
-.featureCard.teal {
-  background: linear-gradient(145deg, #0D9488, #0F766E);
-  color: white;
+.bentoPrimaryInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
 }
-.featureCard.teal p { color: rgba(255,255,255,0.75); }
 
-.featureCard.lime {
-  background: #D4E157;
+.bentoPrimaryVisual {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,58,237,0.12);
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(124,58,237,0.15);
+}
+
+.bentoPrimary .cardLabel { color: #A78BFA; opacity: 1; }
+.bentoPrimary .cardDesc { color: rgba(255,255,255,0.55); }
+
+/* Accent A — purple tint */
+.bentoAccentA {
+  background: #F3EEFF;
   color: var(--text-primary);
+  border: 1px solid rgba(124,58,237,0.06);
 }
-.featureCard.lime p { color: rgba(15,15,26,0.7); }
+.bentoAccentA .cardLabel { color: var(--primary); opacity: 1; }
+.bentoAccentA .cardDesc { color: var(--text-secondary); }
 
-.featureCard.white {
+/* Accent B — teal tint */
+.bentoAccentB {
+  background: #ECFDF5;
+  color: var(--text-primary);
+  border: 1px solid rgba(13,148,136,0.06);
+}
+.bentoAccentB .cardLabel { color: #0D9488; opacity: 1; }
+.bentoAccentB .cardDesc { color: var(--text-secondary); }
+
+/* Light — white card */
+.bentoLight {
   background: white;
   color: var(--text-primary);
   border: 1px solid var(--border-light);
 }
-.featureCard.white p { color: var(--text-secondary); }
+.bentoLight .cardLabel { color: var(--text-muted); }
+.bentoLight .cardDesc { color: var(--text-secondary); }
 
-.featureCard.fullWidth {
-  grid-column: 1 / -1;
-}
-
-.featureTag {
-  display: inline-block;
-  padding: 4px 14px;
-  border-radius: var(--r-full);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 16px;
-  background: rgba(255,255,255,0.15);
-}
-
-.featureCard.lime .featureTag { background: rgba(0,0,0,0.08); }
-.featureCard.white .featureTag { background: rgba(124,58,237,0.08); color: var(--primary); }
-
-.featureCard h3 {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-  line-height: 1.25;
-  letter-spacing: -0.3px;
-}
-
-.featureCard p {
-  font-size: 0.88rem;
-  line-height: 1.55;
-}
-
-.featureEmoji {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
-  display: block;
-}
-
-/* ============================================================
- * How It Works — Clean vertical steps
- * ============================================================ */
-.howItWorks {
-  margin-top: 64px;
+/* ── How It Works ─────────────────────────────────── */
+.howSection {
+  margin-top: 72px;
+  padding-top: 16px;
 }
 
 .sectionTitle {
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 36px;
-  color: var(--text-primary);
   letter-spacing: -0.5px;
+  color: var(--text-primary);
   text-align: center;
+  margin-bottom: 6px;
 }
 
-.steps {
+.sectionSub {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+}
+
+.stepsRow {
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
   gap: 0;
 }
 
-.step {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 24px 28px;
+.stepCard {
+  flex: 1;
   background: white;
   border: 1px solid var(--border-light);
   border-radius: var(--r-lg);
+  padding: 28px 22px;
+  text-align: center;
   transition: all var(--duration-base) var(--ease-out);
 }
 
-.step:hover {
+.stepCard:hover {
   box-shadow: var(--shadow-md);
-  transform: translateX(4px);
-  border-color: var(--border-hover);
+  transform: translateY(-2px);
 }
 
-.step h4 {
+.stepNum {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  opacity: 0.15;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.stepCard h4 {
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: var(--text-primary);
 }
 
-.step p {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
+.stepCard p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 
-.stepNumber {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
+.stepDivider {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #7C3AED, #A78BFA);
-  border-radius: var(--r-full);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1rem;
-  color: white;
-  box-shadow: var(--shadow-glow);
+  padding: 0 6px;
+  color: var(--text-muted);
+  opacity: 0.4;
 }
 
-.stepLine {
-  width: 2px;
-  height: 14px;
-  margin-left: 45px;
-  background: linear-gradient(180deg, var(--border-default), transparent);
-}
-
-/* ============================================================
- * Trusted by — Built on section
- * ============================================================ */
-.trustedBar {
-  margin-top: 56px;
-  padding: 24px 0;
+/* ── Built On / Powered By ────────────────────────── */
+.builtOn {
+  margin-top: 64px;
   text-align: center;
 }
 
-.trustedLabel {
+.builtOnLabel {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--text-muted);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-.trustedLogos {
+.builtOnRow {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  opacity: 0.45;
-}
-
-.trustedLogo {
+  gap: 12px;
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  letter-spacing: 1px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
-/* ============================================================
- * Idle Screen — Connected state
- * ============================================================ */
+.builtOnDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border-default);
+}
+
+/* ── Idle Screen ──────────────────────────────────── */
 .idleScreen {
   display: flex;
   align-items: center;
@@ -324,165 +358,117 @@
 
 .idleCard {
   text-align: center;
-  max-width: 440px;
+  max-width: 420px;
   width: 100%;
-  padding: 56px 40px;
+  padding: 48px 36px;
   background: white;
   border: 1px solid var(--border-light);
   border-radius: var(--r-2xl);
-  position: relative;
-  overflow: hidden;
   box-shadow: var(--shadow-lg);
+  position: relative;
 }
 
-/* Top accent stripe */
 .idleCard::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #7C3AED, #A78BFA, #6366F1);
+  background: linear-gradient(90deg, #7C3AED, #A78BFA, #C4B5FD);
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
 }
 
-.scanPromptIcon {
-  margin-bottom: 28px;
+.scanIcon {
+  margin-bottom: 24px;
   display: inline-block;
-  animation: float 5s ease-in-out infinite;
 }
 
 .idleTitle {
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  margin-bottom: 10px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
   color: var(--text-primary);
 }
 
 .idleSubtitle {
-  color: var(--text-secondary);
-  margin-bottom: 36px;
-  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  font-size: 0.92rem;
 }
 
-.idleStats {
-  margin-top: 36px;
-  padding-top: 28px;
+.idleInfo {
+  margin-top: 32px;
+  padding-top: 24px;
   border-top: 1px solid var(--border-light);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  text-align: left;
 }
 
-.idleStatRow {
+.infoRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-
-.idleStatLabel {
+  padding: 10px 0;
   font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 500;
 }
 
-.idleStatValue {
-  font-size: 0.82rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-}
+.infoRow span:first-child { color: var(--text-muted); font-weight: 500; }
+.infoRow span:last-child { color: var(--text-primary); font-family: var(--font-mono); font-weight: 600; font-size: 0.78rem; }
 
-/* ============================================================
- * Footer
- * ============================================================ */
+/* ── Footer ───────────────────────────────────────── */
 .footer {
   text-align: center;
-  padding: 32px 20px;
+  padding: 28px 24px;
   border-top: 1px solid var(--border-light);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
-  position: relative;
-  z-index: 1;
 }
 
-.footer p + p { margin-top: 4px; }
+.footer strong { color: var(--text-secondary); font-weight: 600; }
 
-/* ============================================================
- * Responsive — Mobile First
- * ============================================================ */
+/* ── Responsive ───────────────────────────────────── */
 
-/* Tablet */
 @media (max-width: 768px) {
-  .landing { padding: 0 16px 60px; }
-  .hero { padding: 40px 0 36px; }
-  .heroTitle { font-size: 2.4rem; letter-spacing: -1px; }
-  .heroSubtitle { font-size: 1rem; margin-bottom: 28px; }
-
-  .featuresGrid { gap: 12px; }
-  .featureCard { padding: 28px 22px; }
-  .featureCard h3 { font-size: 1.15rem; }
-
-  .statsBar { gap: 24px; }
-  .statValue { font-size: 1.4rem; }
-
-  .step { padding: 20px 22px; gap: 14px; }
-  .idleCard { padding: 44px 28px; }
+  .landing { padding: 0 20px 80px; }
+  .hero { padding: 48px 0 0; }
+  .heroTitle { font-size: 2.3rem; }
+  .metricsStrip { gap: 20px; }
+  .metricValue { font-size: 1.3rem; }
+  .stepsRow { gap: 0; }
+  .stepCard { padding: 22px 16px; }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
-  .landing { padding: 0 14px 50px; }
-  .hero { padding: 28px 0 24px; text-align: center; }
-  .heroTitle { font-size: 2rem; letter-spacing: -0.5px; }
-  .heroSubtitle { font-size: 0.92rem; line-height: 1.6; margin-bottom: 24px; max-width: 100%; margin-left: auto; margin-right: auto; }
-  .heroActions { justify-content: center; }
+  .landing { padding: 0 16px 60px; }
+  .hero { padding: 32px 0 0; }
+  .heroTitle { font-size: 1.8rem; letter-spacing: -0.8px; }
+  .heroSubtitle { font-size: 0.92rem; }
+  .heroActions { flex-direction: column; align-items: stretch; }
+  .heroSecondaryBtn { justify-content: center; }
 
-  /* Stats */
-  .statsBar { gap: 16px; padding: 24px 0; }
-  .statValue { font-size: 1.2rem; }
-  .statLabel { font-size: 0.62rem; }
-  .statDivider { height: 28px; }
+  .metricsStrip { gap: 12px; padding: 28px 0; }
+  .metricValue { font-size: 1.1rem; }
+  .metricLabel { font-size: 0.6rem; }
 
-  /* Features — stack single column */
-  .featuresGrid { grid-template-columns: 1fr; gap: 10px; margin-top: 32px; }
-  .featureCard { padding: 24px 20px; border-radius: var(--r-lg); }
-  .featureCard h3 { font-size: 1.1rem; }
-  .featureCard p { font-size: 0.82rem; }
-  .featureEmoji { font-size: 2rem; margin-bottom: 10px; }
+  .bentoGrid { grid-template-columns: 1fr; gap: 10px; }
+  .bentoPrimaryInner { flex-direction: column; text-align: center; gap: 20px; }
+  .cardTitleLg { font-size: 1.3rem; }
 
-  /* Steps */
-  .howItWorks { margin-top: 40px; }
-  .sectionTitle { font-size: 1.3rem; margin-bottom: 24px; }
-  .step { padding: 16px 18px; gap: 12px; }
-  .step h4 { font-size: 0.88rem; }
-  .step p { font-size: 0.75rem; }
-  .stepNumber { width: 36px; height: 36px; min-width: 36px; font-size: 0.85rem; }
-  .stepLine { margin-left: 34px; height: 10px; }
+  .stepsRow { flex-direction: column; gap: 8px; }
+  .stepDivider { transform: rotate(90deg); padding: 4px 0; }
 
-  /* Idle */
-  .idleScreen { padding: 20px 14px; align-items: flex-start; padding-top: 32px; }
-  .idleCard { padding: 36px 20px; border-radius: var(--r-xl); }
+  .idleCard { padding: 36px 24px; border-radius: var(--r-xl); }
   .idleTitle { font-size: 1.4rem; }
-  .idleSubtitle { font-size: 0.88rem; margin-bottom: 28px; }
 
-  /* Trusted */
-  .trustedLogos { gap: 16px; flex-wrap: wrap; }
-
-  /* Footer */
-  .footer { padding: 20px 14px; font-size: 0.75rem; }
+  .builtOnRow { flex-wrap: wrap; gap: 8px; }
+  .footer { padding: 20px 16px; }
 }
 
-/* Small phones */
 @media (max-width: 360px) {
-  .heroTitle { font-size: 1.7rem; }
-  .statValue { font-size: 1.05rem; }
-  .idleCard { padding: 28px 16px; }
+  .heroTitle { font-size: 1.55rem; }
+  .metricValue { font-size: 1rem; }
+  .cardTitle { font-size: 1.05rem; }
 }
 
-/* Safe area for notch devices */
 @supports(padding: max(0px)) {
   .app {
     padding-left: env(safe-area-inset-left);

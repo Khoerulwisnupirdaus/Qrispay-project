@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * Home Page — Rialo QRIS Pay
- *
- * Tria-inspired landing with bold colored feature cards,
- * clean stats bar, and premium neofinance aesthetic.
- */
-
 import React, { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -16,6 +9,59 @@ import PaymentFlow from "@/components/PaymentFlow";
 import styles from "./page.module.css";
 
 type AppState = "idle" | "scanning" | "payment";
+
+/* ── SVG Icon Components ─────────────────────────────── */
+
+const IconQR = () => (
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+    <rect x="2" y="2" width="40" height="40" rx="10" stroke="#7C3AED" strokeWidth="1.5" />
+    <rect x="9" y="9" width="10" height="10" rx="3" fill="#7C3AED" />
+    <rect x="25" y="9" width="10" height="10" rx="3" fill="#A78BFA" />
+    <rect x="9" y="25" width="10" height="10" rx="3" fill="#A78BFA" />
+    <circle cx="30" cy="30" r="5" fill="#7C3AED" />
+    <path d="M28 30l2 2 3-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconBolt = () => (
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect width="40" height="40" rx="12" fill="#7C3AED" fillOpacity="0.08" />
+    <path d="M22 12L14 22h5l-1 6 8-10h-5l1-6z" fill="#7C3AED" />
+  </svg>
+);
+
+const IconClock = () => (
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect width="40" height="40" rx="12" fill="#0D9488" fillOpacity="0.08" />
+    <circle cx="20" cy="20" r="8" stroke="#0D9488" strokeWidth="1.8" />
+    <path d="M20 15v5l3.5 2" stroke="#0D9488" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconLayers = () => (
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect width="40" height="40" rx="12" fill="#6366F1" fillOpacity="0.08" />
+    <path d="M20 12l8 4-8 4-8-4 8-4z" fill="#6366F1" fillOpacity="0.3" stroke="#6366F1" strokeWidth="1.5" />
+    <path d="M12 20l8 4 8-4" stroke="#6366F1" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M12 24l8 4 8-4" stroke="#6366F1" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+  </svg>
+);
+
+const IconShield = () => (
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect width="40" height="40" rx="12" fill="#059669" fillOpacity="0.08" />
+    <path d="M20 11l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10v-5l7-3z" stroke="#059669" strokeWidth="1.8" fill="#059669" fillOpacity="0.1" />
+    <path d="M17 20l2 2 4-4" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconArrowRight = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/* ── Main Page ───────────────────────────────────────── */
 
 export default function HomePage() {
   const { connected } = useWallet();
@@ -37,210 +83,211 @@ export default function HomePage() {
       <Header />
 
       <main className={styles.main}>
-        {/* ============ DISCONNECTED — Landing ============ */}
+        {/* ═══════════ DISCONNECTED — Landing ═══════════ */}
         {!connected && (
           <div className={`${styles.landing} animate-fade-in`}>
             {/* Hero */}
-            <div className={styles.hero}>
+            <section className={styles.hero}>
+              <div className={styles.heroBadge}>
+                <span className={styles.heroBadgeDot} />
+                Live on Rialo SVM Devnet
+              </div>
+
               <h1 className={styles.heroTitle}>
-                Your crypto should do{"\n"}
-                <span className={styles.gradientText}>more than sit in a wallet</span>
+                Pay merchants with crypto.
+                <br />
+                <span className={styles.heroTitleLight}>Settled via QRIS, instantly.</span>
               </h1>
 
               <p className={styles.heroSubtitle}>
-                Pay any merchant in Indonesia with USDC — settled instantly
-                via QRIS on Rialo Network. Zero gas. 50ms finality.
+                Use USDC to pay any of Indonesia&apos;s 40 million QRIS merchants.
+                On-chain settlement in 50ms, zero gas fees, fully non-custodial.
               </p>
 
               <div className={styles.heroActions}>
                 <WalletMultiButton />
+                <a href="#how-it-works" className={styles.heroSecondaryBtn}>
+                  How it works <IconArrowRight />
+                </a>
               </div>
+            </section>
 
-              <p className={styles.heroNote}>
-                Connect your wallet to start paying — powered by Rialo Network
-              </p>
-            </div>
+            {/* Metrics Strip */}
+            <section className={styles.metricsStrip}>
+              <div className={styles.metric}>
+                <span className={styles.metricValue}>50ms</span>
+                <span className={styles.metricLabel}>Settlement</span>
+              </div>
+              <div className={styles.metricDot} />
+              <div className={styles.metric}>
+                <span className={styles.metricValue}>$0.00</span>
+                <span className={styles.metricLabel}>Transaction Fee</span>
+              </div>
+              <div className={styles.metricDot} />
+              <div className={styles.metric}>
+                <span className={styles.metricValue}>40M+</span>
+                <span className={styles.metricLabel}>QRIS Merchants</span>
+              </div>
+            </section>
 
-            {/* Stats Bar */}
-            <div className={styles.statsBar}>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>50ms</div>
-                <div className={styles.statLabel}>Finality</div>
-              </div>
-              <div className={styles.statDivider}></div>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>$0</div>
-                <div className={styles.statLabel}>Gas Fees</div>
-              </div>
-              <div className={styles.statDivider}></div>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>40M+</div>
-                <div className={styles.statLabel}>Merchants</div>
-              </div>
-            </div>
-
-            {/* Feature Cards — Tria-style */}
-            <div className={styles.featuresGrid}>
-              {/* QRIS Pay — Main feature, full width */}
-              <div className={`${styles.featureCard} ${styles.fullWidth} dark`}>
-                <span className={styles.featureTag}>QRIS Pay</span>
-                <h3>Scan. Pay. Done.</h3>
-                <p>
-                  Point your camera at any QRIS code in Indonesia. Your USDC
-                  converts to IDR and settles in real-time — no middlemen,
-                  no delays.
-                </p>
-              </div>
-
-              {/* Zero Gas */}
-              <div className={`${styles.featureCard} violet`}>
-                <span className={styles.featureEmoji}>⚡</span>
-                <span className={styles.featureTag}>Rialo Cruise</span>
-                <h3>Zero Gas Fees</h3>
-                <p>
-                  Gasless transactions on Rialo Network. Every payment is free.
-                </p>
-              </div>
-
-              {/* Instant Settlement */}
-              <div className={`${styles.featureCard} teal`}>
-                <span className={styles.featureEmoji}>🔄</span>
-                <span className={styles.featureTag}>Settlement</span>
-                <h3>50ms Finality</h3>
-                <p>
-                  Rialo&apos;s SVM processes your payment in milliseconds.
-                </p>
-              </div>
-
-              {/* Cross-Chain */}
-              <div className={`${styles.featureCard} lime`}>
-                <span className={styles.featureEmoji}>🌐</span>
-                <span className={styles.featureTag}>Cross-Chain</span>
-                <h3>Multi-Chain Ready</h3>
-                <p>
-                  Built on SVM — compatible with Solana ecosystem. Bridge from
-                  any chain.
-                </p>
-              </div>
-
-              {/* Security */}
-              <div className={`${styles.featureCard} white`}>
-                <span className={styles.featureEmoji}>🔒</span>
-                <span className={styles.featureTag}>Security</span>
-                <h3>On-Chain Escrow</h3>
-                <p>
-                  Smart contract locks funds until QRIS settlement confirms.
-                  Trustless and auditable.
-                </p>
-              </div>
-            </div>
-
-            {/* How it Works */}
-            <div className={styles.howItWorks}>
-              <h2 className={styles.sectionTitle}>How It Works</h2>
-              <div className={styles.steps}>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>1</div>
+            {/* Bento Features */}
+            <section className={styles.bentoGrid}>
+              {/* Primary — full-width hero card */}
+              <div className={`${styles.bentoCard} ${styles.bentoPrimary}`}>
+                <div className={styles.bentoPrimaryInner}>
                   <div>
-                    <h4>Connect Wallet</h4>
-                    <p>Link your Rialo wallet — Phantom, Backpack, or any Solana wallet</p>
+                    <span className={styles.cardLabel}>Core Product</span>
+                    <h2 className={styles.cardTitleLg}>
+                      Scan any QRIS code.
+                      <br />Pay with USDC.
+                    </h2>
+                    <p className={styles.cardDesc}>
+                      Point your camera at a merchant&apos;s QR code — your stablecoin
+                      converts to IDR and reaches them in real-time. No banks, no delays.
+                    </p>
                   </div>
-                </div>
-                <div className={styles.stepLine}></div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>2</div>
-                  <div>
-                    <h4>Scan QRIS</h4>
-                    <p>Point your camera at any merchant&apos;s QRIS code across Indonesia</p>
-                  </div>
-                </div>
-                <div className={styles.stepLine}></div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>3</div>
-                  <div>
-                    <h4>Confirm &amp; Pay</h4>
-                    <p>USDC converts to IDR and settles on-chain in 50ms — gasless</p>
+                  <div className={styles.bentoPrimaryVisual}>
+                    <IconQR />
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Built on */}
-            <div className={styles.trustedBar}>
-              <span className={styles.trustedLabel}>Built on</span>
-              <div className={styles.trustedLogos}>
-                <span className={styles.trustedLogo}>RIALO</span>
-                <span className={styles.trustedLogo}>SUBZERO LABS</span>
-                <span className={styles.trustedLogo}>SVM</span>
-                <span className={styles.trustedLogo}>QRIS</span>
+              {/* 2-col row */}
+              <div className={`${styles.bentoCard} ${styles.bentoAccentA}`}>
+                <IconBolt />
+                <span className={styles.cardLabel}>Rialo Cruise</span>
+                <h3 className={styles.cardTitle}>Zero gas, always</h3>
+                <p className={styles.cardDesc}>
+                  Rialo&apos;s Cruise engine sponsors every transaction.
+                  Users never pay network fees.
+                </p>
               </div>
-            </div>
+
+              <div className={`${styles.bentoCard} ${styles.bentoAccentB}`}>
+                <IconClock />
+                <span className={styles.cardLabel}>Finality</span>
+                <h3 className={styles.cardTitle}>50ms settlement</h3>
+                <p className={styles.cardDesc}>
+                  Rialo SVM confirms payments before the merchant&apos;s terminal beeps.
+                </p>
+              </div>
+
+              {/* 2-col row */}
+              <div className={`${styles.bentoCard} ${styles.bentoLight}`}>
+                <IconLayers />
+                <span className={styles.cardLabel}>Infrastructure</span>
+                <h3 className={styles.cardTitle}>SVM-native, multi-chain ready</h3>
+                <p className={styles.cardDesc}>
+                  Built on Solana Virtual Machine. Bridge assets from Ethereum,
+                  Base, or any supported chain.
+                </p>
+              </div>
+
+              <div className={`${styles.bentoCard} ${styles.bentoLight}`}>
+                <IconShield />
+                <span className={styles.cardLabel}>Security</span>
+                <h3 className={styles.cardTitle}>On-chain escrow</h3>
+                <p className={styles.cardDesc}>
+                  Smart contracts lock funds in a PDA until the QRIS settlement
+                  is confirmed. Fully auditable.
+                </p>
+              </div>
+            </section>
+
+            {/* How It Works */}
+            <section className={styles.howSection} id="how-it-works">
+              <h2 className={styles.sectionTitle}>Three steps to pay</h2>
+              <p className={styles.sectionSub}>Works with any Solana-compatible wallet</p>
+
+              <div className={styles.stepsRow}>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNum}>01</div>
+                  <h4>Connect wallet</h4>
+                  <p>Phantom, Backpack, or any Solana wallet. One tap.</p>
+                </div>
+                <div className={styles.stepDivider}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#C4B5FD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </div>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNum}>02</div>
+                  <h4>Scan QRIS</h4>
+                  <p>Point your camera at any merchant&apos;s QR code across Indonesia.</p>
+                </div>
+                <div className={styles.stepDivider}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#C4B5FD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </div>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNum}>03</div>
+                  <h4>Confirm &amp; pay</h4>
+                  <p>USDC → IDR, on-chain in 50ms. Receipt generated instantly.</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Footer logos */}
+            <section className={styles.builtOn}>
+              <span className={styles.builtOnLabel}>Powered by</span>
+              <div className={styles.builtOnRow}>
+                <span>Rialo Network</span>
+                <span className={styles.builtOnDot} />
+                <span>Subzero Labs</span>
+                <span className={styles.builtOnDot} />
+                <span>SVM</span>
+                <span className={styles.builtOnDot} />
+                <span>QRIS</span>
+              </div>
+            </section>
           </div>
         )}
 
-        {/* ============ CONNECTED — Idle ============ */}
+        {/* ═══════════ CONNECTED — Idle ═══════════ */}
         {connected && appState === "idle" && (
           <div className={`${styles.idleScreen} animate-fade-in`}>
             <div className={styles.idleCard}>
-              <div className={styles.scanPromptIcon}>
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                  <rect x="6" y="6" width="68" height="68" rx="16" stroke="#D4D0E8" strokeWidth="1.5" strokeDasharray="5 3" />
-                  <path d="M6 24V14a8 8 0 018-8h10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M56 6h10a8 8 0 018 8v10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M74 56v10a8 8 0 01-8 8h-10" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M24 74H14a8 8 0 01-8-8V56" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
-                  <rect x="24" y="24" width="14" height="14" rx="4" fill="#7C3AED" opacity="0.15" />
-                  <rect x="42" y="24" width="14" height="14" rx="4" fill="#7C3AED" opacity="0.1" />
-                  <rect x="24" y="42" width="14" height="14" rx="4" fill="#A78BFA" opacity="0.1" />
-                  <rect x="42" y="42" width="14" height="14" rx="4" fill="#A78BFA" opacity="0.15" />
-                  <line x1="14" y1="40" x2="66" y2="40" stroke="url(#sl)" strokeWidth="1.5" opacity="0.4" />
-                  <defs>
-                    <linearGradient id="sl" x1="14" y1="40" x2="66" y2="40">
-                      <stop stopColor="transparent" />
-                      <stop offset="0.3" stopColor="#7C3AED" />
-                      <stop offset="0.7" stopColor="#A78BFA" />
-                      <stop offset="1" stopColor="transparent" />
-                    </linearGradient>
-                  </defs>
+              <div className={styles.scanIcon}>
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+                  <rect x="4" y="4" width="64" height="64" rx="16" stroke="#E9E5F5" strokeWidth="1.5" strokeDasharray="4 3" />
+                  <path d="M4 22V12a8 8 0 018-8h10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M50 4h10a8 8 0 018 8v10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M68 50v10a8 8 0 01-8 8H50" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M22 68H12a8 8 0 01-8-8V50" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
+                  <rect x="20" y="20" width="12" height="12" rx="3" fill="#7C3AED" opacity="0.12" />
+                  <rect x="40" y="20" width="12" height="12" rx="3" fill="#7C3AED" opacity="0.08" />
+                  <rect x="20" y="40" width="12" height="12" rx="3" fill="#A78BFA" opacity="0.08" />
+                  <rect x="40" y="40" width="12" height="12" rx="3" fill="#A78BFA" opacity="0.12" />
                 </svg>
               </div>
 
-              <h2 className={styles.idleTitle}>Ready to Pay</h2>
-              <p className={styles.idleSubtitle}>
-                Scan a merchant&apos;s QRIS code to start your payment
-              </p>
+              <h2 className={styles.idleTitle}>Ready to pay</h2>
+              <p className={styles.idleSubtitle}>Scan a merchant&apos;s QRIS code to begin</p>
 
               <button
                 className="btn btn-primary btn-lg btn-full"
                 onClick={() => setAppState("scanning")}
                 id="scan-qris-button"
               >
-                📱 Scan QRIS Code
+                Scan QRIS Code
               </button>
 
-              <div className={styles.idleStats}>
-                <div className={styles.idleStatRow}>
-                  <span className={styles.idleStatLabel}>Network</span>
-                  <span className={styles.idleStatValue}>Rialo SVM Devnet</span>
+              <div className={styles.idleInfo}>
+                <div className={styles.infoRow}>
+                  <span>Network</span><span>Rialo SVM Devnet</span>
                 </div>
-                <div className={styles.idleStatRow}>
-                  <span className={styles.idleStatLabel}>Finality</span>
-                  <span className={styles.idleStatValue}>~50ms</span>
+                <div className={styles.infoRow}>
+                  <span>Finality</span><span>~50ms</span>
                 </div>
-                <div className={styles.idleStatRow}>
-                  <span className={styles.idleStatLabel}>Gas</span>
-                  <span className={styles.idleStatValue}>Free</span>
+                <div className={styles.infoRow}>
+                  <span>Gas</span><span>Free (Rialo Cruise)</span>
                 </div>
-                <div className={styles.idleStatRow}>
-                  <span className={styles.idleStatLabel}>Rate</span>
-                  <span className={styles.idleStatValue}>1 USDC ≈ Rp 15,800</span>
+                <div className={styles.infoRow}>
+                  <span>Rate</span><span>1 USDC ≈ Rp 15,800</span>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* ============ Scanning ============ */}
+        {/* ═══════════ Scanning ═══════════ */}
         {connected && appState === "scanning" && (
           <QRScanner
             onScanSuccess={handleScanSuccess}
@@ -248,7 +295,7 @@ export default function HomePage() {
           />
         )}
 
-        {/* ============ Payment Flow ============ */}
+        {/* ═══════════ Payment Flow ═══════════ */}
         {connected && appState === "payment" && scanResult && (
           <PaymentFlow
             qrisData={scanResult}
@@ -258,14 +305,12 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Footer */}
       <footer className={styles.footer}>
         <p>
-          Rialo QRIS Pay — A{" "}
-          <span className={styles.gradientText}>Rialo Network</span>{" "}
-          neofinance dApp by Subzero Labs
+          © 2026 Rialo QRIS Pay · Built by{" "}
+          <strong>Subzero Labs</strong> on{" "}
+          <strong>Rialo Network</strong>
         </p>
-        <p className="text-xs text-muted">MVP on SVM Devnet — Mainnet coming soon</p>
       </footer>
     </div>
   );
