@@ -101,7 +101,7 @@ export default function HomePage() {
 
               <p className={styles.heroSubtitle}>
                 Use USDC to pay any of Indonesia&apos;s 40 million QRIS merchants.
-                On-chain settlement in 50ms, zero gas fees, fully non-custodial.
+                Sub-second on-chain settlement, near-zero fees, fully non-custodial.
               </p>
 
               <div className={styles.heroActions}>
@@ -115,13 +115,13 @@ export default function HomePage() {
             {/* Metrics Strip */}
             <section className={styles.metricsStrip}>
               <div className={styles.metric}>
-                <span className={styles.metricValue}>50ms</span>
+                <span className={styles.metricValue}>&lt;1s</span>
                 <span className={styles.metricLabel}>Settlement</span>
               </div>
               <div className={styles.metricDot} />
               <div className={styles.metric}>
-                <span className={styles.metricValue}>$0.00</span>
-                <span className={styles.metricLabel}>Transaction Fee</span>
+                <span className={styles.metricValue}>~$0</span>
+                <span className={styles.metricLabel}>Near-Zero Fee</span>
               </div>
               <div className={styles.metricDot} />
               <div className={styles.metric}>
@@ -155,20 +155,21 @@ export default function HomePage() {
               {/* 2-col row */}
               <div className={`${styles.bentoCard} ${styles.bentoAccentA}`}>
                 <IconBolt />
-                <span className={styles.cardLabel}>Rialo Cruise</span>
-                <h3 className={styles.cardTitle}>Zero gas, always</h3>
+                <span className={styles.cardLabel}>Low-Cost</span>
+                <h3 className={styles.cardTitle}>Near-zero fees</h3>
                 <p className={styles.cardDesc}>
-                  Rialo&apos;s Cruise engine sponsors every transaction.
-                  Users never pay network fees.
+                  Rialo&apos;s DAG-based architecture keeps transaction
+                  fees stable and predictable — near-zero for every payment.
                 </p>
               </div>
 
               <div className={`${styles.bentoCard} ${styles.bentoAccentB}`}>
                 <IconClock />
                 <span className={styles.cardLabel}>Finality</span>
-                <h3 className={styles.cardTitle}>50ms settlement</h3>
+                <h3 className={styles.cardTitle}>Sub-second settlement</h3>
                 <p className={styles.cardDesc}>
-                  Rialo SVM confirms payments before the merchant&apos;s terminal beeps.
+                  Rialo&apos;s DAG consensus confirms payments faster than
+                  a merchant&apos;s terminal can beep.
                 </p>
               </div>
 
@@ -176,10 +177,10 @@ export default function HomePage() {
               <div className={`${styles.bentoCard} ${styles.bentoLight}`}>
                 <IconLayers />
                 <span className={styles.cardLabel}>Infrastructure</span>
-                <h3 className={styles.cardTitle}>SVM-native, multi-chain ready</h3>
+                <h3 className={styles.cardTitle}>Native HTTPS calls</h3>
                 <p className={styles.cardDesc}>
-                  Built on Solana Virtual Machine. Bridge assets from Ethereum,
-                  Base, or any supported chain.
+                  Rialo smart contracts call external APIs directly —
+                  no oracles needed. QRIS settlement verified on-chain.
                 </p>
               </div>
 
@@ -219,7 +220,7 @@ export default function HomePage() {
                 <div className={styles.stepCard}>
                   <div className={styles.stepNum}>03</div>
                   <h4>Confirm &amp; pay</h4>
-                  <p>USDC → IDR, on-chain in 50ms. Receipt generated instantly.</p>
+                  <p>USDC → IDR, settled on-chain in sub-second. Receipt generated instantly.</p>
                 </div>
               </div>
             </section>
@@ -274,10 +275,10 @@ export default function HomePage() {
                   <span>Network</span><span>Rialo SVM Devnet</span>
                 </div>
                 <div className={styles.infoRow}>
-                  <span>Finality</span><span>~50ms</span>
+                  <span>Finality</span><span>Sub-second</span>
                 </div>
                 <div className={styles.infoRow}>
-                  <span>Gas</span><span>Free (Rialo Cruise)</span>
+                  <span>Fees</span><span>Near-zero</span>
                 </div>
                 <div className={styles.infoRow}>
                   <span>Rate</span><span>1 USDC ≈ Rp 15,800</span>
