@@ -4,10 +4,16 @@
   "description": "Pay any merchant in Indonesia with stablecoins — settled via QRIS on Rialo Network",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#06060F",
-  "theme_color": "#06060F",
+  "background_color": "#D4D0E8",
+  "theme_color": "#7C3AED",
   "orientation": "portrait",
   "icons": [
+    {
+      "src": "/rialo-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "/favicon.ico",
       "sizes": "64x64",
