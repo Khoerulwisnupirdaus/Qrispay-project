@@ -47,23 +47,13 @@ export default function Header() {
         {/* Logo */}
         <div className={styles.logo}>
           <div className={styles.logoIcon}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="url(#logo-gradient)" />
-              {/* Rialo abstract R mark — organic tubes with rounded ends */}
-              <path
-                d="M9 10.5C9 9.67 9.67 9 10.5 9H15C17.76 9 20 11.24 20 14C20 15.86 18.97 17.47 17.44 18.27L20.5 23H18L15.1 18.5H12V23H10V11H10.5C9.67 11 9 10.67 9 10.5ZM12 16.5H15C16.66 16.5 18 15.16 18 14C18 12.34 16.66 11 15 11H12V16.5Z"
-                fill="white"
-                opacity="0.95"
-              />
-              {/* Accent dot */}
-              <circle cx="22.5" cy="10" r="1.8" fill="white" opacity="0.5" />
-              <defs>
-                <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stopColor="#7C3AED" />
-                  <stop offset="1" stopColor="#A78BFA" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <img
+              src="/rialo-icon.png"
+              alt="Rialo"
+              width={32}
+              height={32}
+              style={{ borderRadius: 8 }}
+            />
           </div>
           <div>
             <h1 className={styles.logoTitle}>Rialo</h1>

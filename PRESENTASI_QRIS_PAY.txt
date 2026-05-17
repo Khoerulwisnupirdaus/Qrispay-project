@@ -1,0 +1,123 @@
+RIALO QRIS PAY — PRESENTATION
+Oleh: wzscarlet================================================
+
+
+SIAPA SAYA
+----------
+Hai, saya ....... Saya AI-native solo builder yang fokus di blockchain infrastructure.
+Saya build Rialo QRIS Pay — prototype aplikasi pembayaran yang memungkinkan orang bayar merchant di Indonesia pakai stablecoin (USDC) lewat QRIS, di atas Rialo Network.
+
+One-liner:
+"Scan QR code merchant → bayar pakai USDC → settle on-chain di Rialo dalam 50ms."
+
+
+MASALAH
+-------
+1. Indonesia punya 40+ juta merchant yang terima QRIS (standar QR nasional dari Bank Indonesia)
+2. Orang yang pegang crypto TIDAK BISA pakai buat bayar di dunia nyata
+3. Payment gateway tradisional lambat (T+1 settlement), mahal (fee 1-3%), dan ga transparan
+
+"Crypto seharusnya bisa dipakai buat beli kopi, bukan cuma duduk di wallet."
+
+
+SOLUSI — RIALO QRIS PAY
+------------------------
+• Scan & Pay     → User scan QRIS merchant, USDC auto-convert ke IDR, settle on-chain
+• 50ms Finality  → Konfirmasi lebih cepat dari mesin EDC konvensional
+• Zero Gas Fee   → Rialo Cruise sponsorin semua transaksi — user ga bayar gas sama sekali
+• On-Chain Escrow → Smart contract lock dana sampai settlement QRIS terkonfirmasi
+• Non-Custodial  → User pegang key sendiri, tidak ada middleman yang hold dana
+
+
+KENAPA BUILD DI RIALO? (bukan Solana/Ethereum/BSC)
+---------------------------------------------------
+
+1. SVM-Native = Speed & Compatibility
+   Rialo pakai SVM (Solana Virtual Machine). Saya bisa develop pakai Anchor/Rust
+   yang tooling-nya udah mature, tapi deploy di chain yang di-optimized khusus
+   buat financial transactions. Codebase bisa jalan di Solana devnet buat testing,
+   tapi siap migrasi ke Rialo mainnet. Zero rewrite.
+
+2. Rialo Cruise = Gasless UX
+   Di Solana user masih bayar ~$0.00025 per tx. Kecil, tapi buat payment app
+   itu masalah besar — user ga mau mikirin gas fee buat beli nasi goreng.
+   Rialo Cruise bikin SEMUA transaksi gratis. Ini game-changer buat UX.
+
+3. Financial Infrastructure Focus
+   Rialo bukan general-purpose chain. Ini chain yang di-design KHUSUS buat
+   financial infrastructure. QRIS Pay match banget sama visi itu — real money,
+   real merchants, real settlement.
+
+4. First-Mover Advantage
+   Belum ada yang build QRIS payment bridge di Rialo ecosystem.
+   QRIS Pay bisa jadi first real-world payment app di chain ini.
+
+
+ARSITEKTUR
+----------
+
+   User (Phantom wallet)
+       |
+   [Frontend — Next.js/React]  ←  scan QRIS code via camera
+       |
+   [Middleware API — Express.js]  ←  convert USDC ke IDR rate
+       |
+   [Rialo SVM — Anchor/Rust]  ←  smart contract lock & release (PDA escrow)
+       |
+   [Xendit API]  ←  QRIS settlement ke merchant
+
+3 layer, semua open-source:
+• Smart Contract (Rust/Anchor) — PDA-based escrow, fund locking, release mechanism
+• Middleware (Express/TypeScript) — rate conversion, QRIS simulation, webhook handler
+• Frontend (Next.js/React) — wallet connect, QR scanner, payment flow UI
+
+
+TECH STACK
+----------
+Layer            | Teknologi                    | Fungsi
+-----------------+------------------------------+----------------------------------
+Smart Contract   | Rust, Anchor Framework       | PDA escrow, on-chain payment
+Middleware API   | Node.js, Express, TypeScript  | Currency conversion, QRIS sim
+Frontend         | Next.js 16, React, CSS Modules| UI/UX, wallet, QR scanner
+Blockchain       | Rialo Network (SVM)          | Transaction settlement
+Payment Gateway  | Xendit API (sandbox)         | QRIS code generation
+
+
+STATUS
+------
+[DONE] Smart Contract (Anchor)  — PDA escrow, fund locking, release
+[DONE] Middleware API           — 7 endpoint REST, rate conversion, mock payment
+[DONE] Frontend UI              — Landing page, wallet connect, QR scanner, payment flow
+[DONE] E2E Test Flow            — Initiate → Simulate → Status Check verified
+[DONE] Mobile Responsive        — 3 breakpoints (768px, 480px, 360px)
+[DONE] PWA Support              — Installable via browser
+
+[PENDING] Xendit Live Integration — Menunggu production API key
+[PENDING] Rialo Mainnet Deploy    — Menunggu mainnet launch
+
+
+DEMO & LINKS
+------------
+• Live Demo  : https://qrispaydev.netlify.app
+• GitHub     : https://github.com/Khoerulwisnupirdaus/Qrispay-project
+• Twitter/X  : https://x.com/Wisnu100802
+• Network    : Rialo SVM Devnet (Solana-compatible testnet)
+• Status     : MVP/Prototype — tidak menggunakan dana riil
+
+
+ROADMAP
+-------
+Phase 1 (Now)    : MVP prototype, E2E flow verified               → DONE
+Phase 2 (Next)   : Live Xendit integration, real QRIS settlement   → Mainnet-ready
+Phase 3 (Future) : Multi-currency, mobile app, merchant dashboard  → Post-mainnet
+
+
+CLOSING
+-------
+"Rialo bilang mereka mau jadi financial infrastructure layer.
+Saya build buktinya — real payment, real merchants, real settlement.
+Ini bukan DeFi yang cuma swap token. Ini crypto yang bisa dipake beli sate di pinggir jalan."
+
+
+================================================
+wzscarlet — Mei 2026
