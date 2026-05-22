@@ -3,75 +3,94 @@
 /**
  * QR Scanner Component
  *
- * Camera-based QR code scanner for reading merchant QRIS codes.
- * Uses html5-qrcode library for browser camera access.
- * Extracts merchant name and amount from QRIS payload.
+ * Camera-based QRIS scanner. Supports:
+ * - Live camera scanning (auto-start)
+ * - Manual paste input
+ * - Demo mode for testing
+ *
+ * QRIS uses EMVCo TLV format. Parser handles real-world merchant codes.
  */
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import styles from "./QRScanner.module.css";
 
 interface QRScannerProps {
-  /** Callback when a QR code is successfully scanned */
   onScanSuccess: (data: QrisScanResult) => void;
-  /** Callback to close/cancel the scanner */
   onClose: () => void;
 }
 
 export interface QrisScanResult {
-  /** Raw QR code data string */
   rawData: string;
-  /** Extracted merchant name (if available) */
   merchantName: string;
-  /** Extracted IDR amount (if available, 0 = user enters amount) */
   idrAmount: number;
-  /** Merchant ID from QRIS payload */
   merchantId: string;
 }
 
 /**
- * Parse a QRIS EMVCo QR payload to extract merchant info.
- * QRIS follows the EMVCo Merchant Presented Mode specification.
+ * Proper EMVCo TLV parser for QRIS payloads.
  *
- * @param data - Raw QRIS string
- * @returns Parsed QRIS result
+ * TLV format: [TAG 2 chars][LENGTH 2 chars][VALUE N chars]
+ * Tags are parsed sequentially, not via string indexOf (which can match substrings).
  */
+function parseTLV(data: string): Map<string, string> {
+  const result = new Map<string, string>();
+  let i = 0;
+
+  while (i + 4 <= data.length) {
+    const tag = data.substring(i, i + 2);
+    const lenStr = data.substring(i + 2, i + 4);
+    const len = parseInt(lenStr, 10);
+
+    if (isNaN(len) || len < 0 || i + 4 + len > data.length) break;
+
+    const value = data.substring(i + 4, i + 4 + len);
+    result.set(tag, value);
+    i += 4 + len;
+  }
+
+  return result;
+}
+
 function parseQrisData(data: string): QrisScanResult {
-  let merchantName = "Unknown Merchant";
+  let merchantName = "Merchant";
   let idrAmount = 0;
   let merchantId = "";
 
   try {
-    // QRIS uses TLV (Tag-Length-Value) format
+    const tlv = parseTLV(data);
+
     // Tag 59: Merchant Name
+    if (tlv.has("59")) merchantName = tlv.get("59")!;
+
     // Tag 54: Transaction Amount
-    // Tag 26-51: Merchant Account Information
+    if (tlv.has("54")) {
+      const raw = tlv.get("54")!;
+      idrAmount = Math.round(parseFloat(raw)) || 0;
+    }
 
-    const extractTLV = (tag: string, source: string): string => {
-      const tagIndex = source.indexOf(tag);
-      if (tagIndex === -1) return "";
-      const lengthStr = source.substring(tagIndex + tag.length, tagIndex + tag.length + 2);
-      const length = parseInt(lengthStr, 10);
-      if (isNaN(length)) return "";
-      return source.substring(tagIndex + tag.length + 2, tagIndex + tag.length + 2 + length);
-    };
+    // Tag 26-51: Merchant Account Information (try 26 first, then 51)
+    for (const tag of ["26", "51", "27", "28"]) {
+      if (tlv.has(tag)) {
+        const sub = parseTLV(tlv.get(tag)!);
+        // Sub-tag 00: globally unique identifier
+        // Sub-tag 01: merchant PAN or ID
+        // Sub-tag 02: merchant ID
+        merchantId = sub.get("02") || sub.get("01") || sub.get("00") || tlv.get(tag)!.slice(0, 30);
+        break;
+      }
+    }
 
-    // Extract merchant name (tag 59)
-    const name = extractTLV("59", data);
-    if (name) merchantName = name;
+    // Tag 58: Country Code (ID = Indonesia, confirms QRIS)
+    // Tag 52: Merchant Category Code
+    // Tag 53: Transaction Currency (360 = IDR)
 
-    // Extract amount (tag 54)
-    const amount = extractTLV("54", data);
-    if (amount) idrAmount = parseInt(amount, 10) || 0;
-
-    // Extract merchant ID from tag 26 sub-fields
-    const merchantInfo = extractTLV("26", data);
-    if (merchantInfo) {
-      merchantId = extractTLV("01", merchantInfo) || merchantInfo.slice(0, 20);
+    // If no name found, try to use city (tag 60)
+    if (merchantName === "Merchant" && tlv.has("60")) {
+      merchantName = `Merchant - ${tlv.get("60")}`;
     }
   } catch (err) {
-    console.warn("Failed to parse QRIS data:", err);
+    console.warn("[QRIS] Parse error:", err);
   }
 
   return { rawData: data, merchantName, idrAmount, merchantId };
@@ -80,135 +99,187 @@ function parseQrisData(data: string): QrisScanResult {
 export default function QRScanner({ onScanSuccess, onClose }: QRScannerProps) {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [manualMode, setManualMode] = useState(false);
+  const [mode, setMode] = useState<"camera" | "manual">("camera");
   const [manualInput, setManualInput] = useState("");
+  const [lastScanned, setLastScanned] = useState("");
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const containerRef = useRef<string>("qris-scanner-" + Date.now());
+  const containerId = useRef("qr-" + Date.now());
+  const hasStarted = useRef(false);
 
-  /** Initialize camera scanner */
+  /** Start camera scanner */
   const startScanner = useCallback(async () => {
+    if (hasStarted.current) return;
+    hasStarted.current = true;
+
     try {
       setError(null);
-      setIsScanning(true);
+      await new Promise((r) => setTimeout(r, 400));
 
-      const scanner = new Html5Qrcode(containerRef.current);
+      const el = document.getElementById(containerId.current);
+      if (!el) {
+        hasStarted.current = false;
+        setError("Scanner element not found. Try manual input.");
+        return;
+      }
+
+      const scanner = new Html5Qrcode(containerId.current, {
+        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+        verbose: false,
+      });
       scannerRef.current = scanner;
 
       await scanner.start(
-        { facingMode: "environment" }, // Back camera
+        { facingMode: "environment" },
         {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
+          fps: 15,
+          qrbox: (viewfinderWidth, viewfinderHeight) => {
+            // Use 80% of viewport for scan area — better for real-world QRIS stickers
+            const size = Math.min(viewfinderWidth, viewfinderHeight) * 0.8;
+            return { width: Math.floor(size), height: Math.floor(size) };
+          },
+          aspectRatio: 1,
+          disableFlip: false,
         },
         (decodedText) => {
-          // QR code detected
-          console.log("[QR] Scanned:", decodedText);
+          console.log("[QR] Scanned:", decodedText.substring(0, 60) + "...");
+
+          // Prevent duplicate scans
+          if (decodedText === lastScanned) return;
+          setLastScanned(decodedText);
+
           const result = parseQrisData(decodedText);
-          
-          // Stop scanner before callback
+
+          // Vibrate on success (mobile feedback)
+          if (navigator.vibrate) navigator.vibrate(100);
+
           scanner.stop().catch(console.error);
           setIsScanning(false);
           onScanSuccess(result);
         },
-        () => {
-          // QR code not detected in this frame (ignore)
-        }
+        () => {} // frame without QR — ignore
       );
+
+      setIsScanning(true);
     } catch (err: any) {
       console.error("[QR] Scanner error:", err);
+      hasStarted.current = false;
       setIsScanning(false);
-      setError(
-        err.message?.includes("Permission")
-          ? "Camera permission denied. Please allow camera access."
-          : "Could not start camera. Try manual input instead."
-      );
-    }
-  }, [onScanSuccess]);
 
-  /** Cleanup scanner on unmount */
+      const msg = err.message || String(err);
+      if (msg.includes("Permission") || msg.includes("NotAllowed")) {
+        setError("Camera access denied. Tap 'Allow' when prompted, or use manual input.");
+      } else if (msg.includes("NotFound") || msg.includes("device")) {
+        setError("No camera found. Use manual input to paste QRIS data.");
+      } else {
+        setError("Could not start camera. Try manual input instead.");
+      }
+    }
+  }, [onScanSuccess, lastScanned]);
+
+  /** Auto-start when in camera mode */
   useEffect(() => {
+    if (mode === "camera") {
+      hasStarted.current = false;
+      startScanner();
+    }
+
     return () => {
       if (scannerRef.current?.isScanning) {
         scannerRef.current.stop().catch(console.error);
       }
+      hasStarted.current = false;
     };
-  }, []);
+  }, [mode, startScanner]);
 
-  /** Handle manual QRIS input submission */
+  /** Manual submit */
   const handleManualSubmit = () => {
-    if (!manualInput.trim()) return;
-    const result = parseQrisData(manualInput.trim());
-    onScanSuccess(result);
+    const text = manualInput.trim();
+    if (!text) return;
+    onScanSuccess(parseQrisData(text));
   };
 
-  /** Use demo QRIS data for testing */
+  /** Demo QRIS for testing */
   const useDemoQris = () => {
-    const demoData =
-      "00020101021126570011ID.DANA.WWW011893600915310710271702152009150107102717020303UMI51440014ID.CO.QRIS.WWW0215ID20232784903070303UMI5204549953033605405250005802ID5913WARUNG MAKAN6007JAKARTA61051027062190515DEMO1234567890163046B5A";
-    const result = parseQrisData(demoData);
-    result.merchantName = "WARUNG MAKAN DEMO";
-    result.idrAmount = 25000;
-    onScanSuccess(result);
+    onScanSuccess({
+      rawData: "00020101021126570011ID.DANA.WWW011893600915310710271702152009150107102717020303UMI51440014ID.CO.QRIS.WWW0215ID20232784903070303UMI5204549953033605405250005802ID5913WARUNG MAKAN6007JAKARTA61051027062190515DEMO12345678901630",
+      merchantName: "WARUNG MAKAN DEMO",
+      idrAmount: 25000,
+      merchantId: "DEMO1234567890",
+    });
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={`${styles.scannerCard} animate-scale-in`}>
-        {/* Header */}
-        <div className={styles.scannerHeader}>
-          <h2>Scan QRIS Code</h2>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close scanner">
-            ✕
-          </button>
-        </div>
+    <div className={styles.scannerContainer}>
+      {/* Header */}
+      <div className={styles.scannerHeader}>
+        <button className={styles.closeBtn} onClick={onClose}>← Back</button>
+        <h2>Scan QRIS</h2>
+      </div>
 
-        {/* Scanner area */}
-        {!manualMode ? (
-          <div className={styles.scannerArea}>
-            <div id={containerRef.current} className={styles.cameraView}></div>
+      {/* Mode toggle */}
+      <div className={styles.modeToggle}>
+        <button
+          className={`${styles.modeBtn} ${mode === "camera" ? styles.active : ""}`}
+          onClick={() => setMode("camera")}
+        >
+          Camera
+        </button>
+        <button
+          className={`${styles.modeBtn} ${mode === "manual" ? styles.active : ""}`}
+          onClick={() => setMode("manual")}
+        >
+          Manual Input
+        </button>
+      </div>
+
+      {/* Camera mode */}
+      {mode === "camera" && (
+        <>
+          <div className={styles.scannerViewport}>
+            <div id={containerId.current} style={{ width: "100%", height: "100%" }} />
+
+            <div className={`${styles.cornerMarker} tl`} />
+            <div className={`${styles.cornerMarker} tr`} />
+            <div className={`${styles.cornerMarker} bl`} />
+            <div className={`${styles.cornerMarker} br`} />
 
             {!isScanning && !error && (
-              <div className={styles.startPrompt}>
-                <button className="btn btn-primary btn-lg" onClick={startScanner}>
-                  📷 Start Camera
-                </button>
-              </div>
-            )}
-
-            {isScanning && (
-              <div className={styles.scanGuide}>
-                <div className={styles.scanFrame}>
-                  <div className={styles.scanCorner} data-pos="tl"></div>
-                  <div className={styles.scanCorner} data-pos="tr"></div>
-                  <div className={styles.scanCorner} data-pos="bl"></div>
-                  <div className={styles.scanCorner} data-pos="br"></div>
-                  <div className={styles.scanLine}></div>
-                </div>
-                <p className={styles.scanText}>Point camera at QRIS code</p>
+              <div className={styles.cameraStatus}>
+                <div className="spinner spinner-lg" />
+                <p>Starting camera...</p>
               </div>
             )}
 
             {error && (
-              <div className={styles.errorBox}>
-                <p>⚠️ {error}</p>
-                <button className="btn btn-secondary mt-md" onClick={() => setManualMode(true)}>
-                  Enter Code Manually
+              <div className={styles.cameraStatus}>
+                <p>{error}</p>
+                <button className="btn btn-secondary mt-md" onClick={() => setMode("manual")}>
+                  Use Manual Input
                 </button>
               </div>
             )}
           </div>
-        ) : (
-          /* Manual input mode */
+
+          <div className={styles.demoSection}>
+            <h4>No QRIS code? Use demo merchant</h4>
+            <p>Simulated payment — Warung Makan Demo (Rp 25.000)</p>
+            <button className={styles.demoBtn} onClick={useDemoQris}>
+              Use Demo QRIS
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* Manual mode */}
+      {mode === "manual" && (
+        <>
           <div className={styles.manualInput}>
-            <p className="text-muted mb-md">
-              Paste the QRIS data string from your merchant:
-            </p>
+            <label>Paste QRIS data string from merchant:</label>
             <textarea
-              className={`input ${styles.qrisTextarea}`}
               value={manualInput}
               onChange={(e) => setManualInput(e.target.value)}
               placeholder="00020101021126570011..."
-              rows={4}
+              rows={5}
             />
             <button
               className="btn btn-primary btn-full mt-md"
@@ -218,30 +289,16 @@ export default function QRScanner({ onScanSuccess, onClose }: QRScannerProps) {
               Submit QRIS Data
             </button>
           </div>
-        )}
 
-        {/* Bottom actions */}
-        <div className={styles.bottomActions}>
-          {!manualMode ? (
-            <button
-              className="btn btn-secondary btn-full"
-              onClick={() => setManualMode(true)}
-            >
-              ⌨️ Enter Manually
+          <div className={styles.demoSection}>
+            <h4>No QRIS code? Use demo merchant</h4>
+            <p>Simulated payment — Warung Makan Demo (Rp 25.000)</p>
+            <button className={styles.demoBtn} onClick={useDemoQris}>
+              Use Demo QRIS
             </button>
-          ) : (
-            <button
-              className="btn btn-secondary btn-full"
-              onClick={() => setManualMode(false)}
-            >
-              📷 Use Camera
-            </button>
-          )}
-          <button className="btn btn-secondary btn-full" onClick={useDemoQris}>
-            🧪 Use Demo QRIS
-          </button>
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
