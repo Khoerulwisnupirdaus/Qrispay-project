@@ -6,7 +6,10 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Header from "@/components/Header";
 import QRScanner, { QrisScanResult } from "@/components/QRScanner";
 import PaymentFlow from "@/components/PaymentFlow";
+import dynamic from "next/dynamic";
 import styles from "./page.module.css";
+
+const Globe = dynamic(() => import("@/components/Globe"), { ssr: false });
 
 type AppState = "idle" | "scanning" | "payment";
 
@@ -225,17 +228,42 @@ export default function HomePage() {
               </div>
             </section>
 
-            {/* Footer logos */}
-            <section className={styles.builtOn}>
-              <span className={styles.builtOnLabel}>Powered by</span>
-              <div className={styles.builtOnRow}>
-                <span>Rialo Network</span>
-                <span className={styles.builtOnDot} />
-                <span>Subzero Labs</span>
-                <span className={styles.builtOnDot} />
-                <span>SVM</span>
-                <span className={styles.builtOnDot} />
-                <span>QRIS</span>
+            {/* Dark Globe Section */}
+            <section className={styles.globeSection}>
+              <div className={styles.globeContent}>
+                <div className={styles.globeText}>
+                  <h2 className={styles.globeTitle}>Rialo</h2>
+                  <p className={styles.globeTagline}>
+                    Real-world payments,<br />powered by blockchain.
+                  </p>
+                  <div className={styles.globeLinks}>
+                    <div className={styles.globeLinkCol}>
+                      <span className={styles.globeLinkHead}>Product</span>
+                      <a href="#">QRIS Pay</a>
+                      <a href="#">Wallet</a>
+                      <a href="#">API Docs</a>
+                    </div>
+                    <div className={styles.globeLinkCol}>
+                      <span className={styles.globeLinkHead}>Network</span>
+                      <a href="#">Rialo SVM</a>
+                      <a href="#">Explorer</a>
+                      <a href="#">Devnet</a>
+                    </div>
+                    <div className={styles.globeLinkCol}>
+                      <span className={styles.globeLinkHead}>Community</span>
+                      <a href="https://x.com/Wisnu100802" target="_blank" rel="noopener">Twitter/X</a>
+                      <a href="https://github.com/Khoerulwisnupirdaus/Qrispay-project" target="_blank" rel="noopener">GitHub</a>
+                      <a href="#">Discord</a>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.globeVisual}>
+                  <Globe size={380} dotColor="rgba(255,255,255,0.55)" dotSize={1.1} speed={0.002} className={styles.globeCanvas} />
+                </div>
+              </div>
+              <div className={styles.globeFooter}>
+                <span>© 2026 Rialo QRIS Pay · Built by wzscarlet</span>
+                <span>Powered by Rialo Network · Subzero Labs</span>
               </div>
             </section>
           </div>
@@ -306,13 +334,7 @@ export default function HomePage() {
         )}
       </main>
 
-      <footer className={styles.footer}>
-        <p>
-          © 2026 Rialo QRIS Pay · Built by{" "}
-          <strong>Subzero Labs</strong> on{" "}
-          <strong>Rialo Network</strong>
-        </p>
-      </footer>
+
     </div>
   );
 }
