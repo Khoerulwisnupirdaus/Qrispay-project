@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Header from "@/components/Header";
@@ -81,6 +81,23 @@ export default function HomePage() {
     setAppState("idle");
   };
 
+  // Scroll-reveal observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    document.querySelectorAll(".reveal, .reveal-stagger").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [connected]);
+
   return (
     <div className={styles.app}>
       <Header />
@@ -134,9 +151,9 @@ export default function HomePage() {
             </section>
 
             {/* Bento Features */}
-            <section className={styles.bentoGrid}>
+            <section className={`${styles.bentoGrid} reveal-stagger`}>
               {/* Primary — full-width hero card */}
-              <div className={`${styles.bentoCard} ${styles.bentoPrimary}`}>
+              <div className={`${styles.bentoCard} ${styles.bentoPrimary} tilt-3d shimmer-overlay`}>
                 <div className={styles.bentoPrimaryInner}>
                   <div>
                     <span className={styles.cardLabel}>Core Product</span>
@@ -156,7 +173,7 @@ export default function HomePage() {
               </div>
 
               {/* 2-col row */}
-              <div className={`${styles.bentoCard} ${styles.bentoAccentA}`}>
+              <div className={`${styles.bentoCard} ${styles.bentoAccentA} tilt-3d`}>
                 <IconBolt />
                 <span className={styles.cardLabel}>Low-Cost</span>
                 <h3 className={styles.cardTitle}>Near-zero fees</h3>
@@ -166,7 +183,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className={`${styles.bentoCard} ${styles.bentoAccentB}`}>
+              <div className={`${styles.bentoCard} ${styles.bentoAccentB} tilt-3d`}>
                 <IconClock />
                 <span className={styles.cardLabel}>Finality</span>
                 <h3 className={styles.cardTitle}>Sub-second settlement</h3>
@@ -177,7 +194,7 @@ export default function HomePage() {
               </div>
 
               {/* 2-col row */}
-              <div className={`${styles.bentoCard} ${styles.bentoLight}`}>
+              <div className={`${styles.bentoCard} ${styles.bentoLight} tilt-3d`}>
                 <IconLayers />
                 <span className={styles.cardLabel}>Infrastructure</span>
                 <h3 className={styles.cardTitle}>Native HTTPS calls</h3>
@@ -199,7 +216,7 @@ export default function HomePage() {
             </section>
 
             {/* How It Works */}
-            <section className={styles.howSection} id="how-it-works">
+            <section className={`${styles.howSection} reveal`} id="how-it-works">
               <h2 className={styles.sectionTitle}>Three steps to pay</h2>
               <p className={styles.sectionSub}>Works with any Solana-compatible wallet</p>
 
@@ -229,7 +246,7 @@ export default function HomePage() {
             </section>
 
             {/* Dark Globe Section */}
-            <section className={styles.globeSection}>
+            <section className={`${styles.globeSection} reveal`}>
               <div className={styles.globeContent}>
                 <div className={styles.globeText}>
                   <h2 className={styles.globeTitle}>Rialo</h2>

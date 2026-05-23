@@ -14,8 +14,12 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Rialo QRIS Pay — Neofinance Payments on Rialo Network",
   description:
-    "Pay any merchant in Indonesia using USDC stablecoin. QRIS settlement with 50ms finality, zero gas fees, and native real-world connectivity — powered by Rialo Network (Subzero Labs).",
+    "Pay any merchant in Indonesia using USDC stablecoin. Sub-second on-chain settlement, near-zero fees, and native real-world connectivity — powered by Rialo Network (Subzero Labs).",
   keywords: ["QRIS", "Rialo", "neofinance", "USDC", "stablecoin", "payment", "dApp", "Indonesia", "Subzero Labs", "SVM", "Layer-1"],
+  icons: {
+    icon: "/rialo-icon.png",
+    apple: "/rialo-icon.png",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

@@ -278,8 +278,10 @@ a:hover { color: var(--primary-dark); }
 }
 
 /* ============================================================
- * Animations
+ * Animations — 3D, Scroll-Reveal, Floating
  * ============================================================ */
+
+/* Base keyframes */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
@@ -296,10 +298,93 @@ a:hover { color: var(--primary-dark); }
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-12px); }
 }
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(0.5deg); }
+  66% { transform: translateY(-4px) rotate(-0.5deg); }
+}
+@keyframes gradientPulse {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pop3d {
+  from { opacity: 0; transform: perspective(600px) rotateX(15deg) translateY(30px); }
+  to { opacity: 1; transform: perspective(600px) rotateX(0) translateY(0); }
+}
 
+/* Animation classes */
 .animate-fade-in { animation: fadeIn 0.6s var(--ease-out); }
 .animate-slide-up { animation: slideUp 0.7s var(--ease-out); }
 .animate-scale-in { animation: scaleIn 0.5s var(--ease-spring); }
+.animate-float { animation: floatSlow 6s ease-in-out infinite; }
+.animate-pop3d { animation: pop3d 0.8s var(--ease-out); }
+
+/* Scroll-reveal: hidden by default, revealed by IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: perspective(800px) translateY(40px) rotateX(5deg);
+  transition: all 0.8s var(--ease-out);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: perspective(800px) translateY(0) rotateX(0);
+}
+
+/* Staggered children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: all 0.6s var(--ease-out);
+}
+
+.reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+.reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+.reveal-stagger.visible > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.19s; }
+.reveal-stagger.visible > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.26s; }
+.reveal-stagger.visible > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.33s; }
+.reveal-stagger.visible > *:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.40s; }
+
+/* 3D card tilt on hover */
+.tilt-3d {
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-3d:hover {
+  transform: perspective(600px) rotateX(-3deg) rotateY(3deg) translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(124,58,237,0.05);
+}
+
+/* Gradient shimmer overlay for premium cards */
+.shimmer-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
 
 /* ============================================================
  * Scrollbar
@@ -308,3 +393,4 @@ a:hover { color: var(--primary-dark); }
 ::-webkit-scrollbar-track { background: var(--bg-body); }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
