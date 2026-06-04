@@ -100,7 +100,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.app}>
-      <Header />
+      <Header onLogoClick={handleReset} />
 
       <main className={styles.main}>
         {/* ═══════════ DISCONNECTED — Landing ═══════════ */}

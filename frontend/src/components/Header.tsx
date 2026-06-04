@@ -4,22 +4,24 @@
  * Header Component
  *
  * App header with logo, network badge, and wallet connect button.
- * Shows connected wallet address and balance.
+ * Logo is clickable — returns to home/landing.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { useEffect, useState } from "react";
 import styles from "./Header.module.css";
 
-export default function Header() {
+interface HeaderProps {
+  onLogoClick?: () => void;
+}
+
+export default function Header({ onLogoClick }: HeaderProps) {
   const { publicKey, connected } = useWallet();
   const { connection } = useConnection();
   const [balance, setBalance] = useState<number | null>(null);
 
-  /** Fetch SOL balance when wallet connects */
   useEffect(() => {
     if (!publicKey || !connected) {
       setBalance(null);
@@ -36,16 +38,20 @@ export default function Header() {
     };
 
     fetchBalance();
-    // Refresh balance every 30 seconds
     const interval = setInterval(fetchBalance, 30000);
     return () => clearInterval(interval);
   }, [publicKey, connected, connection]);
 
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (onLogoClick) onLogoClick();
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerInner}>
-        {/* Logo */}
-        <div className={styles.logo}>
+        {/* Logo — clickable, returns to home */}
+        <button className={styles.logo} onClick={handleLogoClick} type="button">
           <div className={styles.logoIcon}>
             <img
               src="/rialo-icon.png"
@@ -59,12 +65,12 @@ export default function Header() {
             <h1 className={styles.logoTitle}>Rialo</h1>
             <p className={styles.logoSub}>QRIS Pay</p>
           </div>
-        </div>
+        </button>
 
-        {/* Right side: network + wallet */}
+        {/* Right side */}
         <div className={styles.headerRight}>
           <div className={styles.networkBadge}>
-            <span className={styles.networkDot}></span>
+            <span className={styles.networkDot} />
             Rialo SVM
           </div>
 
