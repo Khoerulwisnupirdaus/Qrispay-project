@@ -147,7 +147,7 @@ export default function HomePage() {
       const progress = Math.max(0, Math.min(1, scrolledInto / (sectionH + viewH)));
       const x = progress * 100;
       const y = progress * 100;
-      glow.style.background = `radial-gradient(ellipse 1400px 600px at ${x}% ${y}%, rgba(169,220,211,0.85) 0%, rgba(169,220,211,0.4) 35%, transparent 65%)`;
+      glow.style.background = `radial-gradient(ellipse 800px 300px at ${x}% ${y}%, rgba(218,165,32,0.5) 0%, rgba(218,165,32,0.15) 35%, transparent 65%)`;
     }
   }, []);
 

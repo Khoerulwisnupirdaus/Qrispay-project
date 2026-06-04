@@ -15,7 +15,7 @@
 /* ── Pattern Zone — QR bg between hero & footer ──── */
 .patternZone {
   position: relative;
-  background: url('/rialo-motif.png') center/120% repeat;
+  background: url('/rialo-motif.png') repeat;
   overflow: hidden;
 }
 
@@ -30,7 +30,7 @@
 .patternGlow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle 600px at 0% 0%, rgba(169,220,211,0.45) 0%, rgba(169,220,211,0.15) 30%, transparent 60%);
+  background: radial-gradient(ellipse 800px 300px at 0% 0%, rgba(218,165,32,0.5) 0%, rgba(218,165,32,0.15) 35%, transparent 65%);
   opacity: 1;
   pointer-events: none;
   z-index: 1;
@@ -629,13 +629,13 @@
 
   /* CTA compact */
   .ctaSection { margin-top: 20px; }
-  .ctaCard { flex-direction: column; text-align: center; padding: 24px 20px; gap: 16px; }
+  .ctaCard { flex-direction: column; text-align: center; padding: 24px 20px; gap: 16px; overflow: hidden; }
+  .ctaText h2 { font-size: 1.3rem; }
+  .ctaText p { font-size: 0.75rem; word-wrap: break-word; }
   .ctaVisual { margin: 0 auto; width: 100px; height: 100px; padding: 12px; }
-  .ctaTitle { font-size: 1.2rem; }
-  .ctaSub { font-size: 0.78rem; }
 
   /* Motif bg on mobile */
-  .patternZone { background-size: 70%; }
+  /* motif uses natural size for seamless tiling */
 
   /* Globe / Footer compact */
   .globeSection { padding: 40px 16px 20px; }
@@ -677,6 +677,8 @@
 
   .ctaSection { margin-top: 16px; }
   .ctaCard { padding: 20px 16px; gap: 12px; }
+  .ctaText h2 { font-size: 1.1rem; }
+  .ctaText p { font-size: 0.7rem; }
   .ctaVisual { width: 80px; height: 80px; padding: 10px; }
 
   .globeSection { padding: 32px 12px 16px; }
