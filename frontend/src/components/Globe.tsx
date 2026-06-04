@@ -120,8 +120,8 @@ export default function Globe({
 
     // Glow effect at center
     const glow = ctx.createRadialGradient(cx, cy, radius * 0.6, cx, cy, radius * 1.1);
-    glow.addColorStop(0, "rgba(124,58,237,0.02)");
-    glow.addColorStop(1, "rgba(124,58,237,0)");
+    glow.addColorStop(0, "rgba(169,220,211,0.02)");
+    glow.addColorStop(1, "rgba(169,220,211,0)");
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, w, h);
 

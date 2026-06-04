@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import QRScanner, { QrisScanResult } from "@/components/QRScanner";
 import PaymentFlow from "@/components/PaymentFlow";
-import dynamic from "next/dynamic";
 import styles from "./page.module.css";
 
+const WalletMultiButton = dynamic(
+  () => import("@solana/wallet-adapter-react-ui").then((m) => m.WalletMultiButton),
+  { ssr: false }
+);
 const Globe = dynamic(() => import("@/components/Globe"), { ssr: false });
 
 type AppState = "idle" | "scanning" | "payment";
@@ -17,19 +20,19 @@ type AppState = "idle" | "scanning" | "payment";
 
 const IconQR = () => (
   <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-    <rect x="2" y="2" width="40" height="40" rx="10" stroke="#7C3AED" strokeWidth="1.5" />
-    <rect x="9" y="9" width="10" height="10" rx="3" fill="#7C3AED" />
-    <rect x="25" y="9" width="10" height="10" rx="3" fill="#A78BFA" />
-    <rect x="9" y="25" width="10" height="10" rx="3" fill="#A78BFA" />
-    <circle cx="30" cy="30" r="5" fill="#7C3AED" />
+    <rect x="2" y="2" width="40" height="40" rx="10" stroke="#A9DCD3" strokeWidth="1.5" />
+    <rect x="9" y="9" width="10" height="10" rx="3" fill="#A9DCD3" />
+    <rect x="25" y="9" width="10" height="10" rx="3" fill="#7CC4B8" />
+    <rect x="9" y="25" width="10" height="10" rx="3" fill="#7CC4B8" />
+    <circle cx="30" cy="30" r="5" fill="#A9DCD3" />
     <path d="M28 30l2 2 3-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const IconBolt = () => (
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-    <rect width="40" height="40" rx="12" fill="#7C3AED" fillOpacity="0.08" />
-    <path d="M22 12L14 22h5l-1 6 8-10h-5l1-6z" fill="#7C3AED" />
+    <rect width="40" height="40" rx="12" fill="#A9DCD3" fillOpacity="0.08" />
+    <path d="M22 12L14 22h5l-1 6 8-10h-5l1-6z" fill="#A9DCD3" />
   </svg>
 );
 
@@ -43,10 +46,10 @@ const IconClock = () => (
 
 const IconLayers = () => (
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-    <rect width="40" height="40" rx="12" fill="#6366F1" fillOpacity="0.08" />
-    <path d="M20 12l8 4-8 4-8-4 8-4z" fill="#6366F1" fillOpacity="0.3" stroke="#6366F1" strokeWidth="1.5" />
-    <path d="M12 20l8 4 8-4" stroke="#6366F1" strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M12 24l8 4 8-4" stroke="#6366F1" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+    <rect width="40" height="40" rx="12" fill="#7CC4B8" fillOpacity="0.08" />
+    <path d="M20 12l8 4-8 4-8-4 8-4z" fill="#7CC4B8" fillOpacity="0.3" stroke="#7CC4B8" strokeWidth="1.5" />
+    <path d="M12 20l8 4 8-4" stroke="#7CC4B8" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M12 24l8 4 8-4" stroke="#7CC4B8" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
   </svg>
 );
 
@@ -70,15 +73,27 @@ export default function HomePage() {
   const { connected } = useWallet();
   const [appState, setAppState] = useState<AppState>("idle");
   const [scanResult, setScanResult] = useState<QrisScanResult | null>(null);
+  const [showLanding, setShowLanding] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const handleScanSuccess = (result: QrisScanResult) => {
     setScanResult(result);
     setAppState("payment");
+    setShowLanding(false);
   };
 
   const handleReset = () => {
     setScanResult(null);
     setAppState("idle");
+    setShowLanding(true);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }), 50);
+  };
+
+  const handleStartScan = () => {
+    setShowLanding(false);
+    setAppState("scanning");
   };
 
   // Scroll-reveal observer
@@ -96,18 +111,63 @@ export default function HomePage() {
 
     document.querySelectorAll(".reveal, .reveal-stagger").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [connected]);
+  }, [connected, showLanding]);
+
+  /* Scroll-driven benefit card spread + pattern glow */
+  const stackRef = useRef<HTMLDivElement>(null);
+  const patternRef = useRef<HTMLElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollEffects = useCallback(() => {
+    const viewH = window.innerHeight;
+
+    // ── Benefit card spread ──
+    const stack = stackRef.current;
+    if (stack) {
+      const rect = stack.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (viewH - rect.top) / (viewH * 1.4)));
+      const cards = stack.querySelectorAll<HTMLElement>('[data-benefit]');
+      cards.forEach((card, i) => {
+        if (i === 0) return;
+        const threshold = i * 0.15;
+        const cardProgress = Math.max(0, Math.min(1, (progress - threshold) / 0.35));
+        const eased = 1 - Math.pow(1 - cardProgress, 3);
+        const marginTop = -70 + (86 * eased);
+        card.style.marginTop = `${marginTop}px`;
+      });
+    }
+
+    // ── Pattern glow sweep: top-left → bottom-right ──
+    const pattern = patternRef.current;
+    const glow = glowRef.current;
+    if (pattern && glow) {
+      const rect = pattern.getBoundingClientRect();
+      const sectionH = rect.height;
+      const scrolledInto = viewH - rect.top;
+      const progress = Math.max(0, Math.min(1, scrolledInto / (sectionH + viewH)));
+      const x = progress * 100;
+      const y = progress * 100;
+      glow.style.background = `radial-gradient(ellipse 1400px 600px at ${x}% ${y}%, rgba(169,220,211,0.85) 0%, rgba(169,220,211,0.4) 35%, transparent 65%)`;
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollEffects, { passive: true });
+    handleScrollEffects();
+    return () => window.removeEventListener('scroll', handleScrollEffects);
+  }, [handleScrollEffects, connected, showLanding]);
 
   return (
     <div className={styles.app}>
       <Header onLogoClick={handleReset} />
 
       <main className={styles.main}>
-        {/* ═══════════ DISCONNECTED — Landing ═══════════ */}
-        {!connected && (
-          <div className={`${styles.landing} animate-fade-in`}>
-            {/* Hero */}
-            <section className={styles.hero}>
+        {/* ═══════════ Landing Page ═══════════ */}
+        {(!connected || (connected && showLanding && appState === "idle")) && (
+          <>
+          {/* Hero — dark gradient with glass card */}
+          <section className={styles.heroWrap}>
+            <div className={`${styles.heroCard} animate-fade-in`}>
               <div className={styles.heroBadge}>
                 <span className={styles.heroBadgeDot} />
                 Live on Rialo SVM Devnet
@@ -125,96 +185,81 @@ export default function HomePage() {
               </p>
 
               <div className={styles.heroActions}>
-                <WalletMultiButton />
+                {connected ? (
+                  <button className="btn btn-primary btn-lg" onClick={handleStartScan}>
+                    Scan QRIS Code
+                  </button>
+                ) : (
+                  <WalletMultiButton />
+                )}
                 <a href="#how-it-works" className={styles.heroSecondaryBtn}>
                   How it works <IconArrowRight />
                 </a>
               </div>
-            </section>
+            </div>
+          </section>
 
-            {/* Metrics Strip */}
-            <section className={styles.metricsStrip}>
-              <div className={styles.metric}>
-                <span className={styles.metricValue}>&lt;1s</span>
-                <span className={styles.metricLabel}>Settlement</span>
-              </div>
-              <div className={styles.metricDot} />
-              <div className={styles.metric}>
-                <span className={styles.metricValue}>~$0</span>
-                <span className={styles.metricLabel}>Near-Zero Fee</span>
-              </div>
-              <div className={styles.metricDot} />
-              <div className={styles.metric}>
-                <span className={styles.metricValue}>40M+</span>
-                <span className={styles.metricLabel}>QRIS Merchants</span>
-              </div>
-            </section>
-
-            {/* Bento Features */}
-            <section className={`${styles.bentoGrid} reveal-stagger`}>
-              {/* Primary — full-width hero card */}
-              <div className={`${styles.bentoCard} ${styles.bentoPrimary} tilt-3d shimmer-overlay`}>
-                <div className={styles.bentoPrimaryInner}>
-                  <div>
-                    <span className={styles.cardLabel}>Core Product</span>
-                    <h2 className={styles.cardTitleLg}>
-                      Scan any QRIS code.
-                      <br />Pay with USDC.
-                    </h2>
-                    <p className={styles.cardDesc}>
-                      Point your camera at a merchant&apos;s QR code — your stablecoin
-                      converts to IDR and reaches them in real-time. No banks, no delays.
-                    </p>
-                  </div>
-                  <div className={styles.bentoPrimaryVisual}>
-                    <IconQR />
-                  </div>
+          {/* Pattern Zone — QR background between hero & footer */}
+          <div className={styles.patternZone} ref={patternRef as React.RefObject<HTMLDivElement>}>
+          <div className={styles.patternGlow} ref={glowRef} />
+          <div className={`${styles.landing} animate-fade-in`}>
+            {/* Metrics + Why Choose Us — unified card */}
+            <div className={styles.unifiedCard}>
+              <div className={styles.metricsRow}>
+                <div className={styles.metric}>
+                  <span className={styles.metricValue}>&lt;1s</span>
+                  <span className={styles.metricLabel}>Settlement</span>
+                </div>
+                <div className={styles.metricDivider} />
+                <div className={styles.metric}>
+                  <span className={styles.metricValue}>~$0</span>
+                  <span className={styles.metricLabel}>Near-Zero Fee</span>
+                </div>
+                <div className={styles.metricDivider} />
+                <div className={styles.metric}>
+                  <span className={styles.metricValue}>40M+</span>
+                  <span className={styles.metricLabel}>QRIS Merchants</span>
                 </div>
               </div>
 
-              {/* 2-col row */}
-              <div className={`${styles.bentoCard} ${styles.bentoAccentA} tilt-3d`}>
-                <IconBolt />
-                <span className={styles.cardLabel}>Low-Cost</span>
-                <h3 className={styles.cardTitle}>Near-zero fees</h3>
-                <p className={styles.cardDesc}>
-                  Rialo&apos;s DAG-based architecture keeps transaction
-                  fees stable and predictable — near-zero for every payment.
-                </p>
+              <div className={styles.benefitHeader}>
+                <span className={styles.benefitBadge}>✦ Why choose us</span>
+                <h2 className={styles.benefitTitle}>Built for speed, designed for trust</h2>
               </div>
-
-              <div className={`${styles.bentoCard} ${styles.bentoAccentB} tilt-3d`}>
-                <IconClock />
-                <span className={styles.cardLabel}>Finality</span>
-                <h3 className={styles.cardTitle}>Sub-second settlement</h3>
-                <p className={styles.cardDesc}>
-                  Rialo&apos;s DAG consensus confirms payments faster than
-                  a merchant&apos;s terminal can beep.
-                </p>
+            </div>
+            <div className={styles.benefitStack} ref={stackRef}>
+              <div className={styles.benefitCard} data-benefit="0">
+                <div className={styles.benefitIcon}><IconBolt /></div>
+                <div className={styles.benefitText}>
+                  <h3>Near-zero fees</h3>
+                  <p>DAG-based architecture keeps fees stable and predictable for every payment.</p>
+                </div>
               </div>
-
-              {/* 2-col row */}
-              <div className={`${styles.bentoCard} ${styles.bentoLight} tilt-3d`}>
-                <IconLayers />
-                <span className={styles.cardLabel}>Infrastructure</span>
-                <h3 className={styles.cardTitle}>Native HTTPS calls</h3>
-                <p className={styles.cardDesc}>
-                  Rialo smart contracts call external APIs directly —
-                  no oracles needed. QRIS settlement verified on-chain.
-                </p>
+              <div className={styles.benefitCard} data-benefit="1" style={{ marginTop: '-70px' }}>
+                <div className={styles.benefitIcon}><IconClock /></div>
+                <div className={styles.benefitText}>
+                  <h3>Sub-second settlement</h3>
+                  <p>Payments confirm faster than a merchant&apos;s terminal can beep.</p>
+                </div>
               </div>
-
-              <div className={`${styles.bentoCard} ${styles.bentoLight} tilt-3d`}>
-                <IconShield />
-                <span className={styles.cardLabel}>Security</span>
-                <h3 className={styles.cardTitle}>On-chain escrow</h3>
-                <p className={styles.cardDesc}>
-                  Smart contracts lock funds in a PDA until the QRIS settlement
-                  is confirmed. Fully auditable.
-                </p>
+              <div className={styles.benefitCard} data-benefit="2" style={{ marginTop: '-70px' }}>
+                <div className={styles.benefitIcon}><IconLayers /></div>
+                <div className={styles.benefitText}>
+                  <h3>Native HTTPS calls</h3>
+                  <p>Smart contracts call external APIs directly — no oracles needed.</p>
+                </div>
               </div>
-            </section>
+              <div className={styles.benefitCard} data-benefit="3" style={{ marginTop: '-70px' }}>
+                <div className={styles.benefitIcon}><IconShield /></div>
+                <div className={styles.benefitText}>
+                  <h3>On-chain escrow</h3>
+                  <p>Funds locked in PDA until QRIS settlement is confirmed. Fully auditable.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <div className={styles.landing}>
             {/* How It Works */}
             <section className={`${styles.howSection} reveal`} id="how-it-works">
               <h2 className={styles.sectionTitle}>Three steps to pay</h2>
@@ -227,7 +272,7 @@ export default function HomePage() {
                   <p>Phantom, Backpack, or any Solana wallet. One tap.</p>
                 </div>
                 <div className={styles.stepDivider}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#C4B5FD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#000102" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <div className={styles.stepCard}>
                   <div className={styles.stepNum}>02</div>
@@ -235,7 +280,7 @@ export default function HomePage() {
                   <p>Point your camera at any merchant&apos;s QR code across Indonesia.</p>
                 </div>
                 <div className={styles.stepDivider}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#C4B5FD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#000102" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <div className={styles.stepCard}>
                   <div className={styles.stepNum}>03</div>
@@ -245,8 +290,30 @@ export default function HomePage() {
               </div>
             </section>
 
-            {/* Dark Globe Section */}
-            <section className={`${styles.globeSection} reveal`}>
+            {/* CTA Section */}
+            <section className={`${styles.ctaSection} reveal`}>
+              <div className={styles.ctaCard}>
+                <div className={styles.ctaText}>
+                  <h2>Start paying with crypto today.</h2>
+                  {connected ? (
+                    <button className="btn btn-primary btn-lg" onClick={handleStartScan}>
+                      Scan QRIS Code
+                    </button>
+                  ) : (
+                    <WalletMultiButton />
+                  )}
+                  <p>Join thousands of users bridging crypto to real-world payments.</p>
+                </div>
+                <div className={styles.ctaVisual}>
+                  <img src="/cta-phone.png" alt="QRIS Phone" width={200} height={200} style={{ objectFit: 'contain' }} />
+                </div>
+              </div>
+            </section>
+          </div>
+          </div>{/* end patternZone */}
+
+          {/* Dark Globe Section */}
+          <section className={`${styles.globeSection} reveal`}>
               <div className={styles.globeContent}>
                 <div className={styles.globeText}>
                   <h2 className={styles.globeTitle}>Rialo</h2>
@@ -283,24 +350,24 @@ export default function HomePage() {
                 <span>Powered by Rialo Network · Subzero Labs</span>
               </div>
             </section>
-          </div>
+          </>
         )}
 
         {/* ═══════════ CONNECTED — Idle ═══════════ */}
-        {connected && appState === "idle" && (
+        {connected && !showLanding && appState === "idle" && (
           <div className={`${styles.idleScreen} animate-fade-in`}>
             <div className={styles.idleCard}>
               <div className={styles.scanIcon}>
                 <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
                   <rect x="4" y="4" width="64" height="64" rx="16" stroke="#E9E5F5" strokeWidth="1.5" strokeDasharray="4 3" />
-                  <path d="M4 22V12a8 8 0 018-8h10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M50 4h10a8 8 0 018 8v10" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M68 50v10a8 8 0 01-8 8H50" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M22 68H12a8 8 0 01-8-8V50" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
-                  <rect x="20" y="20" width="12" height="12" rx="3" fill="#7C3AED" opacity="0.12" />
-                  <rect x="40" y="20" width="12" height="12" rx="3" fill="#7C3AED" opacity="0.08" />
-                  <rect x="20" y="40" width="12" height="12" rx="3" fill="#A78BFA" opacity="0.08" />
-                  <rect x="40" y="40" width="12" height="12" rx="3" fill="#A78BFA" opacity="0.12" />
+                  <path d="M4 22V12a8 8 0 018-8h10" stroke="#A9DCD3" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M50 4h10a8 8 0 018 8v10" stroke="#A9DCD3" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M68 50v10a8 8 0 01-8 8H50" stroke="#7CC4B8" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M22 68H12a8 8 0 01-8-8V50" stroke="#7CC4B8" strokeWidth="2.5" strokeLinecap="round" />
+                  <rect x="20" y="20" width="12" height="12" rx="3" fill="#A9DCD3" opacity="0.12" />
+                  <rect x="40" y="20" width="12" height="12" rx="3" fill="#A9DCD3" opacity="0.08" />
+                  <rect x="20" y="40" width="12" height="12" rx="3" fill="#7CC4B8" opacity="0.08" />
+                  <rect x="40" y="40" width="12" height="12" rx="3" fill="#7CC4B8" opacity="0.12" />
                 </svg>
               </div>
 
@@ -309,7 +376,7 @@ export default function HomePage() {
 
               <button
                 className="btn btn-primary btn-lg btn-full"
-                onClick={() => setAppState("scanning")}
+                onClick={handleStartScan}
                 id="scan-qris-button"
               >
                 Scan QRIS Code
@@ -334,7 +401,7 @@ export default function HomePage() {
         )}
 
         {/* ═══════════ Scanning ═══════════ */}
-        {connected && appState === "scanning" && (
+        {connected && !showLanding && appState === "scanning" && (
           <QRScanner
             onScanSuccess={handleScanSuccess}
             onClose={() => setAppState("idle")}
@@ -342,7 +409,7 @@ export default function HomePage() {
         )}
 
         {/* ═══════════ Payment Flow ═══════════ */}
-        {connected && appState === "payment" && scanResult && (
+        {connected && !showLanding && appState === "payment" && scanResult && (
           <PaymentFlow
             qrisData={scanResult}
             onBack={() => setAppState("idle")}

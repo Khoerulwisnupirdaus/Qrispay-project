@@ -9,44 +9,44 @@
  * Design Tokens — Light Mode, Soft Palette
  * ============================================================ */
 :root {
-  /* Primary — Violet/Purple accent */
-  --primary: #7C3AED;
-  --primary-light: #A78BFA;
-  --primary-dark: #6D28D9;
-  --primary-glow: rgba(124, 58, 237, 0.2);
+  /* Primary — Rialo Mint Teal */
+  --primary: #A9DCD3;
+  --primary-light: #C5EAE4;
+  --primary-dark: #7CC4B8;
+  --primary-glow: rgba(169, 220, 211, 0.25);
 
   /* Accent colors for cards */
-  --card-teal: #0D9488;
-  --card-blue: #6366F1;
+  --card-teal: #A9DCD3;
+  --card-blue: #7CC4B8;
   --card-yellow: #D4E157;
   --card-green: #34D399;
-  --card-dark: #1A1A2E;
+  --card-dark: #000102;
 
   /* Backgrounds */
-  --bg-body: #D4D0E8;
+  --bg-body: #000102;
   --bg-card-light: #FFFFFF;
-  --bg-card-dark: #1A1A2E;
+  --bg-card-dark: #000102;
   --bg-glass: rgba(255, 255, 255, 0.65);
   --bg-glass-hover: rgba(255, 255, 255, 0.85);
 
   /* Text */
-  --text-primary: #0F0F1A;
-  --text-secondary: #4A4A6A;
-  --text-muted: #8888A8;
-  --text-on-dark: #F1F0FF;
-  --text-on-dark-muted: #A0A0C0;
+  --text-primary: #000102;
+  --text-secondary: #3A3A3C;
+  --text-muted: #7A7A7C;
+  --text-on-dark: #F1F0EE;
+  --text-on-dark-muted: #A0A09C;
 
   /* Borders */
   --border-light: rgba(0, 0, 0, 0.06);
   --border-default: rgba(0, 0, 0, 0.1);
-  --border-hover: rgba(124, 58, 237, 0.3);
+  --border-hover: rgba(169, 220, 211, 0.5);
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 4px 30px rgba(124, 58, 237, 0.25);
+  --shadow-glow: 0 4px 30px rgba(169, 220, 211, 0.3);
 
   /* Radius */
   --r-xs: 8px;
@@ -132,14 +132,15 @@ a:hover { color: var(--primary-dark); }
 .btn:active { transform: scale(0.97); }
 
 .btn-primary {
-  background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
-  color: white;
-  box-shadow: var(--shadow-glow);
+  background: #000102;
+  color: #A9DCD3;
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 8px 40px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 8px 40px rgba(0, 1, 2, 0.3);
   transform: translateY(-2px);
+  background: #1a1a1c;
 }
 
 .btn-dark {
@@ -149,7 +150,7 @@ a:hover { color: var(--primary-dark); }
 }
 
 .btn-dark:hover {
-  background: #2A2A4A;
+  background: #1a1a1c;
   transform: translateY(-2px);
 }
 
@@ -194,8 +195,8 @@ a:hover { color: var(--primary-dark); }
 }
 
 .badge-info {
-  background: rgba(124, 58, 237, 0.1);
-  color: var(--primary);
+  background: rgba(169, 220, 211, 0.15);
+  color: #5BA99E;
 }
 
 .badge-warning {
@@ -232,22 +233,26 @@ a:hover { color: var(--primary-dark); }
 .mt-xl { margin-top: 32px; }
 
 /* ============================================================
- * Wallet Adapter Overrides — Purple theme
+ * Wallet Adapter Overrides — Rialo theme
  * ============================================================ */
 .wallet-adapter-button {
-  background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%) !important;
-  border-radius: var(--r-md) !important;
+  background: #000102 !important;
+  color: #A9DCD3 !important;
+  border-radius: var(--r-full) !important;
   font-family: var(--font-body) !important;
   font-weight: 600 !important;
-  padding: 14px 28px !important;
+  font-size: 0.75rem !important;
+  padding: 6px 14px !important;
   height: auto !important;
+  line-height: 1.4 !important;
   transition: all var(--duration-base) var(--ease-out) !important;
-  box-shadow: var(--shadow-glow) !important;
+  box-shadow: none !important;
 }
 
 .wallet-adapter-button:hover {
-  box-shadow: 0 8px 40px rgba(124, 58, 237, 0.4) !important;
+  box-shadow: 0 8px 40px rgba(0, 1, 2, 0.3) !important;
   transform: translateY(-2px) !important;
+  background: #1a1a1c !important;
 }
 
 .wallet-adapter-modal-wrapper {
@@ -264,13 +269,13 @@ a:hover { color: var(--primary-dark); }
 }
 
 .wallet-adapter-modal-list li {
-  background: #F5F3FF !important;
+  background: #F5F3EF !important;
   border-radius: var(--r-md) !important;
   margin-bottom: 8px !important;
 }
 
 .wallet-adapter-modal-list li:hover {
-  background: #EDE9FE !important;
+  background: #EDE9E0 !important;
 }
 
 .wallet-adapter-modal-button-close {
@@ -366,7 +371,7 @@ a:hover { color: var(--primary-dark); }
 
 .tilt-3d:hover {
   transform: perspective(600px) rotateX(-3deg) rotateY(3deg) translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(124,58,237,0.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(169,220,211,0.05);
 }
 
 /* Gradient shimmer overlay for premium cards */

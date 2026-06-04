@@ -127,9 +127,9 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
           <div className={styles.merchantCard}>
             <div className={styles.merchantIcon}>
               <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                <rect width="36" height="36" rx="10" fill="#7C3AED" fillOpacity="0.08" />
-                <path d="M10 14h16M10 18h10M10 22h13" stroke="#7C3AED" strokeWidth="1.8" strokeLinecap="round" />
-                <rect x="22" y="20" width="6" height="6" rx="1.5" fill="#7C3AED" fillOpacity="0.2" stroke="#7C3AED" strokeWidth="1" />
+                <rect width="36" height="36" rx="10" fill="#A9DCD3" fillOpacity="0.08" />
+                <path d="M10 14h16M10 18h10M10 22h13" stroke="#A9DCD3" strokeWidth="1.8" strokeLinecap="round" />
+                <rect x="22" y="20" width="6" height="6" rx="1.5" fill="#A9DCD3" fillOpacity="0.2" stroke="#A9DCD3" strokeWidth="1" />
               </svg>
             </div>
             <div>

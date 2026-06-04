@@ -9,9 +9,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import dynamic from "next/dynamic";
 import styles from "./Header.module.css";
+
+const WalletMultiButton = dynamic(
+  () => import("@solana/wallet-adapter-react-ui").then((m) => m.WalletMultiButton),
+  { ssr: false }
+);
 
 interface HeaderProps {
   onLogoClick?: () => void;
@@ -43,7 +48,6 @@ export default function Header({ onLogoClick }: HeaderProps) {
   }, [publicKey, connected, connection]);
 
   const handleLogoClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
     if (onLogoClick) onLogoClick();
   };
 
@@ -53,13 +57,14 @@ export default function Header({ onLogoClick }: HeaderProps) {
         {/* Logo — clickable, returns to home */}
         <button className={styles.logo} onClick={handleLogoClick} type="button">
           <div className={styles.logoIcon}>
-            <img
-              src="/rialo-icon.png"
-              alt="Rialo"
-              width={32}
-              height={32}
-              style={{ borderRadius: 8 }}
-            />
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+              <circle cx="17" cy="17" r="17" fill="#000102" />
+              <circle cx="17" cy="17" r="12" stroke="#A9DCD3" strokeWidth="2" fill="none" />
+              <line x1="17" y1="5" x2="17" y2="29" stroke="#A9DCD3" strokeWidth="1" opacity="0.35" />
+              <line x1="5" y1="17" x2="29" y2="17" stroke="#A9DCD3" strokeWidth="1" opacity="0.35" />
+              <ellipse cx="17" cy="17" rx="6" ry="12" stroke="#A9DCD3" strokeWidth="1" opacity="0.35" />
+              <line x1="22" y1="22" x2="30" y2="30" stroke="#A9DCD3" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
           </div>
           <div>
             <h1 className={styles.logoTitle}>Rialo</h1>

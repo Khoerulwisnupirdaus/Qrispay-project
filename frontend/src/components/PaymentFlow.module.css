@@ -29,7 +29,7 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #7C3AED, #A78BFA, #6366F1);
+  background: linear-gradient(90deg, #A9DCD3, #7CC4B8, #7CC4B8);
 }
 
 .stepHeader {
@@ -67,8 +67,8 @@
   align-items: center;
   gap: 16px;
   padding: 20px;
-  background: #F5F3FF;
-  border: 1px solid rgba(124,58,237,0.08);
+  background: #F5F3EF;
+  border: 1px solid rgba(169,220,211,0.08);
   border-radius: var(--r-lg);
   margin-bottom: 24px;
 }
@@ -151,7 +151,7 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.quickBtn:hover { border-color: var(--primary); color: var(--primary); background: #F5F3FF; }
+.quickBtn:hover { border-color: var(--primary); color: var(--primary); background: #F5F3EF; }
 
 /* Conversion */
 .conversionCard {
@@ -173,7 +173,7 @@
 .qrisIcon { display: inline-block; animation: float 3s ease-in-out infinite; }
 
 .progressBar { width: 100%; height: 4px; background: #F0EDF8; border-radius: var(--r-full); margin: 20px 0; overflow: hidden; }
-.progressFill { height: 100%; background: linear-gradient(90deg, #7C3AED, #A78BFA); border-radius: var(--r-full); transition: width 1s var(--ease-out); }
+.progressFill { height: 100%; background: linear-gradient(90deg, #A9DCD3, #7CC4B8); border-radius: var(--r-full); transition: width 1s var(--ease-out); }
 
 .processingSteps { text-align: left; margin-top: 20px; }
 
@@ -183,7 +183,7 @@
   color: var(--text-muted); font-weight: 500;
 }
 .pStep[data-done="true"] { color: #059669; background: rgba(52,211,153,0.08); }
-.pStep[data-active="true"] { color: var(--primary); background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.12); }
+.pStep[data-active="true"] { color: var(--primary); background: rgba(169,220,211,0.06); border: 1px solid rgba(169,220,211,0.12); }
 
 /* Success */
 .successCard { text-align: center; padding: 48px 32px; }
