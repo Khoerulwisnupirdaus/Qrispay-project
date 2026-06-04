@@ -113,7 +113,7 @@ export async function createQrisPayment(
       throw new Error(`Xendit API error: ${response.status} - ${error}`);
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
 
     return {
       id: data.id,
@@ -166,7 +166,7 @@ export async function getQrisPaymentStatus(
       throw new Error(`Xendit API error: ${response.status} - ${error}`);
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
 
     return {
       status: data.status,
@@ -230,7 +230,7 @@ export async function simulateQrisPayment(
       };
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
     return {
       status: data.status || "COMPLETED",
       message: "Payment simulated successfully",
