@@ -57,21 +57,21 @@
 .cornerMarker { position: absolute; width: 28px; height: 28px; z-index: 4; }
 .cornerMarker::before, .cornerMarker::after { content: ''; position: absolute; background: var(--primary); border-radius: 2px; }
 
-.cornerMarker.tl { top: 14px; left: 14px; }
-.cornerMarker.tl::before { width: 28px; height: 3px; top: 0; left: 0; }
-.cornerMarker.tl::after { width: 3px; height: 28px; top: 0; left: 0; }
+.cornerMarker[data-pos="tl"] { top: 14px; left: 14px; }
+.cornerMarker[data-pos="tl"]::before { width: 28px; height: 3px; top: 0; left: 0; }
+.cornerMarker[data-pos="tl"]::after { width: 3px; height: 28px; top: 0; left: 0; }
 
-.cornerMarker.tr { top: 14px; right: 14px; }
-.cornerMarker.tr::before { width: 28px; height: 3px; top: 0; right: 0; }
-.cornerMarker.tr::after { width: 3px; height: 28px; top: 0; right: 0; }
+.cornerMarker[data-pos="tr"] { top: 14px; right: 14px; }
+.cornerMarker[data-pos="tr"]::before { width: 28px; height: 3px; top: 0; right: 0; }
+.cornerMarker[data-pos="tr"]::after { width: 3px; height: 28px; top: 0; right: 0; }
 
-.cornerMarker.bl { bottom: 14px; left: 14px; }
-.cornerMarker.bl::before { width: 28px; height: 3px; bottom: 0; left: 0; }
-.cornerMarker.bl::after { width: 3px; height: 28px; bottom: 0; left: 0; }
+.cornerMarker[data-pos="bl"] { bottom: 14px; left: 14px; }
+.cornerMarker[data-pos="bl"]::before { width: 28px; height: 3px; bottom: 0; left: 0; }
+.cornerMarker[data-pos="bl"]::after { width: 3px; height: 28px; bottom: 0; left: 0; }
 
-.cornerMarker.br { bottom: 14px; right: 14px; }
-.cornerMarker.br::before { width: 28px; height: 3px; bottom: 0; right: 0; background: var(--primary-light); }
-.cornerMarker.br::after { width: 3px; height: 28px; bottom: 0; right: 0; background: var(--primary-light); }
+.cornerMarker[data-pos="br"] { bottom: 14px; right: 14px; }
+.cornerMarker[data-pos="br"]::before { width: 28px; height: 3px; bottom: 0; right: 0; background: var(--primary-light); }
+.cornerMarker[data-pos="br"]::after { width: 3px; height: 28px; bottom: 0; right: 0; background: var(--primary-light); }
 
 .cameraStatus {
   position: absolute; inset: 0;

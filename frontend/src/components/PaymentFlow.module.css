@@ -205,6 +205,9 @@
 .errorCard h2 { font-family: var(--font-display); font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
 .errorActions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
 
+/* Disclaimer */
+.disclaimer { margin-top: 12px; opacity: 0.7; }
+
 @media (max-width: 480px) {
   .flowContainer { padding-top: 32px; }
   .stepCard { padding: 28px 20px; border-radius: var(--r-xl); }

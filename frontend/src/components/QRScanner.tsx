@@ -238,10 +238,10 @@ export default function QRScanner({ onScanSuccess, onClose }: QRScannerProps) {
           <div className={styles.scannerViewport}>
             <div id={containerId.current} style={{ width: "100%", height: "100%" }} />
 
-            <div className={`${styles.cornerMarker} tl`} />
-            <div className={`${styles.cornerMarker} tr`} />
-            <div className={`${styles.cornerMarker} bl`} />
-            <div className={`${styles.cornerMarker} br`} />
+            <div className={styles.cornerMarker} data-pos="tl" />
+            <div className={styles.cornerMarker} data-pos="tr" />
+            <div className={styles.cornerMarker} data-pos="bl" />
+            <div className={styles.cornerMarker} data-pos="br" />
 
             {!isScanning && !error && (
               <div className={styles.cameraStatus}>

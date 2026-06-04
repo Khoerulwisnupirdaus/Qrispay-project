@@ -313,40 +313,6 @@
   opacity: 0.4;
 }
 
-/* ── Built On / Powered By ────────────────────────── */
-.builtOn {
-  margin-top: 64px;
-  text-align: center;
-}
-
-.builtOnLabel {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.builtOnRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.builtOnDot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--border-default);
-}
-
 /* ── Idle Screen ──────────────────────────────────── */
 .idleScreen {
   display: flex;

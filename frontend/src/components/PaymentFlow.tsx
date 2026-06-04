@@ -125,7 +125,13 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
 
           {/* Merchant Info */}
           <div className={styles.merchantCard}>
-            <div className={styles.merchantIcon}>🏪</div>
+            <div className={styles.merchantIcon}>
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                <rect width="36" height="36" rx="10" fill="#7C3AED" fillOpacity="0.08" />
+                <path d="M10 14h16M10 18h10M10 22h13" stroke="#7C3AED" strokeWidth="1.8" strokeLinecap="round" />
+                <rect x="22" y="20" width="6" height="6" rx="1.5" fill="#7C3AED" fillOpacity="0.2" stroke="#7C3AED" strokeWidth="1" />
+              </svg>
+            </div>
             <div>
               <h3 className={styles.merchantName}>{qrisData.merchantName}</h3>
               <p className="text-sm text-muted text-mono">
@@ -201,7 +207,7 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
           </button>
 
           <p className={`${styles.disclaimer} text-xs text-muted text-center mt-sm`}>
-            Secured by Rialo escrow — gasless via Rialo Cruise
+            Secured by Rialo on-chain escrow — near-zero fees
           </p>
         </div>
       )}
@@ -220,7 +226,7 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
             <div className={styles.progressFill} style={{ width: "40%" }}></div>
           </div>
           <p className="text-xs text-muted text-mono mt-sm">
-            Escrow PDA locking {usdcAmount.toFixed(4)} USDC • ~50ms finality
+            Escrow PDA locking {usdcAmount.toFixed(4)} USDC • sub-second finality
           </p>
         </div>
       )}
@@ -231,25 +237,25 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
           <div className={styles.processingIcon}>
             <div className={styles.qrisIcon}>
               <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                <rect x="4" y="4" width="56" height="56" rx="12" stroke="var(--accent-cyan)" strokeWidth="2" />
-                <rect x="12" y="12" width="16" height="16" rx="4" fill="var(--accent-cyan)" opacity="0.3" />
-                <rect x="36" y="12" width="16" height="16" rx="4" fill="var(--accent-cyan)" opacity="0.3" />
-                <rect x="12" y="36" width="16" height="16" rx="4" fill="var(--accent-cyan)" opacity="0.3" />
+                <rect x="4" y="4" width="56" height="56" rx="12" stroke="#0D9488" strokeWidth="2" />
+                <rect x="12" y="12" width="16" height="16" rx="4" fill="#0D9488" opacity="0.3" />
+                <rect x="36" y="12" width="16" height="16" rx="4" fill="#0D9488" opacity="0.3" />
+                <rect x="12" y="36" width="16" height="16" rx="4" fill="#0D9488" opacity="0.3" />
                 <rect x="36" y="36" width="16" height="16" rx="2" fill="var(--primary)" opacity="0.5" />
               </svg>
             </div>
           </div>
           <h2>Processing QRIS</h2>
           <p className="text-muted">
-            Rialo Edge settling IDR to merchant via QRIS...
+            Settling IDR to merchant via QRIS network...
           </p>
           <div className={styles.progressBar}>
             <div className={styles.progressFill} style={{ width: "75%" }}></div>
           </div>
           <div className={styles.processingSteps}>
-            <div className={styles.pStep} data-done="true">✓ USDC locked on Rialo (50ms)</div>
-            <div className={styles.pStep} data-done="true">✓ QRIS payment via Rialo Edge</div>
-            <div className={styles.pStep} data-active="true">⟳ Settling to merchant (gasless)...</div>
+            <div className={styles.pStep} data-done="true">✓ USDC locked on Rialo (sub-second)</div>
+            <div className={styles.pStep} data-done="true">✓ QRIS payment initiated</div>
+            <div className={styles.pStep} data-active="true">⟳ Settling to merchant...</div>
           </div>
         </div>
       )}
@@ -259,10 +265,10 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
         <div className={`${styles.stepCard} ${styles.successCard} animate-scale-in`}>
           <div className={styles.successIcon}>
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-              <circle cx="40" cy="40" r="38" stroke="var(--accent-green)" strokeWidth="3" />
+              <circle cx="40" cy="40" r="38" stroke="#059669" strokeWidth="3" />
               <path
                 d="M24 40L35 51L56 30"
-                stroke="var(--accent-green)"
+                stroke="#059669"
                 strokeWidth="4"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -310,7 +316,7 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
             </div>
             <div className={styles.receiptRow}>
               <span>Gas Fee</span>
-              <span className="text-mono text-xs">Free (Rialo Cruise)</span>
+              <span className="text-mono text-xs">Near-zero</span>
             </div>
             <div className={styles.receiptRow}>
               <span>Status</span>
@@ -327,7 +333,13 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
       {/* Step: Error */}
       {step === "error" && (
         <div className={`${styles.stepCard} ${styles.errorCard} animate-scale-in`}>
-          <div className={styles.errorIcon}>⚠️</div>
+          <div className={styles.errorIcon}>
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="22" stroke="#DC2626" strokeWidth="2.5" />
+              <path d="M24 14v12" stroke="#DC2626" strokeWidth="3" strokeLinecap="round" />
+              <circle cx="24" cy="32" r="2" fill="#DC2626" />
+            </svg>
+          </div>
           <h2>Payment Failed</h2>
           <p className="text-muted">{errorMessage}</p>
           <div className={styles.errorActions}>

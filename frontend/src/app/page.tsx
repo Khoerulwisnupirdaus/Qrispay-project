@@ -204,7 +204,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className={`${styles.bentoCard} ${styles.bentoLight}`}>
+              <div className={`${styles.bentoCard} ${styles.bentoLight} tilt-3d`}>
                 <IconShield />
                 <span className={styles.cardLabel}>Security</span>
                 <h3 className={styles.cardTitle}>On-chain escrow</h3>
