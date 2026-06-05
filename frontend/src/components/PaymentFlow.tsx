@@ -34,8 +34,8 @@ type PaymentStep = "review" | "confirming" | "processing" | "success" | "error";
 
 export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlowProps) {
   const { wallets } = useWallets();
-  const solanaWallet = wallets?.find((w) => w.chainType === "solana");
-  const publicKeyStr = solanaWallet?.address || wallets?.[0]?.address || null;
+  const solanaWallet = wallets?.find((w: any) => w.chainType === "solana" || (w.address && !w.address.startsWith("0x")));
+  const publicKeyStr = solanaWallet?.address || null;
   const [step, setStep] = useState<PaymentStep>("review");
   const [customAmount, setCustomAmount] = useState<string>(
     qrisData.idrAmount > 0 ? qrisData.idrAmount.toString() : ""

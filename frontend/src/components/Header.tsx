@@ -25,24 +25,20 @@ export default function Header({ onLogoClick }: HeaderProps) {
   /** Find Solana wallet — multiple fallback strategies */
   // Debug: log all wallets to help troubleshoot
   if (authenticated && wallets?.length) {
-    console.log("[Rialo] All wallets:", wallets.map(w => ({ address: w.address, chainType: w.chainType, type: w.walletClientType })));
+    console.log("[Rialo] All wallets:", wallets.map((w: any) => ({ address: w.address, chainType: w.chainType, chain: w.chain, type: w.walletClientType })));
   }
   if (authenticated && user?.linkedAccounts) {
     console.log("[Rialo] Linked accounts:", user.linkedAccounts.filter((a: any) => a.type === "wallet").map((a: any) => ({ address: a.address, chainType: a.chainType, chain: a.chain, type: a.walletClientType })));
   }
 
-  // Strategy 1: from useWallets hook, filter by chainType
-  const solanaWallet = wallets?.find((w) => w.chainType === "solana");
-  // Strategy 2: from linkedAccounts, find wallet with Solana address (base58, no 0x prefix)
+  // Strategy 1: from useWallets hook — Solana addresses are base58 (no 0x prefix)
+  const solanaWallet = wallets?.find((w: any) => w.chainType === "solana" || (w.address && !w.address.startsWith("0x")));
+  // Strategy 2: from linkedAccounts — find non-EVM address
   const linkedSolana = user?.linkedAccounts?.find(
     (a: any) => a.type === "wallet" && a.address && !a.address.startsWith("0x")
   ) as any;
-  // Strategy 3: from linkedAccounts, explicitly check chainType
-  const linkedSolanaByChain = user?.linkedAccounts?.find(
-    (a: any) => a.type === "wallet" && (a.chainType === "solana" || a.chain === "solana")
-  ) as any;
   
-  const walletAddress = solanaWallet?.address || linkedSolana?.address || linkedSolanaByChain?.address || null;
+  const walletAddress = solanaWallet?.address || linkedSolana?.address || null;
 
   /** Truncate wallet address for display */
   const shortAddress = walletAddress
