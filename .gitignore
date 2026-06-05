@@ -34,3 +34,11 @@ yarn-error.log*
 
 # Package locks (optional - uncomment if you want to exclude)
 # package-lock.json
+
+# Gemini / AI agent config
+.gemini/
+
+# Misc files not for repo
+PRESENTASI_QRIS_PAY.txt
+netlify.toml
+qr-pattern.png
