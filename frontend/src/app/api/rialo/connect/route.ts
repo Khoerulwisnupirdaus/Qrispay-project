@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getPlaygroundSession,
   checkPlaygroundAccount,
+  generatePassword,
   PLAYGROUND_API,
 } from "@/lib/rialo-playground";
 
@@ -24,10 +25,10 @@ export async function POST(request: NextRequest) {
     console.log(`[Rialo] Connect request for wallet: ${walletAddress}`);
 
     // If no password provided, check if user already has a playground account
+    let isNewAccount = false;
     if (!playgroundPassword && email) {
       const check = await checkPlaygroundAccount(walletAddress, email);
       if (check.status === "exists") {
-        // Account exists with different password — ask user for their password
         console.log("[Rialo] Existing playground account detected, requesting password");
         return NextResponse.json({
           success: false,
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
           message: "Akun playground sudah terdaftar. Masukkan password playground kamu untuk menggunakan address yang sama.",
         });
       }
+      isNewAccount = check.status === "new";
     }
 
     // Authenticate and get session cookies
@@ -82,10 +84,16 @@ export async function POST(request: NextRequest) {
       throw new Error(`Key generation failed (${generateRes.status}): ${text}`);
     }
 
-    return NextResponse.json({
+    // For new accounts, return the password so user can login to playground.rialo.io
+    const response: Record<string, unknown> = {
       success: true,
       rialoAddress,
-    });
+    };
+    if (isNewAccount) {
+      response.isNewAccount = true;
+      response.playgroundPassword = generatePassword(walletAddress);
+    }
+    return NextResponse.json(response);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error(`[Rialo] Connect error: ${message}`);

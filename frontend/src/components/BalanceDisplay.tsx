@@ -42,6 +42,8 @@ export default function BalanceDisplay({
 
   // Store password for faucet calls
   const [savedPassword, setSavedPassword] = useState<string | null>(null);
+  // Password to show for newly created accounts
+  const [newAccountPw, setNewAccountPw] = useState<string | null>(null);
 
   /** Connect to Rialo devnet */
   const connectRialo = useCallback(async (password?: string) => {
@@ -69,6 +71,9 @@ export default function BalanceDisplay({
         setRialoBalance(data.balance ?? 0);
         setNeedsPassword(false);
         if (password) setSavedPassword(password);
+        if (data.isNewAccount && data.playgroundPassword) {
+          setNewAccountPw(data.playgroundPassword);
+        }
         onBalanceChange?.(data.balance ?? 0);
       } else if (data.error) {
         setPgError(data.error);
@@ -235,6 +240,14 @@ export default function BalanceDisplay({
           </span>
           <span className={styles.rialoAddrCopy}>{copied ? "Copied!" : "Copy"}</span>
         </button>
+      )}
+
+      {newAccountPw && (
+        <div className={styles.pgNewNote}>
+          <span>Akun playground dibuat otomatis.</span>
+          <span>Login di <strong>playground.rialo.io</strong>:</span>
+          <code className={styles.pgNewPw}>{newAccountPw}</code>
+        </div>
       )}
 
       <div className={styles.balanceRow}>

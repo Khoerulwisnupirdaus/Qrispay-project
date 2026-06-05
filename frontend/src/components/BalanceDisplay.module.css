@@ -179,6 +179,34 @@
 .faucetSuccess { color: #34D399; }
 .faucetError { color: #EF4444; }
 
+/* New account password note */
+.pgNewNote {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  background: rgba(169, 220, 211, 0.1);
+  border: 1px solid rgba(169, 220, 211, 0.3);
+  border-radius: var(--r-md);
+  font-size: 0.62rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.pgNewPw {
+  display: block;
+  margin-top: 2px;
+  padding: 4px 6px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  word-break: break-all;
+  user-select: all;
+  color: var(--text);
+}
+
 /* Playground password prompt */
 .pgPrompt {
   display: flex;
