@@ -5,9 +5,22 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_PUBLIC_API_URL = "http://3.141.100.30"
+  NEXT_PUBLIC_API_URL = ""
   NEXT_PUBLIC_SOLANA_RPC_URL = "https://api.devnet.solana.com"
   NEXT_PUBLIC_PROGRAM_ID = "QRiSPay1111111111111111111111111111111111111"
+
+# Proxy API requests to VPS backend (avoids mixed content HTTPS/HTTP)
+[[redirects]]
+  from = "/api/*"
+  to = "http://3.141.100.30/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/health"
+  to = "http://3.141.100.30/health"
+  status = 200
+  force = true
 
 # SPA fallback for client-side routing
 [[redirects]]

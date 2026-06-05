@@ -16,7 +16,7 @@ import { QrisScanResult } from "./QRScanner";
 import styles from "./PaymentFlow.module.css";
 
 /** Middleware API base URL */
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 /** Simulated exchange rate: 1 USD = 15,800 IDR */
 const EXCHANGE_RATE = 15800;
