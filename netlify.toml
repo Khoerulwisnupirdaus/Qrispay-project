@@ -5,4 +5,12 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_PUBLIC_API_URL = "https://your-middleware-api.onrender.com"
+  NEXT_PUBLIC_API_URL = "http://3.141.100.30"
+  NEXT_PUBLIC_SOLANA_RPC_URL = "https://api.devnet.solana.com"
+  NEXT_PUBLIC_PROGRAM_ID = "QRiSPay1111111111111111111111111111111111111"
+
+# SPA fallback for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
