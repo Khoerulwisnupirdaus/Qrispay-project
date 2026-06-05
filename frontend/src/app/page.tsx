@@ -78,6 +78,18 @@ export default function HomePage() {
 
   useEffect(() => { setMounted(true); }, []);
 
+  /** Detect mobile device */
+  const isMobile = typeof window !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  /** Check if inside Phantom in-app browser */
+  const isPhantomBrowser = typeof window !== "undefined" && !!(window as any).phantom?.solana?.isPhantom;
+
+  /** Open current URL inside Phantom's in-app browser */
+  const handleMobileConnect = () => {
+    const currentUrl = encodeURIComponent(window.location.href);
+    window.location.href = `https://phantom.app/ul/browse/${currentUrl}?ref=${currentUrl}`;
+  };
+
   const handleScanSuccess = (result: QrisScanResult) => {
     setScanResult(result);
     setAppState("payment");
@@ -189,6 +201,10 @@ export default function HomePage() {
                   <button className="btn btn-primary btn-lg" onClick={handleStartScan}>
                     Scan QRIS Code
                   </button>
+                ) : isMobile && !isPhantomBrowser ? (
+                  <button className="btn btn-primary btn-lg" onClick={handleMobileConnect}>
+                    Open in Phantom
+                  </button>
                 ) : (
                   <WalletMultiButton />
                 )}
@@ -298,6 +314,10 @@ export default function HomePage() {
                   {connected ? (
                     <button className="btn btn-primary btn-lg" onClick={handleStartScan}>
                       Scan QRIS Code
+                    </button>
+                  ) : isMobile && !isPhantomBrowser ? (
+                    <button className="btn btn-primary btn-lg" onClick={handleMobileConnect}>
+                      Open in Phantom
                     </button>
                   ) : (
                     <WalletMultiButton />
