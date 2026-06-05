@@ -34,10 +34,12 @@ export default function SolanaWalletProvider({
         appearance: {
           theme: "light",
           accentColor: "#A9DCD3",
-          walletChainType: "solana-only",
           logo: "/rialo-icon.png",
         },
         embeddedWallets: {
+          ethereum: {
+            createOnLogin: "all-users",
+          },
           solana: {
             createOnLogin: "all-users",
           },
