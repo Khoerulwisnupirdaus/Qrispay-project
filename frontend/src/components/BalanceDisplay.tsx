@@ -5,8 +5,8 @@
  *
  * Shows $RIALO and USDC balance for the user's Rialo wallet.
  * Connects to Rialo devnet via playground API proxy.
+ * Uses the user's real email so the Rialo address matches their playground account.
  * Includes faucet button to request real devnet $RIALO tokens.
- * Auto-refreshes every 30 seconds.
  */
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -14,6 +14,7 @@ import styles from "./BalanceDisplay.module.css";
 
 interface BalanceDisplayProps {
   walletAddress: string | null;
+  userEmail?: string | null;
   compact?: boolean;
   showFaucet?: boolean;
   onBalanceChange?: (balance: number) => void;
@@ -21,6 +22,7 @@ interface BalanceDisplayProps {
 
 export default function BalanceDisplay({
   walletAddress,
+  userEmail,
   compact = false,
   showFaucet = false,
   onBalanceChange,
@@ -32,8 +34,9 @@ export default function BalanceDisplay({
   const [connecting, setConnecting] = useState(false);
   const [faucetLoading, setFaucetLoading] = useState(false);
   const [faucetMsg, setFaucetMsg] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  /** Connect to Rialo devnet — register + generate keypair */
+  /** Connect to Rialo devnet */
   const connectRialo = useCallback(async () => {
     if (!walletAddress || connecting) return;
     setConnecting(true);
@@ -42,7 +45,7 @@ export default function BalanceDisplay({
       const res = await fetch("/api/rialo/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ walletAddress }),
+        body: JSON.stringify({ walletAddress, email: userEmail }),
       });
 
       const data = await res.json();
@@ -59,16 +62,24 @@ export default function BalanceDisplay({
       setConnecting(false);
       setLoading(false);
     }
-  }, [walletAddress, connecting, onBalanceChange]);
+  }, [walletAddress, userEmail, connecting, onBalanceChange]);
 
-  /** Auto-connect on mount */
   useEffect(() => {
     if (walletAddress && !rialoAddress) {
       connectRialo();
     }
   }, [walletAddress, rialoAddress, connectRialo]);
 
-  /** Request devnet $RIALO via playground faucet */
+  /** Copy Rialo address */
+  const copyRialoAddress = () => {
+    if (rialoAddress) {
+      navigator.clipboard.writeText(rialoAddress);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  /** Request devnet $RIALO */
   const requestFaucet = async () => {
     if (!walletAddress || faucetLoading) return;
     setFaucetLoading(true);
@@ -78,13 +89,12 @@ export default function BalanceDisplay({
       const res = await fetch("/api/rialo/faucet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ walletAddress }),
+        body: JSON.stringify({ walletAddress, email: userEmail }),
       });
 
       const data = await res.json();
       if (data.success) {
         setFaucetMsg(`${data.amount} $RIALO received!`);
-        // Update balance
         if (rialoBalance !== null) {
           const newBal = rialoBalance + parseFloat(data.amount || "1");
           setRialoBalance(newBal);
@@ -122,14 +132,15 @@ export default function BalanceDisplay({
 
   return (
     <div className={styles.balanceCard}>
-      {/* Rialo devnet address */}
+      {/* Rialo devnet address with copy button */}
       {rialoAddress && (
-        <div className={styles.rialoAddr}>
+        <button className={styles.rialoAddr} onClick={copyRialoAddress} type="button">
           <span className={styles.rialoAddrLabel}>Rialo Devnet</span>
           <span className={styles.rialoAddrValue}>
             {rialoAddress.slice(0, 6)}...{rialoAddress.slice(-4)}
           </span>
-        </div>
+          <span className={styles.rialoAddrCopy}>{copied ? "Copied!" : "Copy"}</span>
+        </button>
       )}
 
       <div className={styles.balanceRow}>

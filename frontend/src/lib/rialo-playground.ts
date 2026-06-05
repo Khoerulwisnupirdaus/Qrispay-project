@@ -176,9 +176,11 @@ async function login(
 /**
  * Run the full register + login flow and return a merged Cookie header string
  * that can be used for authenticated requests to the Rialo API.
+ * If userEmail is provided, use it instead of the deterministic email
+ * so the Rialo address matches the user's playground account.
  */
-export async function getPlaygroundSession(walletAddress: string): Promise<string> {
-  const email = generateEmail(walletAddress);
+export async function getPlaygroundSession(walletAddress: string, userEmail?: string): Promise<string> {
+  const email = userEmail || generateEmail(walletAddress);
   const password = generatePassword(walletAddress);
   const name = `QrisPay_${walletAddress.slice(0, 8)}`;
 
