@@ -17,12 +17,17 @@ interface HeaderProps {
 }
 
 export default function Header({ onLogoClick }: HeaderProps) {
-  const { authenticated, user, login, logout } = usePrivy();
+  const { authenticated, user, login, logout, ready } = usePrivy();
   const { wallets } = useWallets();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const walletAddress = wallets?.[0]?.address || null;
+  /** Find Solana wallet — check wallets array and user linked accounts */
+  const solanaWallet = wallets?.find((w) => w.chainType === "solana");
+  const embeddedWalletAddress = user?.linkedAccounts?.find(
+    (a) => a.type === "wallet" && (a as any).chainType === "solana"
+  ) as any;
+  const walletAddress = solanaWallet?.address || embeddedWalletAddress?.address || null;
 
   /** Truncate wallet address for display */
   const shortAddress = walletAddress
@@ -122,7 +127,7 @@ export default function Header({ onLogoClick }: HeaderProps) {
                   <div className={styles.dropdownDivider} />
 
                   {/* Wallet address */}
-                  {walletAddress && (
+                  {walletAddress ? (
                     <button className={styles.dropdownItem} onClick={copyAddress} type="button">
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <rect x="4" y="4" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.2"/>
@@ -131,6 +136,10 @@ export default function Header({ onLogoClick }: HeaderProps) {
                       <span>{shortAddress}</span>
                       <span className={styles.dropdownHint}>Copy</span>
                     </button>
+                  ) : (
+                    <div className={styles.dropdownItem}>
+                      <span className={styles.dropdownHint}>Wallet creating...</span>
+                    </div>
                   )}
 
                   <div className={styles.dropdownDivider} />
