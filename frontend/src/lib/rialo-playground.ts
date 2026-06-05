@@ -65,10 +65,9 @@ function mergeCookies(...arrays: string[][]): string {
 // ---------------------------------------------------------------------------
 
 /**
- * Register the deterministic account. 201 = new account, 409 = already exists.
- * Both are acceptable outcomes.
+ * Register the account. Returns 'new' if just created, 'exists' if already registered.
  */
-async function register(email: string, password: string, name: string): Promise<void> {
+async function register(email: string, password: string, name: string): Promise<"new" | "exists"> {
   console.log(`[Rialo] Registering account: ${email}`);
   const res = await fetch(`${PLAYGROUND_FRONTEND}/api/auth/register`, {
     method: "POST",
@@ -79,12 +78,12 @@ async function register(email: string, password: string, name: string): Promise<
   if (res.status === 201) {
     const data = await res.json();
     console.log(`[Rialo] Registration success, userId: ${data.userId}`);
-    return;
+    return "new";
   }
 
   if (res.status === 409) {
-    console.log("[Rialo] Account already exists, continuing");
-    return;
+    console.log("[Rialo] Account already exists");
+    return "exists";
   }
 
   const text = await res.text();
@@ -181,26 +180,53 @@ async function login(
 // ---------------------------------------------------------------------------
 
 /**
- * Run the full register + login flow and return a merged Cookie header string.
- * If userEmail is provided, try it first. If login fails (user already registered
- * on playground with a different password), fall back to deterministic email.
+ * Check if a user's email already has a playground account.
+ * Returns 'new' if we just registered them (auto), 'exists' if they had one already.
  */
-export async function getPlaygroundSession(walletAddress: string, userEmail?: string): Promise<string> {
+export async function checkPlaygroundAccount(
+  walletAddress: string,
+  userEmail?: string,
+): Promise<{ status: "new" | "exists"; email: string }> {
   const password = generatePassword(walletAddress);
   const name = `QrisPay_${walletAddress.slice(0, 8)}`;
+  const email = userEmail || generateEmail(walletAddress);
 
-  // Try with user's real email first (if provided)
+  const result = await register(email, password, name);
+  return { status: result, email };
+}
+
+/**
+ * Run the full register + login flow and return a merged Cookie header string.
+ *
+ * - If playgroundPassword is provided, use it with the user's email (for returning users).
+ * - If userEmail is provided (without playgroundPassword), try our deterministic password.
+ * - If login fails, fall back to deterministic email.
+ */
+export async function getPlaygroundSession(
+  walletAddress: string,
+  userEmail?: string,
+  playgroundPassword?: string,
+): Promise<string> {
+  const name = `QrisPay_${walletAddress.slice(0, 8)}`;
+
+  // Option 1: user provided their playground password
+  if (userEmail && playgroundPassword) {
+    return attemptSession(userEmail, playgroundPassword, name);
+  }
+
+  // Option 2: try user email with our deterministic password
   if (userEmail) {
+    const ourPassword = generatePassword(walletAddress);
     try {
-      const result = await attemptSession(userEmail, password, name);
-      return result;
-    } catch (err) {
-      console.log(`[Rialo] Login with user email failed, falling back to deterministic email`);
+      return await attemptSession(userEmail, ourPassword, name);
+    } catch {
+      console.log("[Rialo] Login with user email failed, falling back to deterministic email");
     }
   }
 
-  // Fallback: use deterministic email (always works because we control the password)
+  // Option 3: fallback to deterministic email (always works)
   const deterministicEmail = generateEmail(walletAddress);
+  const password = generatePassword(walletAddress);
   return attemptSession(deterministicEmail, password, name);
 }
 
@@ -209,25 +235,21 @@ export async function getPlaygroundSession(walletAddress: string, userEmail?: st
  * Throws if login fails (e.g. password mismatch).
  */
 async function attemptSession(email: string, password: string, name: string): Promise<string> {
-  // Step 1 - Register (idempotent)
   await register(email, password, name);
 
-  // Step 2 - Get CSRF token + cookies
   const { csrfToken, cookies: csrfCookies } = await fetchCsrf();
 
-  // Step 3 - Get session cookies
   const sessionCookies = await fetchSessionCookies(
     mergeCookies(csrfCookies),
   );
 
-  // Step 4 - Login with all accumulated cookies
   const allPreLoginCookies = mergeCookies(csrfCookies, sessionCookies);
   const loginCookies = await login(email, password, csrfToken, allPreLoginCookies);
 
-  // Merge everything into a single Cookie header
   const finalCookieHeader = mergeCookies(csrfCookies, sessionCookies, loginCookies);
   console.log(`[Rialo] Session acquired for ${email}`);
   return finalCookieHeader;
 }
 
 export { PLAYGROUND_FRONTEND, PLAYGROUND_API };
+

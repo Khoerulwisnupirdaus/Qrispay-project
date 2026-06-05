@@ -179,3 +179,72 @@
 .faucetSuccess { color: #34D399; }
 .faucetError { color: #EF4444; }
 
+/* Playground password prompt */
+.pgPrompt {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pgNote {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.pgInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-md);
+  font-size: 0.78rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.pgInput:focus {
+  border-color: var(--primary);
+}
+
+.pgError {
+  font-size: 0.65rem;
+  color: #EF4444;
+}
+
+.pgActions {
+  display: flex;
+  gap: 6px;
+}
+
+.pgSubmitBtn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--primary);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.pgSubmitBtn:hover:not(:disabled) { opacity: 0.85; }
+.pgSubmitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pgSkipBtn {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pgSkipBtn:hover:not(:disabled) { background: rgba(0,0,0,0.03); }
+.pgSkipBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+

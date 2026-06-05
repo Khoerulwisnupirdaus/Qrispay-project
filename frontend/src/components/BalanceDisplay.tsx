@@ -5,8 +5,7 @@
  *
  * Shows $RIALO and USDC balance for the user's Rialo wallet.
  * Connects to Rialo devnet via playground API proxy.
- * Uses the user's real email so the Rialo address matches their playground account.
- * Includes faucet button to request real devnet $RIALO tokens.
+ * If user already has a playground account, prompts for password.
  */
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -31,44 +30,95 @@ export default function BalanceDisplay({
   const [usdcBalance, setUsdcBalance] = useState<number>(0);
   const [rialoAddress, setRialoAddress] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [connecting, setConnecting] = useState(false);
   const [faucetLoading, setFaucetLoading] = useState(false);
   const [faucetMsg, setFaucetMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  /** Connect to Rialo devnet */
-  const connectRialo = useCallback(async () => {
-    if (!walletAddress || connecting) return;
-    setConnecting(true);
+  // Password prompt state
+  const [needsPassword, setNeedsPassword] = useState(false);
+  const [pgPassword, setPgPassword] = useState("");
+  const [pgError, setPgError] = useState<string | null>(null);
+  const [pgLoading, setPgLoading] = useState(false);
 
+  // Store password for faucet calls
+  const [savedPassword, setSavedPassword] = useState<string | null>(null);
+
+  /** Connect to Rialo devnet */
+  const connectRialo = useCallback(async (password?: string) => {
     try {
       const res = await fetch("/api/rialo/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ walletAddress, email: userEmail }),
+        body: JSON.stringify({
+          walletAddress,
+          email: userEmail,
+          playgroundPassword: password || undefined,
+        }),
       });
 
+      const data = await res.json();
+
+      if (data.needsPassword) {
+        setNeedsPassword(true);
+        setLoading(false);
+        return;
+      }
+
+      if (data.success && data.rialoAddress) {
+        setRialoAddress(data.rialoAddress);
+        setRialoBalance(data.balance ?? 0);
+        setNeedsPassword(false);
+        if (password) setSavedPassword(password);
+        onBalanceChange?.(data.balance ?? 0);
+      } else if (data.error) {
+        setPgError(data.error);
+      }
+    } catch (err) {
+      console.error("[Rialo] Connect error:", err);
+    } finally {
+      setLoading(false);
+      setPgLoading(false);
+    }
+  }, [walletAddress, userEmail, onBalanceChange]);
+
+  /** Auto-connect on mount */
+  useEffect(() => {
+    if (walletAddress && !rialoAddress && !needsPassword) {
+      connectRialo();
+    }
+  }, [walletAddress]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /** Submit playground password */
+  const handlePasswordSubmit = async () => {
+    if (!pgPassword.trim()) return;
+    setPgLoading(true);
+    setPgError(null);
+    await connectRialo(pgPassword);
+  };
+
+  /** Skip password — use separate QRIS Pay account */
+  const handleSkip = async () => {
+    setNeedsPassword(false);
+    setPgLoading(true);
+    // Connect without email to force deterministic account
+    try {
+      const res = await fetch("/api/rialo/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletAddress }),
+      });
       const data = await res.json();
       if (data.success && data.rialoAddress) {
         setRialoAddress(data.rialoAddress);
         setRialoBalance(data.balance ?? 0);
         onBalanceChange?.(data.balance ?? 0);
-      } else {
-        console.error("[Rialo] Connect failed:", data.error);
       }
     } catch (err) {
-      console.error("[Rialo] Connect error:", err);
+      console.error("[Rialo] Skip connect error:", err);
     } finally {
-      setConnecting(false);
-      setLoading(false);
+      setPgLoading(false);
     }
-  }, [walletAddress, userEmail, connecting, onBalanceChange]);
-
-  useEffect(() => {
-    if (walletAddress && !rialoAddress) {
-      connectRialo();
-    }
-  }, [walletAddress, rialoAddress, connectRialo]);
+  };
 
   /** Copy Rialo address */
   const copyRialoAddress = () => {
@@ -89,7 +139,11 @@ export default function BalanceDisplay({
       const res = await fetch("/api/rialo/faucet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ walletAddress, email: userEmail }),
+        body: JSON.stringify({
+          walletAddress,
+          email: userEmail,
+          playgroundPassword: savedPassword || undefined,
+        }),
       });
 
       const data = await res.json();
@@ -112,7 +166,48 @@ export default function BalanceDisplay({
     }
   };
 
-  if (!walletAddress || loading) return null;
+  if (!walletAddress) return null;
+  if (loading) return null;
+
+  // Password prompt UI
+  if (needsPassword && !rialoAddress) {
+    return (
+      <div className={styles.balanceCard}>
+        <div className={styles.pgPrompt}>
+          <span className={styles.pgNote}>
+            Kamu sudah punya akun di Rialo Playground. Masukkan password playground untuk address yang sama.
+          </span>
+          <input
+            className={styles.pgInput}
+            type="password"
+            placeholder="Password playground"
+            value={pgPassword}
+            onChange={(e) => setPgPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
+          />
+          {pgError && <span className={styles.pgError}>{pgError}</span>}
+          <div className={styles.pgActions}>
+            <button
+              className={styles.pgSubmitBtn}
+              onClick={handlePasswordSubmit}
+              disabled={pgLoading || !pgPassword.trim()}
+              type="button"
+            >
+              {pgLoading ? "Connecting..." : "Connect"}
+            </button>
+            <button
+              className={styles.pgSkipBtn}
+              onClick={handleSkip}
+              disabled={pgLoading}
+              type="button"
+            >
+              Lewati (address baru)
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (compact) {
     return (
@@ -132,7 +227,6 @@ export default function BalanceDisplay({
 
   return (
     <div className={styles.balanceCard}>
-      {/* Rialo devnet address with copy button */}
       {rialoAddress && (
         <button className={styles.rialoAddr} onClick={copyRialoAddress} type="button">
           <span className={styles.rialoAddrLabel}>Rialo Devnet</span>
@@ -174,7 +268,7 @@ export default function BalanceDisplay({
                 <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             )}
-            {faucetLoading ? "Requesting..." : connecting ? "Connecting..." : "Get $RIALO"}
+            {faucetLoading ? "Requesting..." : "Get $RIALO"}
           </button>
           {faucetMsg && (
             <span className={`${styles.faucetMsg} ${faucetMsg.includes("received") ? styles.faucetSuccess : styles.faucetError}`}>

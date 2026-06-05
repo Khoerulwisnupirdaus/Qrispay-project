@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   getPlaygroundSession,
+  checkPlaygroundAccount,
   PLAYGROUND_API,
 } from "@/lib/rialo-playground";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { walletAddress, email } = body as { walletAddress?: string; email?: string };
+    const { walletAddress, email, playgroundPassword } = body as {
+      walletAddress?: string;
+      email?: string;
+      playgroundPassword?: string;
+    };
 
     if (!walletAddress || typeof walletAddress !== "string") {
       return NextResponse.json(
@@ -18,8 +23,26 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Rialo] Connect request for wallet: ${walletAddress}`);
 
+    // If no password provided, check if user already has a playground account
+    if (!playgroundPassword && email) {
+      const check = await checkPlaygroundAccount(walletAddress, email);
+      if (check.status === "exists") {
+        // Account exists with different password — ask user for their password
+        console.log("[Rialo] Existing playground account detected, requesting password");
+        return NextResponse.json({
+          success: false,
+          needsPassword: true,
+          message: "Akun playground sudah terdaftar. Masukkan password playground kamu untuk menggunakan address yang sama.",
+        });
+      }
+    }
+
     // Authenticate and get session cookies
-    const cookieHeader = await getPlaygroundSession(walletAddress, email || undefined);
+    const cookieHeader = await getPlaygroundSession(
+      walletAddress,
+      email || undefined,
+      playgroundPassword || undefined,
+    );
 
     // Try to generate keys first
     let rialoAddress: string | null = null;

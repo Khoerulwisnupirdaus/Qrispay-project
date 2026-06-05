@@ -7,7 +7,11 @@ import {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { walletAddress, email } = body as { walletAddress?: string; email?: string };
+    const { walletAddress, email, playgroundPassword } = body as {
+      walletAddress?: string;
+      email?: string;
+      playgroundPassword?: string;
+    };
 
     if (!walletAddress || typeof walletAddress !== "string") {
       return NextResponse.json(
@@ -19,7 +23,11 @@ export async function POST(request: NextRequest) {
     console.log(`[Rialo] Faucet request for wallet: ${walletAddress}`);
 
     // Authenticate and get session cookies
-    const cookieHeader = await getPlaygroundSession(walletAddress, email || undefined);
+    const cookieHeader = await getPlaygroundSession(
+      walletAddress,
+      email || undefined,
+      playgroundPassword || undefined,
+    );
 
     // Call faucet
     console.log("[Rialo] Calling faucet endpoint");
