@@ -45,6 +45,30 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
+.rialoAddr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.rialoAddrLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
+}
+
+.rialoAddrValue {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .balanceRow {
   display: flex;
   align-items: center;

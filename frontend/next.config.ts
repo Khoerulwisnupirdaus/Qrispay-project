@@ -3,12 +3,11 @@ import type { NextConfig } from "next";
 /**
  * Next.js Configuration
  *
- * - output: 'export' → static HTML build for Netlify/Vercel/any CDN
+ * - Server mode (default) for API routes support
  * - turbopack resolveAlias → dev mode Node.js stubs
  * - webpack fallback → production build Node.js stubs
  */
 const nextConfig: NextConfig = {
-  output: "export",
 
   turbopack: {
     resolveAlias: {

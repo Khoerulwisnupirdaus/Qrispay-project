@@ -3,22 +3,14 @@
 /**
  * Balance Display Component
  *
- * Shows $RIALO (native) and USDC balance for the user's wallet.
- * Includes faucet button to request devnet tokens.
+ * Shows $RIALO and USDC balance for the user's Rialo wallet.
+ * Connects to Rialo devnet via playground API proxy.
+ * Includes faucet button to request real devnet $RIALO tokens.
  * Auto-refreshes every 30 seconds.
  */
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import styles from "./BalanceDisplay.module.css";
-
-const RPC_URL =
-  process.env.NEXT_PUBLIC_RIALO_RPC_URL ||
-  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ||
-  "https://api.devnet.solana.com";
-
-/** USDC Mint address on Devnet (placeholder — replace with Meridian mint when available) */
-const USDC_MINT_DEVNET = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
 interface BalanceDisplayProps {
   walletAddress: string | null;
@@ -33,76 +25,77 @@ export default function BalanceDisplay({
   showFaucet = false,
   onBalanceChange,
 }: BalanceDisplayProps) {
-  const [solBalance, setSolBalance] = useState<number | null>(null);
-  const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
+  const [rialoBalance, setRialoBalance] = useState<number | null>(null);
+  const [usdcBalance, setUsdcBalance] = useState<number>(0);
+  const [rialoAddress, setRialoAddress] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [connecting, setConnecting] = useState(false);
   const [faucetLoading, setFaucetLoading] = useState(false);
   const [faucetMsg, setFaucetMsg] = useState<string | null>(null);
 
-  const fetchBalances = useCallback(async () => {
-    if (!walletAddress) return;
+  /** Connect to Rialo devnet — register + generate keypair */
+  const connectRialo = useCallback(async () => {
+    if (!walletAddress || connecting) return;
+    setConnecting(true);
 
     try {
-      const connection = new Connection(RPC_URL, "confirmed");
-      const pubkey = new PublicKey(walletAddress);
+      const res = await fetch("/api/rialo/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletAddress }),
+      });
 
-      // Fetch native balance ($RIALO / SOL on devnet)
-      const sol = await connection.getBalance(pubkey);
-      const bal = sol / LAMPORTS_PER_SOL;
-      setSolBalance(bal);
-      onBalanceChange?.(bal);
-
-      // Fetch USDC balance (SPL token)
-      try {
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubkey, {
-          mint: new PublicKey(USDC_MINT_DEVNET),
-        });
-
-        if (tokenAccounts.value.length > 0) {
-          const amount = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-          setUsdcBalance(amount);
-        } else {
-          setUsdcBalance(0);
-        }
-      } catch {
-        setUsdcBalance(0);
+      const data = await res.json();
+      if (data.success && data.rialoAddress) {
+        setRialoAddress(data.rialoAddress);
+        setRialoBalance(data.balance ?? 0);
+        onBalanceChange?.(data.balance ?? 0);
+      } else {
+        console.error("[Rialo] Connect failed:", data.error);
       }
-
-      setLoading(false);
     } catch (err) {
-      console.error("Failed to fetch balances:", err);
+      console.error("[Rialo] Connect error:", err);
+    } finally {
+      setConnecting(false);
       setLoading(false);
     }
-  }, [walletAddress, onBalanceChange]);
+  }, [walletAddress, connecting, onBalanceChange]);
 
+  /** Auto-connect on mount */
   useEffect(() => {
-    fetchBalances();
-    const interval = setInterval(fetchBalances, 30000);
-    return () => clearInterval(interval);
-  }, [fetchBalances]);
+    if (walletAddress && !rialoAddress) {
+      connectRialo();
+    }
+  }, [walletAddress, rialoAddress, connectRialo]);
 
-  /** Request devnet airdrop */
+  /** Request devnet $RIALO via playground faucet */
   const requestFaucet = async () => {
     if (!walletAddress || faucetLoading) return;
     setFaucetLoading(true);
     setFaucetMsg(null);
 
     try {
-      const connection = new Connection(RPC_URL, "confirmed");
-      const pubkey = new PublicKey(walletAddress);
-      const sig = await connection.requestAirdrop(pubkey, 1 * LAMPORTS_PER_SOL);
-      await connection.confirmTransaction(sig, "confirmed");
-      setFaucetMsg("1 $RIALO received!");
-      // Refresh balance
-      setTimeout(fetchBalances, 1000);
-    } catch (err: unknown) {
-      console.error("Faucet error:", err);
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      if (msg.includes("429") || msg.includes("rate")) {
-        setFaucetMsg("Rate limited — try again later");
+      const res = await fetch("/api/rialo/faucet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletAddress }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setFaucetMsg(`${data.amount} $RIALO received!`);
+        // Update balance
+        if (rialoBalance !== null) {
+          const newBal = rialoBalance + parseFloat(data.amount || "1");
+          setRialoBalance(newBal);
+          onBalanceChange?.(newBal);
+        }
       } else {
-        setFaucetMsg("Faucet error — try again");
+        setFaucetMsg(data.error || "Faucet error — try again");
       }
+    } catch (err) {
+      console.error("[Rialo] Faucet error:", err);
+      setFaucetMsg("Network error — try again");
     } finally {
       setFaucetLoading(false);
       setTimeout(() => setFaucetMsg(null), 4000);
@@ -116,12 +109,12 @@ export default function BalanceDisplay({
       <div className={styles.compactWrap}>
         <span className={styles.compactItem}>
           <span className={styles.compactIcon}>◎</span>
-          {solBalance !== null ? solBalance.toFixed(2) : "—"}
+          {rialoBalance !== null ? rialoBalance.toFixed(2) : "—"}
         </span>
         <span className={styles.compactDivider} />
         <span className={styles.compactItem}>
           <span className={styles.compactIcon}>$</span>
-          {usdcBalance !== null ? usdcBalance.toFixed(2) : "—"}
+          {usdcBalance.toFixed(2)}
         </span>
       </div>
     );
@@ -129,18 +122,28 @@ export default function BalanceDisplay({
 
   return (
     <div className={styles.balanceCard}>
+      {/* Rialo devnet address */}
+      {rialoAddress && (
+        <div className={styles.rialoAddr}>
+          <span className={styles.rialoAddrLabel}>Rialo Devnet</span>
+          <span className={styles.rialoAddrValue}>
+            {rialoAddress.slice(0, 6)}...{rialoAddress.slice(-4)}
+          </span>
+        </div>
+      )}
+
       <div className={styles.balanceRow}>
         <div className={styles.balanceItem}>
           <span className={styles.balanceLabel}>$RIALO</span>
           <span className={styles.balanceValue}>
-            {solBalance !== null ? solBalance.toFixed(4) : "—"}
+            {rialoBalance !== null ? rialoBalance.toFixed(4) : "—"}
           </span>
         </div>
         <div className={styles.balanceDivider} />
         <div className={styles.balanceItem}>
           <span className={styles.balanceLabel}>USDC</span>
           <span className={styles.balanceValue}>
-            {usdcBalance !== null ? usdcBalance.toFixed(2) : "—"}
+            {usdcBalance.toFixed(2)}
           </span>
         </div>
       </div>
@@ -150,7 +153,7 @@ export default function BalanceDisplay({
           <button
             className={styles.faucetBtn}
             onClick={requestFaucet}
-            disabled={faucetLoading}
+            disabled={faucetLoading || !rialoAddress}
             type="button"
           >
             {faucetLoading ? (
@@ -160,7 +163,7 @@ export default function BalanceDisplay({
                 <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             )}
-            {faucetLoading ? "Requesting..." : "Get $RIALO"}
+            {faucetLoading ? "Requesting..." : connecting ? "Connecting..." : "Get $RIALO"}
           </button>
           {faucetMsg && (
             <span className={`${styles.faucetMsg} ${faucetMsg.includes("received") ? styles.faucetSuccess : styles.faucetError}`}>
