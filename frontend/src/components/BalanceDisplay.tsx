@@ -33,6 +33,7 @@ export default function BalanceDisplay({
   const [faucetLoading, setFaucetLoading] = useState(false);
   const [faucetMsg, setFaucetMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Password prompt state
   const [needsPassword, setNeedsPassword] = useState(false);
@@ -250,20 +251,39 @@ export default function BalanceDisplay({
         </div>
       )}
 
-      <div className={styles.balanceRow}>
-        <div className={styles.balanceItem}>
-          <span className={styles.balanceLabel}>$RIALO</span>
-          <span className={styles.balanceValue}>
-            {rialoBalance !== null ? rialoBalance.toFixed(4) : "—"}
-          </span>
+      <div className={styles.balanceHeader}>
+        <div className={styles.balanceRow}>
+          <div className={styles.balanceItem}>
+            <span className={styles.balanceLabel}>$RIALO</span>
+            <span className={styles.balanceValue}>
+              {rialoBalance !== null ? rialoBalance.toFixed(4) : "—"}
+            </span>
+          </div>
+          <div className={styles.balanceDivider} />
+          <div className={styles.balanceItem}>
+            <span className={styles.balanceLabel}>USDC</span>
+            <span className={styles.balanceValue}>
+              {usdcBalance.toFixed(2)}
+            </span>
+          </div>
         </div>
-        <div className={styles.balanceDivider} />
-        <div className={styles.balanceItem}>
-          <span className={styles.balanceLabel}>USDC</span>
-          <span className={styles.balanceValue}>
-            {usdcBalance.toFixed(2)}
-          </span>
-        </div>
+        <button
+          className={`${styles.refreshBtn} ${refreshing ? styles.refreshSpin : ""}`}
+          onClick={async () => {
+            if (refreshing) return;
+            setRefreshing(true);
+            await connectRialo(savedPassword || undefined);
+            setRefreshing(false);
+          }}
+          disabled={refreshing}
+          type="button"
+          title="Refresh balance"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1.5 7a5.5 5.5 0 019.37-3.9M12.5 7a5.5 5.5 0 01-9.37 3.9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+            <path d="M11.5 1v2.5H9M2.5 13v-2.5H5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
 
       {showFaucet && (

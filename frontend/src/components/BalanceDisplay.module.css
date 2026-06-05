@@ -85,6 +85,31 @@
   margin-left: auto;
 }
 
+.balanceHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refreshBtn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.refreshBtn:hover { color: var(--primary); border-color: var(--primary); }
+.refreshBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.refreshSpin svg { animation: refreshSpin 0.8s linear infinite; }
+@keyframes refreshSpin { to { transform: rotate(360deg); } }
+
 .balanceRow {
   display: flex;
   align-items: center;
