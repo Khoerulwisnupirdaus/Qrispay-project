@@ -4,10 +4,10 @@
  * Header Component
  *
  * App header with logo, network badge, balance display, and auth controls.
- * Uses Privy for authentication state.
+ * User button opens a dropdown with profile + balance + logout.
  */
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import BalanceDisplay from "./BalanceDisplay";
 import styles from "./Header.module.css";
@@ -19,6 +19,8 @@ interface HeaderProps {
 export default function Header({ onLogoClick }: HeaderProps) {
   const { authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const walletAddress = wallets?.[0]?.address || null;
 
@@ -33,9 +35,30 @@ export default function Header({ onLogoClick }: HeaderProps) {
     || shortAddress
     || "User";
 
+  /** Get user email */
+  const userEmail = user?.google?.email || user?.email?.address || null;
+
   const handleLogoClick = () => {
     if (onLogoClick) onLogoClick();
   };
+
+  /** Copy wallet address to clipboard */
+  const copyAddress = () => {
+    if (walletAddress) {
+      navigator.clipboard.writeText(walletAddress);
+    }
+  };
+
+  /** Close menu on outside click */
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className={styles.header}>
@@ -65,17 +88,72 @@ export default function Header({ onLogoClick }: HeaderProps) {
             Rialo SVM
           </div>
 
-          {authenticated && walletAddress && (
-            <BalanceDisplay walletAddress={walletAddress} compact />
-          )}
-
           {authenticated ? (
-            <button className={styles.userBtn} onClick={logout} title="Logout">
-              <span className={styles.userAvatar}>
-                {displayName.charAt(0).toUpperCase()}
-              </span>
-              <span className={styles.userName}>{displayName}</span>
-            </button>
+            <div className={styles.userWrap} ref={menuRef}>
+              <button
+                className={styles.userBtn}
+                onClick={() => setMenuOpen(!menuOpen)}
+                type="button"
+              >
+                <span className={styles.userAvatar}>
+                  {displayName.charAt(0).toUpperCase()}
+                </span>
+                <span className={styles.userName}>{displayName}</span>
+                <svg className={`${styles.chevron} ${menuOpen ? styles.chevronOpen : ""}`} width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M3 5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {menuOpen && (
+                <div className={styles.dropdown}>
+                  {/* Profile section */}
+                  <div className={styles.dropdownProfile}>
+                    <span className={styles.dropdownAvatar}>
+                      {displayName.charAt(0).toUpperCase()}
+                    </span>
+                    <div>
+                      <p className={styles.dropdownName}>{displayName}</p>
+                      {userEmail && (
+                        <p className={styles.dropdownEmail}>{userEmail}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={styles.dropdownDivider} />
+
+                  {/* Wallet address */}
+                  {walletAddress && (
+                    <button className={styles.dropdownItem} onClick={copyAddress} type="button">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <rect x="4" y="4" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.2"/>
+                        <path d="M10 4V3a2 2 0 00-2-2H3a2 2 0 00-2 2v5a2 2 0 002 2h1" stroke="currentColor" strokeWidth="1.2"/>
+                      </svg>
+                      <span>{shortAddress}</span>
+                      <span className={styles.dropdownHint}>Copy</span>
+                    </button>
+                  )}
+
+                  <div className={styles.dropdownDivider} />
+
+                  {/* Balance */}
+                  {walletAddress && (
+                    <div className={styles.dropdownBalance}>
+                      <BalanceDisplay walletAddress={walletAddress} />
+                    </div>
+                  )}
+
+                  <div className={styles.dropdownDivider} />
+
+                  {/* Logout */}
+                  <button className={styles.dropdownLogout} onClick={() => { logout(); setMenuOpen(false); }} type="button">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M5 1H3a2 2 0 00-2 2v8a2 2 0 002 2h2M9 10l3-3-3-3M12 7H5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <button className={styles.loginBtn} onClick={login}>
               Sign In
