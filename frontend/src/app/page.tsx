@@ -307,6 +307,9 @@ export default function HomePage() {
                   )}
                   <p>Join thousands of users bridging crypto to real-world payments.</p>
                 </div>
+                <div className={styles.ctaVisual}>
+                  <img src="/cta-phone.png" alt="QRIS Pay" width={200} height={200} style={{ objectFit: 'contain' }} />
+                </div>
               </div>
             </section>
           </div>
