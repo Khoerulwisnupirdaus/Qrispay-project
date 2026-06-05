@@ -180,12 +180,12 @@ export default function BalanceDisplay({
       <div className={styles.balanceCard}>
         <div className={styles.pgPrompt}>
           <span className={styles.pgNote}>
-            Kamu sudah punya akun di Rialo Playground. Masukkan password playground untuk address yang sama.
+            You already have a Rialo Playground account. Enter your playground password to use the same address.
           </span>
           <input
             className={styles.pgInput}
             type="password"
-            placeholder="Password playground"
+            placeholder="Playground password"
             value={pgPassword}
             onChange={(e) => setPgPassword(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
@@ -206,7 +206,7 @@ export default function BalanceDisplay({
               disabled={pgLoading}
               type="button"
             >
-              Lewati (address baru)
+              Skip (new address)
             </button>
           </div>
         </div>
@@ -244,8 +244,8 @@ export default function BalanceDisplay({
 
       {newAccountPw && (
         <div className={styles.pgNewNote}>
-          <span>Akun playground dibuat otomatis.</span>
-          <span>Login di <strong>playground.rialo.io</strong>:</span>
+          <span>Playground account created automatically.</span>
+          <span>Login at <strong>playground.rialo.io</strong> with:</span>
           <code className={styles.pgNewPw}>{newAccountPw}</code>
         </div>
       )}

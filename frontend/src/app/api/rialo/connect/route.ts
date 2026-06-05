@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: false,
           needsPassword: true,
-          message: "Akun playground sudah terdaftar. Masukkan password playground kamu untuk menggunakan address yang sama.",
+          message: "You already have a Rialo Playground account. Enter your playground password to use the same address.",
         });
       }
       isNewAccount = check.status === "new";
