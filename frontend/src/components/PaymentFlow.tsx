@@ -62,47 +62,53 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
       setStep("confirming");
 
       // Step 1: Simulate on-chain lock transaction
-      // In production, this would be an actual Anchor program call
-      const fakeTxSig = `sim_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+      const fakeTxSig = `rialo_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
       setTxSignature(fakeTxSig);
 
-      // Small delay to simulate tx confirmation
+      // Simulate tx confirmation delay
       await new Promise((r) => setTimeout(r, 1500));
 
       setStep("processing");
 
-      // Step 2: Call middleware to create QRIS payment
-      const initiateRes = await fetch(`${API_URL}/api/payment/initiate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          onChainTxId: fakeTxSig,
-          userWallet: publicKeyStr || "unknown",
-          usdcAmount: usdcSmallestUnit,
-          idrAmount: idrAmount,
-          exchangeRate: EXCHANGE_RATE * 100,
-          qrisData: qrisData.rawData,
-        }),
-      });
+      if (API_URL) {
+        // Production mode: call middleware API
+        const initiateRes = await fetch(`${API_URL}/api/payment/initiate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            onChainTxId: fakeTxSig,
+            userWallet: publicKeyStr || "unknown",
+            usdcAmount: usdcSmallestUnit,
+            idrAmount: idrAmount,
+            exchangeRate: EXCHANGE_RATE * 100,
+            qrisData: qrisData.rawData,
+          }),
+        });
 
-      if (!initiateRes.ok) {
-        throw new Error("Middleware payment initiation failed");
-      }
+        if (!initiateRes.ok) {
+          throw new Error("Middleware payment initiation failed");
+        }
 
-      const initiateData = await initiateRes.json();
-      setPaymentId(initiateData.paymentId);
+        const initiateData = await initiateRes.json();
+        setPaymentId(initiateData.paymentId);
 
-      // Step 3: Simulate QRIS payment completion (sandbox)
-      await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, 2000));
 
-      const simulateRes = await fetch(`${API_URL}/api/payment/simulate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paymentId: initiateData.paymentId }),
-      });
+        const simulateRes = await fetch(`${API_URL}/api/payment/simulate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentId: initiateData.paymentId }),
+        });
 
-      if (!simulateRes.ok) {
-        throw new Error("Payment simulation failed");
+        if (!simulateRes.ok) {
+          throw new Error("Payment simulation failed");
+        }
+      } else {
+        // Demo mode: simulate payment without backend
+        const demoPaymentId = `demo_pay_${Date.now()}`;
+        setPaymentId(demoPaymentId);
+        // Simulate processing delay
+        await new Promise((r) => setTimeout(r, 2500));
       }
 
       setStep("success");
