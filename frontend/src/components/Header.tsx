@@ -158,7 +158,7 @@ export default function Header({ onLogoClick }: HeaderProps) {
                   {/* Balance */}
                   {walletAddress && (
                     <div className={styles.dropdownBalance}>
-                      <BalanceDisplay walletAddress={walletAddress} />
+                      <BalanceDisplay walletAddress={walletAddress} showFaucet={true} />
                     </div>
                   )}
 

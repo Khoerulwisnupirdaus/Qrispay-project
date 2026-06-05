@@ -3,7 +3,8 @@
 /**
  * Balance Display Component
  *
- * Shows SOL and USDC balance for the user's wallet.
+ * Shows $RIALO (native) and USDC balance for the user's wallet.
+ * Includes faucet button to request devnet tokens.
  * Auto-refreshes every 30 seconds.
  */
 
@@ -11,20 +12,32 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import styles from "./BalanceDisplay.module.css";
 
-const RPC_URL = process.env.NEXT_PUBLIC_SOLANA_RPC_URL || "https://api.devnet.solana.com";
+const RPC_URL =
+  process.env.NEXT_PUBLIC_RIALO_RPC_URL ||
+  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ||
+  "https://api.devnet.solana.com";
 
-/** USDC Mint address on Devnet (use mainnet address for production) */
+/** USDC Mint address on Devnet (placeholder — replace with Meridian mint when available) */
 const USDC_MINT_DEVNET = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
 interface BalanceDisplayProps {
   walletAddress: string | null;
   compact?: boolean;
+  showFaucet?: boolean;
+  onBalanceChange?: (balance: number) => void;
 }
 
-export default function BalanceDisplay({ walletAddress, compact = false }: BalanceDisplayProps) {
+export default function BalanceDisplay({
+  walletAddress,
+  compact = false,
+  showFaucet = false,
+  onBalanceChange,
+}: BalanceDisplayProps) {
   const [solBalance, setSolBalance] = useState<number | null>(null);
   const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [faucetLoading, setFaucetLoading] = useState(false);
+  const [faucetMsg, setFaucetMsg] = useState<string | null>(null);
 
   const fetchBalances = useCallback(async () => {
     if (!walletAddress) return;
@@ -33,9 +46,11 @@ export default function BalanceDisplay({ walletAddress, compact = false }: Balan
       const connection = new Connection(RPC_URL, "confirmed");
       const pubkey = new PublicKey(walletAddress);
 
-      // Fetch SOL balance
+      // Fetch native balance ($RIALO / SOL on devnet)
       const sol = await connection.getBalance(pubkey);
-      setSolBalance(sol / LAMPORTS_PER_SOL);
+      const bal = sol / LAMPORTS_PER_SOL;
+      setSolBalance(bal);
+      onBalanceChange?.(bal);
 
       // Fetch USDC balance (SPL token)
       try {
@@ -58,13 +73,41 @@ export default function BalanceDisplay({ walletAddress, compact = false }: Balan
       console.error("Failed to fetch balances:", err);
       setLoading(false);
     }
-  }, [walletAddress]);
+  }, [walletAddress, onBalanceChange]);
 
   useEffect(() => {
     fetchBalances();
     const interval = setInterval(fetchBalances, 30000);
     return () => clearInterval(interval);
   }, [fetchBalances]);
+
+  /** Request devnet airdrop */
+  const requestFaucet = async () => {
+    if (!walletAddress || faucetLoading) return;
+    setFaucetLoading(true);
+    setFaucetMsg(null);
+
+    try {
+      const connection = new Connection(RPC_URL, "confirmed");
+      const pubkey = new PublicKey(walletAddress);
+      const sig = await connection.requestAirdrop(pubkey, 1 * LAMPORTS_PER_SOL);
+      await connection.confirmTransaction(sig, "confirmed");
+      setFaucetMsg("1 $RIALO received!");
+      // Refresh balance
+      setTimeout(fetchBalances, 1000);
+    } catch (err: unknown) {
+      console.error("Faucet error:", err);
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      if (msg.includes("429") || msg.includes("rate")) {
+        setFaucetMsg("Rate limited — try again later");
+      } else {
+        setFaucetMsg("Faucet error — try again");
+      }
+    } finally {
+      setFaucetLoading(false);
+      setTimeout(() => setFaucetMsg(null), 4000);
+    }
+  };
 
   if (!walletAddress || loading) return null;
 
@@ -88,7 +131,7 @@ export default function BalanceDisplay({ walletAddress, compact = false }: Balan
     <div className={styles.balanceCard}>
       <div className={styles.balanceRow}>
         <div className={styles.balanceItem}>
-          <span className={styles.balanceLabel}>SOL</span>
+          <span className={styles.balanceLabel}>$RIALO</span>
           <span className={styles.balanceValue}>
             {solBalance !== null ? solBalance.toFixed(4) : "—"}
           </span>
@@ -101,6 +144,31 @@ export default function BalanceDisplay({ walletAddress, compact = false }: Balan
           </span>
         </div>
       </div>
+
+      {showFaucet && (
+        <div className={styles.faucetWrap}>
+          <button
+            className={styles.faucetBtn}
+            onClick={requestFaucet}
+            disabled={faucetLoading}
+            type="button"
+          >
+            {faucetLoading ? (
+              <span className={styles.faucetSpinner} />
+            ) : (
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            )}
+            {faucetLoading ? "Requesting..." : "Get $RIALO"}
+          </button>
+          {faucetMsg && (
+            <span className={`${styles.faucetMsg} ${faucetMsg.includes("received") ? styles.faucetSuccess : styles.faucetError}`}>
+              {faucetMsg}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
