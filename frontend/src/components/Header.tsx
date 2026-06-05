@@ -152,7 +152,10 @@ export default function Header({ onLogoClick }: HeaderProps) {
                     </button>
                   ) : (
                     <div className={styles.dropdownItem}>
-                      <span className={styles.dropdownHint}>Wallet creating...</span>
+                      <span className={styles.walletCreating}>
+                        <span className={styles.walletSpinner} />
+                        Setting up wallet...
+                      </span>
                     </div>
                   )}
 

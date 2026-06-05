@@ -37,9 +37,6 @@ export default function SolanaWalletProvider({
           logo: "/rialo-icon.png",
         },
         embeddedWallets: {
-          ethereum: {
-            createOnLogin: "all-users",
-          },
           solana: {
             createOnLogin: "all-users",
           },
