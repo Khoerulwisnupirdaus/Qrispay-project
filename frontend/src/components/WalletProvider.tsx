@@ -1,50 +1,50 @@
 "use client";
 
 /**
- * Solana Wallet Provider
+ * Privy Auth + Wallet Provider
  *
- * Wraps the app with Solana wallet adapter context.
- * Supports Phantom and Backpack wallets on Devnet.
+ * Wraps the app with Privy for:
+ * - Social login (Google, Email)
+ * - Auto-generated embedded Solana wallets
+ * - External wallet support (Phantom, Backpack via standard wallet adapter)
  */
 
-import React, { useMemo } from "react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import {
-  ConnectionProvider,
-  WalletProvider,
-} from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { clusterApiUrl } from "@solana/web3.js";
-
-// Import wallet adapter CSS
-import "@solana/wallet-adapter-react-ui/styles.css";
+import React from "react";
+import { PrivyProvider } from "@privy-io/react-auth";
 
 interface SolanaWalletProviderProps {
   children: React.ReactNode;
 }
 
-/**
- * SolanaWalletProvider component
- *
- * Provides Solana wallet connection context to the entire app.
- * Uses Devnet for the MVP phase.
- */
 export default function SolanaWalletProvider({
   children,
 }: SolanaWalletProviderProps) {
-  // Use Devnet for development/simulation
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
-  // Only include Phantom and Backpack wallets
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+  if (!appId) {
+    console.error("NEXT_PUBLIC_PRIVY_APP_ID is not set");
+    return <>{children}</>;
+  }
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <PrivyProvider
+      appId={appId}
+      config={{
+        loginMethods: ["google", "email", "wallet"],
+        appearance: {
+          theme: "light",
+          accentColor: "#A9DCD3",
+          walletChainType: "solana-only",
+          logo: "/rialo-icon.png",
+        },
+        embeddedWallets: {
+          solana: {
+            createOnLogin: "all-users",
+          },
+        },
+      }}
+    >
+      {children}
+    </PrivyProvider>
   );
 }

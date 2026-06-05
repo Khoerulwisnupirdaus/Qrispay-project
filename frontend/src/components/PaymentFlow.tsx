@@ -11,7 +11,7 @@
  */
 
 import React, { useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallets } from "@privy-io/react-auth";
 import { QrisScanResult } from "./QRScanner";
 import styles from "./PaymentFlow.module.css";
 
@@ -33,7 +33,8 @@ interface PaymentFlowProps {
 type PaymentStep = "review" | "confirming" | "processing" | "success" | "error";
 
 export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlowProps) {
-  const { publicKey } = useWallet();
+  const { wallets } = useWallets();
+  const publicKeyStr = wallets?.[0]?.address || null;
   const [step, setStep] = useState<PaymentStep>("review");
   const [customAmount, setCustomAmount] = useState<string>(
     qrisData.idrAmount > 0 ? qrisData.idrAmount.toString() : ""
@@ -75,7 +76,7 @@ export default function PaymentFlow({ qrisData, onBack, onComplete }: PaymentFlo
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           onChainTxId: fakeTxSig,
-          userWallet: publicKey?.toBase58() || "unknown",
+          userWallet: publicKeyStr || "unknown",
           usdcAmount: usdcSmallestUnit,
           idrAmount: idrAmount,
           exchangeRate: EXCHANGE_RATE * 100,

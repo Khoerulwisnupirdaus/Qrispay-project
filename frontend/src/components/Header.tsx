@@ -3,49 +3,35 @@
 /**
  * Header Component
  *
- * App header with logo, network badge, and wallet connect button.
- * Logo is clickable — returns to home/landing.
+ * App header with logo, network badge, balance display, and auth controls.
+ * Uses Privy for authentication state.
  */
 
-import React, { useEffect, useState } from "react";
-import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import dynamic from "next/dynamic";
+import React from "react";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import BalanceDisplay from "./BalanceDisplay";
 import styles from "./Header.module.css";
-
-const WalletMultiButton = dynamic(
-  () => import("@solana/wallet-adapter-react-ui").then((m) => m.WalletMultiButton),
-  { ssr: false }
-);
 
 interface HeaderProps {
   onLogoClick?: () => void;
 }
 
 export default function Header({ onLogoClick }: HeaderProps) {
-  const { publicKey, connected } = useWallet();
-  const { connection } = useConnection();
-  const [balance, setBalance] = useState<number | null>(null);
+  const { authenticated, user, login, logout } = usePrivy();
+  const { wallets } = useWallets();
 
-  useEffect(() => {
-    if (!publicKey || !connected) {
-      setBalance(null);
-      return;
-    }
+  const walletAddress = wallets?.[0]?.address || null;
 
-    const fetchBalance = async () => {
-      try {
-        const bal = await connection.getBalance(publicKey);
-        setBalance(bal / LAMPORTS_PER_SOL);
-      } catch (err) {
-        console.error("Failed to fetch balance:", err);
-      }
-    };
+  /** Truncate wallet address for display */
+  const shortAddress = walletAddress
+    ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`
+    : null;
 
-    fetchBalance();
-    const interval = setInterval(fetchBalance, 30000);
-    return () => clearInterval(interval);
-  }, [publicKey, connected, connection]);
+  /** Get user display name */
+  const displayName = user?.google?.name
+    || user?.email?.address?.split("@")[0]
+    || shortAddress
+    || "User";
 
   const handleLogoClick = () => {
     if (onLogoClick) onLogoClick();
@@ -79,13 +65,22 @@ export default function Header({ onLogoClick }: HeaderProps) {
             Rialo SVM
           </div>
 
-          {connected && balance !== null && (
-            <div className={styles.balance}>
-              {balance.toFixed(2)} SOL
-            </div>
+          {authenticated && walletAddress && (
+            <BalanceDisplay walletAddress={walletAddress} compact />
           )}
 
-          <WalletMultiButton />
+          {authenticated ? (
+            <button className={styles.userBtn} onClick={logout} title="Logout">
+              <span className={styles.userAvatar}>
+                {displayName.charAt(0).toUpperCase()}
+              </span>
+              <span className={styles.userName}>{displayName}</span>
+            </button>
+          ) : (
+            <button className={styles.loginBtn} onClick={login}>
+              Sign In
+            </button>
+          )}
         </div>
       </div>
     </header>

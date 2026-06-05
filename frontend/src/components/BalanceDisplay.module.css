@@ -1,0 +1,79 @@
+/* ============================================================
+ * Balance Display — compact & full card styles
+ * ============================================================ */
+
+/* Compact mode (header) */
+.compactWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-full);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.compactItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.compactIcon {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.compactDivider {
+  width: 1px;
+  height: 14px;
+  background: var(--border-light);
+  margin: 0 4px;
+}
+
+/* Full card mode */
+.balanceCard {
+  padding: 16px 20px;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-xl);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.balanceRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.balanceItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.balanceLabel {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.balanceValue {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.balanceDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--border-light);
+}

@@ -109,6 +109,63 @@
   color: var(--text-secondary);
 }
 
+/* Auth buttons */
+.loginBtn {
+  padding: 8px 20px;
+  background: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: var(--r-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.2px;
+}
+.loginBtn:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.userBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px 4px 4px;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.userBtn:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(169,220,211,0.15);
+}
+
+.userAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #7CC4B8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.userName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Mobile header */
 @media (max-width: 480px) {
   .header { margin: 8px 8px 0; top: 8px; }
@@ -116,4 +173,7 @@
   .logoTitle { font-size: 1rem; }
   .networkBadge { padding: 4px 10px; font-size: 0.65rem; }
   .balance { padding: 4px 10px; font-size: 0.68rem; }
+  .loginBtn { padding: 6px 14px; font-size: 0.72rem; }
+  .userName { display: none; }
 }
+

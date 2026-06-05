@@ -1,17 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { usePrivy } from "@privy-io/react-auth";
 import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import QRScanner, { QrisScanResult } from "@/components/QRScanner";
 import PaymentFlow from "@/components/PaymentFlow";
 import styles from "./page.module.css";
 
-const WalletMultiButton = dynamic(
-  () => import("@solana/wallet-adapter-react-ui").then((m) => m.WalletMultiButton),
-  { ssr: false }
-);
 const Globe = dynamic(() => import("@/components/Globe"), { ssr: false });
 
 type AppState = "idle" | "scanning" | "payment";
@@ -70,25 +66,14 @@ const IconArrowRight = () => (
 /* ── Main Page ───────────────────────────────────────── */
 
 export default function HomePage() {
-  const { connected } = useWallet();
+  const { authenticated, login } = usePrivy();
+  const connected = authenticated;
   const [appState, setAppState] = useState<AppState>("idle");
   const [scanResult, setScanResult] = useState<QrisScanResult | null>(null);
   const [showLanding, setShowLanding] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
-
-  /** Detect mobile device */
-  const isMobile = typeof window !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  /** Check if inside Phantom in-app browser */
-  const isPhantomBrowser = typeof window !== "undefined" && !!(window as any).phantom?.solana?.isPhantom;
-
-  /** Open current URL inside Phantom's in-app browser */
-  const handleMobileConnect = () => {
-    const currentUrl = encodeURIComponent(window.location.href);
-    window.location.href = `https://phantom.app/ul/browse/${currentUrl}?ref=${currentUrl}`;
-  };
 
   const handleScanSuccess = (result: QrisScanResult) => {
     setScanResult(result);
@@ -201,12 +186,12 @@ export default function HomePage() {
                   <button className="btn btn-primary btn-lg" onClick={handleStartScan}>
                     Scan QRIS Code
                   </button>
-                ) : isMobile && !isPhantomBrowser ? (
-                  <button className="btn btn-primary btn-lg" onClick={handleMobileConnect}>
-                    Open in Phantom
-                  </button>
                 ) : (
-                  <WalletMultiButton />
+                  <div className={styles.authButtons}>
+                    <button className="btn btn-primary btn-lg" onClick={login}>
+                      Get Started
+                    </button>
+                  </div>
                 )}
                 <a href="#how-it-works" className={styles.heroSecondaryBtn}>
                   How it works <IconArrowRight />
@@ -315,12 +300,10 @@ export default function HomePage() {
                     <button className="btn btn-primary btn-lg" onClick={handleStartScan}>
                       Scan QRIS Code
                     </button>
-                  ) : isMobile && !isPhantomBrowser ? (
-                    <button className="btn btn-primary btn-lg" onClick={handleMobileConnect}>
-                      Open in Phantom
-                    </button>
                   ) : (
-                    <WalletMultiButton />
+                    <button className="btn btn-primary btn-lg" onClick={login}>
+                      Get Started
+                    </button>
                   )}
                   <p>Join thousands of users bridging crypto to real-world payments.</p>
                 </div>

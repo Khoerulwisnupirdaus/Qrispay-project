@@ -8,6 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@privy-io/react-auth": "^3.29.2",
+    "@solana-program/memo": "^0.11.1",
+    "@solana/spl-token": "^0.4.14",
     "@solana/wallet-adapter-backpack": "^0.1.14",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-phantom": "^0.9.29",
