@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
 
     // Try to generate keys first
     let rialoAddress: string | null = null;
+    let balance = 0;
 
     console.log("[Rialo] Generating keys");
     const generateRes = await fetch(`${PLAYGROUND_API}/keys/generate`, {
@@ -64,30 +65,30 @@ export async function POST(request: NextRequest) {
       rialoAddress = data.publicKey;
       console.log(`[Rialo] Keys generated: ${rialoAddress}`);
     } else if (generateRes.status === 409 || generateRes.status === 400) {
-      // Keys already exist, load them instead
-      console.log("[Rialo] Keys already exist, loading");
-      const loadRes = await fetch(`${PLAYGROUND_API}/keys/load`, {
-        method: "GET",
-        headers: { Cookie: cookieHeader },
-      });
-
-      if (!loadRes.ok) {
-        const text = await loadRes.text();
-        throw new Error(`Failed to load keys (${loadRes.status}): ${text}`);
-      }
-
-      const data = await loadRes.json();
-      rialoAddress = data.publicKey;
-      console.log(`[Rialo] Keys loaded: ${rialoAddress}`);
+      console.log("[Rialo] Keys already exist");
     } else {
       const text = await generateRes.text();
       throw new Error(`Key generation failed (${generateRes.status}): ${text}`);
     }
 
-    // For new accounts, return the password so user can login to playground.rialo.io
+    // Always load keys to get current balance
+    console.log("[Rialo] Loading keys + balance");
+    const loadRes = await fetch(`${PLAYGROUND_API}/keys/load`, {
+      method: "GET",
+      headers: { Cookie: cookieHeader },
+    });
+
+    if (loadRes.ok) {
+      const data = await loadRes.json();
+      rialoAddress = data.publicKey;
+      balance = parseFloat(data.balance || "0");
+      console.log(`[Rialo] Address: ${rialoAddress}, Balance: ${balance}`);
+    }
+
     const response: Record<string, unknown> = {
       success: true,
       rialoAddress,
+      balance,
     };
     if (isNewAccount) {
       response.isNewAccount = true;
