@@ -144,7 +144,10 @@ export default function Header({ onLogoClick }: HeaderProps) {
                         <rect x="4" y="4" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.2"/>
                         <path d="M10 4V3a2 2 0 00-2-2H3a2 2 0 00-2 2v5a2 2 0 002 2h1" stroke="currentColor" strokeWidth="1.2"/>
                       </svg>
-                      <span>{shortAddress}</span>
+                      <span className={styles.walletAddrWrap}>
+                        <span className={styles.walletAddrTag}>Solana · Privy</span>
+                        <span>{shortAddress}</span>
+                      </span>
                       <span className={styles.dropdownHint}>Copy</span>
                     </button>
                   ) : (

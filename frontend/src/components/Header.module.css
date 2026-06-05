@@ -270,6 +270,21 @@
   letter-spacing: 0.5px;
 }
 
+.walletAddrWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.walletAddrTag {
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #9945FF;
+  line-height: 1;
+}
+
 .dropdownBalance {
   padding: 6px 4px;
 }
