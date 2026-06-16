@@ -23,11 +23,12 @@ export async function POST(request: NextRequest) {
     console.log(`[Rialo] Faucet request for wallet: ${walletAddress}`);
 
     // Authenticate and get session cookies
-    const cookieHeader = await getPlaygroundSession(
+    const sessionResult = await getPlaygroundSession(
       walletAddress,
       email || undefined,
       playgroundPassword || undefined,
     );
+    const cookieHeader = sessionResult.cookieHeader;
 
     // Call faucet
     console.log("[Rialo] Calling faucet endpoint");
