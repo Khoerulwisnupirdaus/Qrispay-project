@@ -121,30 +121,6 @@ export default function BalanceDisplay({
     await connectRialo(pgPassword);
   };
 
-  /** Skip password — use separate QRIS Pay account */
-  const handleSkip = async () => {
-    setNeedsPassword(false);
-    setPgLoading(true);
-    // Connect without email to force deterministic account
-    try {
-      const res = await fetch("/api/rialo/connect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ walletAddress }),
-      });
-      const data = await res.json();
-      if (data.success && data.rialoAddress) {
-        setRialoAddress(data.rialoAddress);
-        setRialoBalance(data.balance ?? 0);
-        onBalanceChange?.(data.balance ?? 0);
-      }
-    } catch (err) {
-      console.error("[Rialo] Skip connect error:", err);
-    } finally {
-      setPgLoading(false);
-    }
-  };
-
   /** Copy Rialo address */
   const copyRialoAddress = () => {
     if (rialoAddress) {
@@ -229,14 +205,6 @@ export default function BalanceDisplay({
               type="button"
             >
               {pgLoading ? "Connecting..." : "Connect"}
-            </button>
-            <button
-              className={styles.pgSkipBtn}
-              onClick={handleSkip}
-              disabled={pgLoading}
-              type="button"
-            >
-              Skip (new address)
             </button>
           </div>
         </div>
