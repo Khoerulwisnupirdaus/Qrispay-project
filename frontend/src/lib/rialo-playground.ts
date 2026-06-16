@@ -13,8 +13,25 @@ export function generateEmail(walletAddress: string): string {
   return `rialo_${walletAddress.slice(0, 12).toLowerCase()}@qrispay.app`;
 }
 
-export function generatePassword(walletAddress: string): string {
+export function generateLegacyPassword(walletAddress: string): string {
   return `Rialo!${walletAddress.slice(0, 16)}#2024`;
+}
+
+export function generatePassword(walletAddress: string): string {
+  // A simple synchronous hash function to make the password unguessable from just the address
+  let hash1 = 0x811c9dc5;
+  let hash2 = 0x811c9dc5;
+  const str = walletAddress + "QrisPay_Secure_Salt_2026!";
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash1 ^= char;
+    hash1 = Math.imul(hash1, 0x01000193);
+    hash2 ^= char;
+    hash2 = Math.imul(hash2, 0x1000193);
+  }
+  const h1Str = Math.abs(hash1).toString(36);
+  const h2Str = Math.abs(hash2).toString(36).toUpperCase();
+  return `Rp!${h1Str}${h2Str}#`;
 }
 
 // ---------------------------------------------------------------------------
@@ -206,28 +223,45 @@ export async function getPlaygroundSession(
   walletAddress: string,
   userEmail?: string,
   playgroundPassword?: string,
-): Promise<string> {
+): Promise<{ cookieHeader: string; passwordUsed: string }> {
   const name = `QrisPay_${walletAddress.slice(0, 8)}`;
 
   // Option 1: user provided their playground password
   if (userEmail && playgroundPassword) {
-    return attemptSession(userEmail, playgroundPassword, name);
+    const cookieHeader = await attemptSession(userEmail, playgroundPassword, name);
+    return { cookieHeader, passwordUsed: playgroundPassword };
   }
 
-  // Option 2: try user email with our deterministic password
+  // Option 2: try user email with our deterministic passwords
   if (userEmail) {
     const ourPassword = generatePassword(walletAddress);
     try {
-      return await attemptSession(userEmail, ourPassword, name);
+      const cookieHeader = await attemptSession(userEmail, ourPassword, name);
+      return { cookieHeader, passwordUsed: ourPassword };
     } catch {
-      console.log("[Rialo] Login with user email failed, falling back to deterministic email");
+      console.log("[Rialo] Login with new password failed, trying legacy password");
+      const legacyPw = generateLegacyPassword(walletAddress);
+      try {
+        const cookieHeader = await attemptSession(userEmail, legacyPw, name);
+        return { cookieHeader, passwordUsed: legacyPw };
+      } catch {
+        console.log("[Rialo] Login with user email failed completely, falling back to deterministic email");
+      }
     }
   }
 
   // Option 3: fallback to deterministic email (always works)
   const deterministicEmail = generateEmail(walletAddress);
   const password = generatePassword(walletAddress);
-  return attemptSession(deterministicEmail, password, name);
+  try {
+    const cookieHeader = await attemptSession(deterministicEmail, password, name);
+    return { cookieHeader, passwordUsed: password };
+  } catch {
+    console.log("[Rialo] Deterministic login failed, trying legacy password");
+    const legacyPw = generateLegacyPassword(walletAddress);
+    const cookieHeader = await attemptSession(deterministicEmail, legacyPw, name);
+    return { cookieHeader, passwordUsed: legacyPw };
+  }
 }
 
 /**

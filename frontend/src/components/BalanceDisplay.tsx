@@ -9,7 +9,6 @@
  */
 
 import React, { useEffect, useState, useCallback } from "react";
-import { generatePassword } from "@/lib/rialo-playground";
 import styles from "./BalanceDisplay.module.css";
 
 interface BalanceDisplayProps {
@@ -88,7 +87,7 @@ export default function BalanceDisplay({
         setRialoBalance(data.balance ?? 0);
         setNeedsPassword(false);
         if (password) setSavedPassword(password);
-        if (data.isNewAccount && data.playgroundPassword) {
+        if (data.playgroundPassword) {
           setNewAccountPw(data.playgroundPassword);
           // Persist to localStorage
           if (walletAddress) {
@@ -339,7 +338,7 @@ export default function BalanceDisplay({
           <span>Login at <strong>playground.rialo.io</strong> with:</span>
           <div className={styles.pgPwRow}>
             <code className={styles.pgNewPw}>
-              {showPw ? (newAccountPw || savedPassword || generatePassword(walletAddress)) : "••••••••••••"}
+              {showPw ? (newAccountPw || savedPassword) : "••••••••••••"}
             </code>
             <button
               type="button"

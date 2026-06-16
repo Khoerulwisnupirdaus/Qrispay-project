@@ -40,11 +40,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Authenticate and get session cookies
-    const cookieHeader = await getPlaygroundSession(
+    const sessionResult = await getPlaygroundSession(
       walletAddress,
       email || undefined,
       playgroundPassword || undefined,
     );
+    const cookieHeader = sessionResult.cookieHeader;
+    const actualPassword = sessionResult.passwordUsed;
 
     // Try to generate keys first
     let rialoAddress: string | null = null;
@@ -89,10 +91,10 @@ export async function POST(request: NextRequest) {
       success: true,
       rialoAddress,
       balance,
+      playgroundPassword: actualPassword,
     };
     if (isNewAccount) {
       response.isNewAccount = true;
-      response.playgroundPassword = generatePassword(walletAddress);
     }
     return NextResponse.json(response);
   } catch (error) {
