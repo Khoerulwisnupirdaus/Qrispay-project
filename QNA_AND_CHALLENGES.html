@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRIS Pay — Q&A dan Kendala</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 40px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            color: #e2e8f0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-top: 30px;
+        }
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 0;
+            color: #f1f5f9;
+        }
+        .answer {
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background-color: var(--surface);
+            color: var(--text);
+        }
+        td {
+            color: var(--text-muted);
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .tag.kritis { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .tag.teknis { background-color: rgba(59, 130, 246, 0.2); color: var(--primary); }
+        .tag.bisnis { background-color: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .tag.operasional { background-color: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>QRIS Pay — Q&A dan Mitigasi Kendala</h1>
+
+    <!-- SECTION: KENDALA -->
+    <h2>⚠️ Kendala yang Mungkin Ditemui di Masa Depan</h2>
+    <p style="color: var(--text-muted)">Beberapa tantangan dan blocker potensial saat QRIS Pay berjalan di Production / Mainnet.</p>
+
+    <div class="card">
+        <span class="tag kritis">Regulasi (Kritis)</span>
+        <p class="question">1. Bank Indonesia (BI) Melarang Crypto sebagai Alat Pembayaran</p>
+        <p class="answer">Per PBI No. 17/2015, cryptocurrency dilarang sebagai alat pembayaran di Indonesia. QRIS Pay harus memposisikan diri sebagai "layanan konversi" (conversion service) dan bukan "crypto payment". Merchant menerima IDR secara sah, bukan crypto. Namun, grey area ini bisa jadi masalah jika pengawasan BI diperketat.</p>
+        
+        <p class="question" style="margin-top: 20px;">2. Perizinan Bappebti / OJK</p>
+        <p class="answer">Jika QRIS Pay menangani konversi crypto-to-fiat sendiri, kemungkinan besar membutuhkan perizinan sebagai "Pedagang Aset Kripto" atau penyedia jasa pembayaran. Proses perizinan ini mahal dan memakan waktu.</p>
+
+        <p class="question" style="margin-top: 20px;">3. Kepatuhan Xendit (Compliance)</p>
+        <p class="answer">Xendit memiliki aturan KYC/AML yang ketat. Jika mereka mengetahui sumber dana berasal dari crypto, mereka dapat menunda pencairan (settlement) atau meminta lisensi tambahan dari pihak QRIS Pay.</p>
+    </div>
+
+    <div class="card">
+        <span class="tag teknis">Teknis</span>
+        <p class="question">4. Privy Belum Tentu Support Rialo Mainnet</p>
+        <p class="answer">Saat ini Privy mendukung chain berbasis EVM dan Solana. Jika Rialo mainnet memiliki RPC atau environment yang berbeda dan tidak ter-cover oleh Privy, kita mungkin harus membangun solusi dompet embedded sendiri atau menggunakan SDK native dari Rialo.</p>
+
+        <p class="question" style="margin-top: 20px;">5. Absennya Smart Contract Escrow yang Aman</p>
+        <p class="answer">Di production, kita butuh smart contract escrow yang benar-benar diaudit untuk menghindari dana nyangkut saat pembayaran QRIS timeout atau gagal. Pengembangan dan audit ini membutuhkan biaya dan keahlian Anchor/Rust yang kuat.</p>
+    </div>
+
+    <div class="card">
+        <span class="tag bisnis">Bisnis & Operasional</span>
+        <p class="question">6. Masalah Chicken-and-Egg (Likuiditas & On-ramp)</p>
+        <p class="answer">User tidak akan memakai aplikasi ini jika sulit mendapatkan RIALO. Kita butuh jalur on-ramp (IDR ke RIALO) yang mudah atau menunggu token RIALO listing di exchange lokal besar (Indodax, Tokocrypto).</p>
+
+        <p class="question" style="margin-top: 20px;">7. Manajemen Likuiditas Fiat (Modal Kerja)</p>
+        <p class="answer">Settlement QRIS membutuhkan uang fiat (IDR) asli. Kita harus memiliki pool / cadangan IDR yang cukup di Xendit untuk menalangi pembayaran ke merchant sementara crypto RIALO milik user sedang di-likuidasi. Ini butuh modal kerja yang lumayan besar.</p>
+    </div>
+
+    <!-- SECTION: Q&A -->
+    <h2>💬 Q&A (Tanya Jawab Presentasi)</h2>
+    <p style="color: var(--text-muted)">Draft jawaban untuk pertanyaan yang kemungkinan akan ditanyakan oleh panelis atau audience.</p>
+
+    <h3>A. Product & Business</h3>
+    
+    <div class="card">
+        <p class="question">1. Apa bedanya pakai QRIS Pay dibanding jual crypto di exchange lalu bayar pakai GoPay?</p>
+        <p class="answer">Proses konvensional memakan waktu berjam-jam dan melalui 4 tahap (jual di exchange, tunggu withdraw ke bank, top-up e-wallet, baru bayar). QRIS Pay menyelesaikannya dalam 1 langkah dalam hitungan detik. User tidak perlu keluar dari aplikasi.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">2. Siapa target pengguna Anda?</p>
+        <p class="answer">Para pemegang aset crypto di Indonesia (terdapat 18.5 juta trader terdaftar) yang ingin membelanjakan keuntungan mereka di dunia nyata tanpa harus melalui proses pencairan (withdraw) yang ribet.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">3. Bagaimana model pendapatan (revenue) Anda?</p>
+        <p class="answer">Ada tiga jalur: biaya transaksi (0.5-1% per pembayaran), selisih (spread) dari konversi rate RIALO ke IDR, dan penyediaan B2B API bagi dompet atau exchange lain yang ingin mengintegrasikan fitur QRIS.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">4. Apakah merchant perlu mendaftar atau melakukan integrasi khusus?</p>
+        <p class="answer">Tidak sama sekali (Zero merchant integration). Kami menumpang pada infrastruktur QRIS yang sudah ada. Ke-30 juta lebih merchant QRIS di Indonesia akan menerima IDR seperti biasa, tanpa tahu bahwa sumber dananya dari crypto.</p>
+    </div>
+
+    <h3>B. Technical & Architecture</h3>
+
+    <div class="card">
+        <p class="question">5. Bagaimana proses settlement pembayarannya bekerja?</p>
+        <p class="answer">User mengirim RIALO → Middleware API kita mengonversinya menjadi nominal IDR → Memanggil API Xendit untuk memproses QRIS → Merchant menerima pembayaran QRIS → Xendit meneruskan IDR ke rekening bank merchant. Konversi terjadi di belakang layar pada layer middleware.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">6. Apa yang terjadi jika pembayaran QRIS gagal tapi user sudah telanjur mengirim RIALO?</p>
+        <p class="answer">Pada versi production, kita akan menggunakan smart contract escrow. Dana RIALO akan dikunci di PDA (Program Derived Address). Jika webhook Xendit menyatakan gagal/timeout, dana dari escrow otomatis kembali ke user. Tidak ada dana yang hilang.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">7. Kenapa memilih Privy sebagai wallet, bukan Phantom?</p>
+        <p class="answer">Privy memungkinkan user login menggunakan Google atau Email secara langsung tanpa perlu download aplikasi atau menyimpan seed phrase. Ini krusial untuk adopsi massal di Indonesia, membuat UX terasa seperti aplikasi Web2 biasa.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">8. Apakah private key user aman di Privy?</p>
+        <p class="answer">Ya, Privy menggunakan teknologi MPC (Multi-Party Computation). Private key dipecah dan tidak pernah utuh di satu server. Privy pun tidak bisa mengakses aset user. Sifatnya tetap non-custodial.</p>
+    </div>
+
+    <h3>C. Specific to Rialo</h3>
+
+    <div class="card">
+        <p class="question">9. Mengapa membangun di atas Rialo SVM dan bukan Solana mainnet?</p>
+        <p class="answer">Rialo berfokus pada market Indonesia dengan ekosistem dan dukungan lokal yang selaras. Walaupun kompatibel dengan Solana (tools yang sama), kami ingin menjadi bagian dari blockchain yang sengaja dibangun untuk infrastruktur Indonesia.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">10. Apa yang tim butuhkan dari Rialo untuk bisa lanjut ke Mainnet?</p>
+        <p class="answer">Tiga hal utama: Akses SDK/API resmi Rialo mainnet, panduan teknis untuk deployment smart contract escrow di ekosistem Rialo, dan dana hibah (grant funding) untuk modal kerja menutupi biaya operasional Xendit di awal.</p>
+    </div>
+
+    <h3>D. Critical & Tough Questions</h3>
+
+    <div class="card">
+        <p class="question">11. Kalau harga RIALO tiba-tiba anjlok 10% saat user sedang membayar, siapa yang rugi?</p>
+        <p class="answer">Konversi rate dikunci (locked) tepat pada detik saat user menginisiasi pembayaran. Escrow mengunci nominal RIALO yang dihitung berdasarkan rate detik tersebut. Karena proses settlement terjadi dalam hitungan detik, risiko fluktuasi/slippage sangat minimal.</p>
+    </div>
+
+    <div class="card">
+        <p class="question">12. MVP ini live tapi pakai token devnet. Bagaimana cara memvalidasi bahwa orang benar-benar butuh ini?</p>
+        <p class="answer">MVP membuktikan bahwa secara teknis flow ini bisa berjalan mulus di bawah 10 detik. Untuk validasi demand nyata, gap antara 18.5 juta trader kripto dan 30 juta merchant QRIS adalah peluangnya. Langkah selanjutnya adalah closed beta menggunakan uang/crypto sungguhan.</p>
+    </div>
+</div>
+
+</body>
+</html>

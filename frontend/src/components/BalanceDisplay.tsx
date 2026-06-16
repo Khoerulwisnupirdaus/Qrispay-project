@@ -45,6 +45,21 @@ export default function BalanceDisplay({
   const [savedPassword, setSavedPassword] = useState<string | null>(null);
   // Password to show for newly created accounts
   const [newAccountPw, setNewAccountPw] = useState<string | null>(null);
+  // Show/hide password toggle
+  const [showPw, setShowPw] = useState(false);
+  // Show/hide for password input
+  const [showPgInput, setShowPgInput] = useState(false);
+
+  // Load saved password from localStorage on mount
+  useEffect(() => {
+    if (walletAddress) {
+      const stored = localStorage.getItem(`rialo_pw_${walletAddress}`);
+      if (stored) {
+        setNewAccountPw(stored);
+        setSavedPassword(stored);
+      }
+    }
+  }, [walletAddress]);
 
   /** Connect to Rialo devnet */
   const connectRialo = useCallback(async (password?: string) => {
@@ -74,6 +89,10 @@ export default function BalanceDisplay({
         if (password) setSavedPassword(password);
         if (data.isNewAccount && data.playgroundPassword) {
           setNewAccountPw(data.playgroundPassword);
+          // Persist to localStorage
+          if (walletAddress) {
+            localStorage.setItem(`rialo_pw_${walletAddress}`, data.playgroundPassword);
+          }
         }
         onBalanceChange?.(data.balance ?? 0);
       } else if (data.error) {
@@ -183,14 +202,24 @@ export default function BalanceDisplay({
           <span className={styles.pgNote}>
             You already have a Rialo Playground account. Enter your playground password to use the same address.
           </span>
-          <input
-            className={styles.pgInput}
-            type="password"
-            placeholder="Playground password"
-            value={pgPassword}
-            onChange={(e) => setPgPassword(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
-          />
+          <div className={styles.pgInputWrap}>
+            <input
+              className={styles.pgInput}
+              type={showPgInput ? "text" : "password"}
+              placeholder="Playground password"
+              value={pgPassword}
+              onChange={(e) => setPgPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
+            />
+            <button
+              type="button"
+              className={styles.pgToggleBtn}
+              onClick={() => setShowPgInput(!showPgInput)}
+              title={showPgInput ? "Hide password" : "Show password"}
+            >
+              {showPgInput ? "🙈" : "👁️"}
+            </button>
+          </div>
           {pgError && <span className={styles.pgError}>{pgError}</span>}
           <div className={styles.pgActions}>
             <button
@@ -247,7 +276,17 @@ export default function BalanceDisplay({
         <div className={styles.pgNewNote}>
           <span>Playground account created automatically.</span>
           <span>Login at <strong>playground.rialo.io</strong> with:</span>
-          <code className={styles.pgNewPw}>{newAccountPw}</code>
+          <div className={styles.pgPwRow}>
+            <code className={styles.pgNewPw}>{showPw ? newAccountPw : "••••••••••••"}</code>
+            <button
+              type="button"
+              className={styles.pgToggleBtn}
+              onClick={() => setShowPw(!showPw)}
+              title={showPw ? "Hide password" : "Show password"}
+            >
+              {showPw ? "🙈" : "👁️"}
+            </button>
+          </div>
         </div>
       )}
 

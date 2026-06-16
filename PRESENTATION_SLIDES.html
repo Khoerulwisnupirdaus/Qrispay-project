@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rialo QRIS Pay — Panduan Presentasi</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .slide-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .slide-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .slide-time {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-family: monospace;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .slide-title {
+            font-size: 1.6rem;
+            color: #e2e8f0;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 10px;
+        }
+        .highlight {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+        }
+        ul, ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+        th {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text);
+        }
+        pre {
+            background-color: #000;
+            padding: 15px;
+            border-radius: 8px;
+            color: #34d399;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        .checklist-section {
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        .checklist-section h3 {
+            color: #f59e0b;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Rialo QRIS Pay</h1>
+        <p style="font-size: 1.2rem; color: var(--text-muted);">Skrip Demo & Presentasi (~10 menit)</p>
+    </div>
+
+    <!-- Slide 1 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 1</div>
+        <div class="slide-time">⏱️ 30s</div>
+        <div class="slide-title">Pembukaan</div>
+        <div class="highlight">"Bayar merchant mana saja di Indonesia dengan crypto. Selesai via QRIS. Dalam hitungan detik."</div>
+        <p><strong>Judul:</strong> Rialo QRIS Pay — Neofinance Payment Bridge</p>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 2</div>
+        <div class="slide-time">⏱️ 60s</div>
+        <div class="slide-title">Masalah</div>
+        <div class="highlight">"270 juta penduduk. 1 standar QR. 0 jembatan untuk crypto."</div>
+        <ul>
+            <li>Indonesia memiliki <strong>QRIS</strong> — sistem QR terpadu yang diterima <strong>30 juta+ merchant</strong>.</li>
+            <li>Adopsi crypto tumbuh sangat pesat (<strong>18.5 juta trader terdaftar</strong>).</li>
+            <li>Tapi <strong>tidak ada cara untuk membelanjakan crypto di merchant sehari-hari</strong>.</li>
+            <li>Alur saat ini: jual crypto → tunggu transfer bank → top-up e-wallet → bayar (makan waktu berjam-jam, biaya 2-5%).</li>
+        </ul>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 3</div>
+        <div class="slide-time">⏱️ 60s</div>
+        <div class="slide-title">Solusi</div>
+        <div class="highlight">"QRIS Pay menghubungkan crypto ke QRIS dalam satu tap."</div>
+        <table>
+            <tr>
+                <th></th>
+                <th>Sebelumnya</th>
+                <th>Dengan QRIS Pay</th>
+            </tr>
+            <tr>
+                <td><strong>Langkah</strong></td>
+                <td>4+ langkah</td>
+                <td>1 langkah</td>
+            </tr>
+            <tr>
+                <td><strong>Waktu</strong></td>
+                <td>Berjam-jam</td>
+                <td>Hitungan Detik</td>
+            </tr>
+            <tr>
+                <td><strong>Biaya</strong></td>
+                <td>2-5%</td>
+                <td>Mendekati nol</td>
+            </tr>
+            <tr>
+                <td><strong>Integrasi Merchant</strong></td>
+                <td>Diperlukan</td>
+                <td>Tidak ada (pakai QRIS biasa)</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 4</div>
+        <div class="slide-time">⏱️ 60s</div>
+        <div class="slide-title">Live Demo — Login</div>
+        <p style="color: #60a5fa;">👉 <em>Aksi: Buka qrispay.vercel.app, klik "Get Started"</em></p>
+        <ol>
+            <li><strong>Login Google</strong> — tanpa seed phrase, tanpa perlu install wallet extension, cukup klik akun Google.</li>
+            <li>Privy secara otomatis membuatkan <strong>dompet Solana tersemat (embedded wallet)</strong> di latar belakang.</li>
+            <li>Buka dropdown untuk memperlihatkan alamat dompet <strong>Solana · Privy</strong>.</li>
+        </ol>
+        <p><strong>Pesan Utama:</strong> <em>"Onboarding cuma 3 detik. Siapa saja bisa melakukannya."</em></p>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 5</div>
+        <div class="slide-time">⏱️ 60s</div>
+        <div class="slide-title">Live Demo — Rialo Devnet</div>
+        <p style="color: #60a5fa;">👉 <em>Aksi: Buka dropdown, tunjukkan bagian Rialo Devnet</em></p>
+        <ol>
+            <li>QRIS Pay otomatis terhubung dengan <strong>Rialo Playground</strong>.</li>
+            <li>Alamat Rialo Devnet muncul — <strong>cocok dengan alamat di akun playground</strong>.</li>
+            <li>Klik <strong>"Get RIALO"</strong> — faucet akan mengirimkan <strong>1 RIALO</strong> dari devnet asli.</li>
+            <li>Klik <strong>refresh</strong> — saldo langsung terupdate secara live.</li>
+        </ol>
+        <p><strong>Pesan Utama:</strong> <em>"Blockchain sungguhan. Token sungguhan. Transaksi sungguhan."</em></p>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 6</div>
+        <div class="slide-time">⏱️ 90s</div>
+        <div class="slide-title">Live Demo — Alur Pembayaran</div>
+        <p style="color: #60a5fa;">👉 <em>Aksi: Klik "Pay with QRIS", scan QR atau masukkan nominal</em></p>
+        <ol>
+            <li>Masukkan nominal IDR (mis. Rp 50.000).</li>
+            <li>Aplikasi mengonversinya secara otomatis ke <strong>RIALO</strong> menggunakan kurs real-time.</li>
+            <li><strong>Kode QRIS</strong> berhasil di-generate.</li>
+            <li>Pembayaran dikonfirmasi — merchant langsung menerima dana dalam bentuk IDR.</li>
+        </ol>
+        <p><strong>Pesan Utama:</strong> <em>"Dari saldo crypto ke rekening bank merchant dalam waktu kurang dari 10 detik."</em></p>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 7</div>
+        <div class="slide-time">⏱️ 60s</div>
+        <div class="slide-title">Arsitektur Teknis</div>
+<pre>User (Browser)
+   ↓ Login Google
+Privy (Auth + Embedded Wallet)
+   ↓ Auto-connect
+Rialo Playground API (Devnet)
+   ↓ RIALO tokens
+QRIS Pay Frontend (Next.js)
+   ↓ Request pembayaran
+Middleware API (Express)
+   ↓ Generate QRIS
+Xendit Payment Gateway
+   ↓ Settlement IDR
+Rekening Bank Merchant</pre>
+        <p><strong>Highlight:</strong> Tanpa install aplikasi. Tanpa seed phrase. Tanpa perlu integrasi khusus dari sisi merchant.</p>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 8</div>
+        <div class="slide-time">⏱️ 45s</div>
+        <div class="slide-title">Mengapa Memilih Rialo SVM?</div>
+        <ul>
+            <li><strong>Kompatibel dengan Solana</strong> — developer tools yang sama, performa secepat Solana.</li>
+            <li><strong>Fokus di Indonesia</strong> — dibangun khusus untuk kasus penggunaan pembayaran lokal.</li>
+            <li><strong>Biaya transaksi mendekati nol</strong> dan <strong>finalitas di bawah satu detik</strong>.</li>
+            <li>QRIS Pay sejak awal memang dirancang untuk bermigrasi dari devnet ke <strong>mainnet Rialo</strong>.</li>
+        </ul>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 9</div>
+        <div class="slide-time">⏱️ 45s</div>
+        <div class="slide-title">Keunggulan Kompetitif</div>
+        <table>
+            <tr>
+                <th>Fitur</th>
+                <th>QRIS Pay</th>
+                <th>Kartu Debit Crypto</th>
+                <th>P2P OTC (Jual Beli)</th>
+            </tr>
+            <tr>
+                <td>Berfungsi di Indonesia</td>
+                <td>✅</td>
+                <td>Terbatas</td>
+                <td>✅</td>
+            </tr>
+            <tr>
+                <td>Jangkauan Merchant</td>
+                <td>30 Juta+ (QRIS)</td>
+                <td>Merchant tertentu saja</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Kecepatan Settlement</td>
+                <td>Hitungan Detik</td>
+                <td>Hitungan Hari</td>
+                <td>Berjam-jam</td>
+            </tr>
+            <tr>
+                <td>Onboarding User</td>
+                <td>3 detik</td>
+                <td>Perlu proses KYC ketat</td>
+                <td>Manual</td>
+            </tr>
+            <tr>
+                <td>Integrasi Merchant</td>
+                <td>Tidak Ada</td>
+                <td>Butuh alat khusus (EDC)</td>
+                <td>N/A</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 10</div>
+        <div class="slide-time">⏱️ 45s</div>
+        <div class="slide-title">Model Bisnis</div>
+        <ol>
+            <li><strong>Biaya Transaksi (Fee)</strong> — persentase kecil di setiap pembayaran QRIS.</li>
+            <li><strong>Spread Konversi</strong> — margin keuntungan dari kurs penukaran IDR/Crypto.</li>
+            <li><strong>B2B API</strong> — layanan white-label yang bisa disewakan ke dompet atau bursa crypto lain.</li>
+        </ol>
+    </div>
+
+    <!-- Slide 11 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 11</div>
+        <div class="slide-time">⏱️ 45s</div>
+        <div class="slide-title">Roadmap Ke Depan</div>
+        <table>
+            <tr>
+                <th>Fase</th>
+                <th>Waktu</th>
+                <th>Pencapaian</th>
+            </tr>
+            <tr>
+                <td>Fase 1 ✅</td>
+                <td>Q2 2026</td>
+                <td>Prototipe di Rialo Devnet berjalan sukses</td>
+            </tr>
+            <tr>
+                <td>Fase 2</td>
+                <td>Q3 2026</td>
+                <td>Integrasi Xendit QRIS (environment Sandbox)</td>
+            </tr>
+            <tr>
+                <td>Fase 3</td>
+                <td>Q4 2026</td>
+                <td>Migrasi ke Rialo Mainnet</td>
+            </tr>
+            <tr>
+                <td>Fase 4</td>
+                <td>Q1 2027</td>
+                <td>Public Beta — uji coba pembayaran QRIS dengan uang asli</td>
+            </tr>
+            <tr>
+                <td>Fase 5</td>
+                <td>Q2 2027</td>
+                <td>Dukungan multi-token (USDC, USDT, dsb)</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 12 -->
+    <div class="slide-card">
+        <div class="slide-number">Slide 12</div>
+        <div class="slide-time">⏱️ 30s</div>
+        <div class="slide-title">Penutup</div>
+        <div class="highlight">"Masa depan pembayaran di Indonesia dimulai dari sini."</div>
+        <ul>
+            <li>🌐 <strong>Demo Langsung:</strong> qrispay.vercel.app</li>
+            <li>💻 <strong>GitHub:</strong> github.com/Khoerulwisnupirdaus/Qrispay-project</li>
+            <li>⛓️ <strong>Dibangun di Atas:</strong> Rialo SVM</li>
+        </ul>
+    </div>
+
+    <!-- Checklist -->
+    <div class="checklist-section">
+        <h3>📋 Ceklis Sebelum Presentasi Dimulai</h3>
+        <ul style="list-style-type: none; padding-left: 0;">
+            <li><input type="checkbox" checked disabled> Login dulu di qrispay.vercel.app supaya wallet ready</li>
+            <li><input type="checkbox" checked disabled> Pastikan dompet sudah punya saldo RIALO</li>
+            <li><input type="checkbox" checked disabled> Buka playground.rialo.io di tab lain (untuk menunjukkan alamat yang sama)</li>
+            <li><input type="checkbox" checked disabled> Pastikan koneksi internet stabil (banyak memanggil API)</li>
+            <li><input type="checkbox" checked disabled> Siapkan kode QRIS merchant untuk demo simulasi pembayaran</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
