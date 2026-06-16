@@ -272,24 +272,6 @@ export default function BalanceDisplay({
         </button>
       )}
 
-      {newAccountPw && (
-        <div className={styles.pgNewNote}>
-          <span>Playground account created automatically.</span>
-          <span>Login at <strong>playground.rialo.io</strong> with:</span>
-          <div className={styles.pgPwRow}>
-            <code className={styles.pgNewPw}>{showPw ? newAccountPw : "••••••••••••"}</code>
-            <button
-              type="button"
-              className={styles.pgToggleBtn}
-              onClick={() => setShowPw(!showPw)}
-              title={showPw ? "Hide password" : "Show password"}
-            >
-              {showPw ? "🙈" : "👁️"}
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className={styles.balanceHeader}>
         <div className={styles.balanceRow}>
           <div className={styles.balanceItem}>
@@ -347,6 +329,24 @@ export default function BalanceDisplay({
               {faucetMsg}
             </span>
           )}
+        </div>
+      )}
+
+      {newAccountPw && (
+        <div className={styles.pgNewNote}>
+          <span>Playground account created automatically.</span>
+          <span>Login at <strong>playground.rialo.io</strong> with:</span>
+          <div className={styles.pgPwRow}>
+            <code className={styles.pgNewPw}>{showPw ? newAccountPw : "••••••••••••"}</code>
+            <button
+              type="button"
+              className={styles.pgToggleBtn}
+              onClick={() => setShowPw(!showPw)}
+              title={showPw ? "Hide password" : "Show password"}
+            >
+              {showPw ? "🙈" : "👁️"}
+            </button>
+          </div>
         </div>
       )}
     </div>

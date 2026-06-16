@@ -233,7 +233,7 @@ export default function HomePage() {
                 <div className={styles.benefitIcon}><IconBolt /></div>
                 <div className={styles.benefitText}>
                   <h3>Near-zero fees</h3>
-                  <p>DAG-based architecture keeps fees stable and predictable for every payment.</p>
+                  <p>SVM-based architecture keeps fees stable and predictable for every payment.</p>
                 </div>
               </div>
               <div className={styles.benefitCard} data-benefit="1" style={{ marginTop: '-70px' }}>
@@ -246,8 +246,8 @@ export default function HomePage() {
               <div className={styles.benefitCard} data-benefit="2" style={{ marginTop: '-70px' }}>
                 <div className={styles.benefitIcon}><IconLayers /></div>
                 <div className={styles.benefitText}>
-                  <h3>Native HTTPS calls</h3>
-                  <p>Smart contracts call external APIs directly — no oracles needed.</p>
+                  <h3>Indonesia-focused</h3>
+                  <p>Built specifically for the Indonesian market and payment infrastructure.</p>
                 </div>
               </div>
               <div className={styles.benefitCard} data-benefit="3" style={{ marginTop: '-70px' }}>
@@ -269,8 +269,8 @@ export default function HomePage() {
               <div className={styles.stepsRow}>
                 <div className={styles.stepCard}>
                   <div className={styles.stepNum}>01</div>
-                  <h4>Connect wallet</h4>
-                  <p>Phantom, Backpack, or any Solana wallet. One tap.</p>
+                  <h4>Sign Up / Log In</h4>
+                  <p>Login securely with your Google or Email account. No seed phrases needed.</p>
                 </div>
                 <div className={styles.stepDivider}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 8l4 4-4 4" stroke="#000102" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -286,7 +286,7 @@ export default function HomePage() {
                 <div className={styles.stepCard}>
                   <div className={styles.stepNum}>03</div>
                   <h4>Confirm &amp; pay</h4>
-                  <p>USDC → IDR, settled on-chain in sub-second. Receipt generated instantly.</p>
+                  <p>RIALO → IDR, settled on-chain in sub-second. Receipt generated instantly.</p>
                 </div>
               </div>
             </section>
