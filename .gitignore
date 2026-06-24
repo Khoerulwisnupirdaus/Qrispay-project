@@ -40,5 +40,13 @@ yarn-error.log*
 
 # Misc files not for repo
 PRESENTASI_QRIS_PAY.txt
+PRESENTATION_FLOW.md
+PRESENTATION_SLIDES.html
+QA_PREPARATION.md
+QNA_AND_CHALLENGES.html
 netlify.toml
 qr-pattern.png
+frames/
+*.mp4
+.agents/
+%.agents/
